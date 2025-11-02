@@ -3,7 +3,7 @@
 % 也可以到github留言: https://github.com/coldwufish/NYCU-thesis-template
 
 % 載入會用到的套件, 通常不需要修改這邊的資料
-\input{covers/load_env.tex}
+\input{covers/load_env.tex} 
 
 % 預設英文目錄
 % 如果想用中文目錄, 再把下面的註解拿掉
@@ -12,7 +12,7 @@
 
 % #### 下面是自己的資料 ####
 
-% 博士班就把下方註解拿掉吧!! (羅頤同學是碩士班，所以保持註解)
+% 博士班就把下方註解拿掉吧!!
 %\toggletrue{iamphd}
 
 % 論文名稱
@@ -37,7 +37,7 @@
 
 % 論文提交的日期，可以寫口試日期 or 畢業日期
 \newcommand{\ThesisDate}{June 2026}
-\newcommand{\ThesisDateTW}{中華民國~ 一一五年六月}
+\newcommand{\ThesisDateTW}{中華民國~ 一一五年六月} 
 
 
 % [書名頁] 可參考教務處的 學位授予名稱 寫法
@@ -46,12 +46,12 @@
 % 詳情請向系所承辦人員確認，以系所提供的資訊為主
 
 % 下面變數跟表格使用一樣的名稱, 後綴的CN與EN表示中英文
-\newcommand{\NameofCollegeCN}{管理學院}
+\newcommand{\NameofCollegeCN}{管理學院} % 這個其實沒用到, 不過為了一致還是放進來
 \newcommand{\NameofCollegeEN}{College of Management}
-\newcommand{\NameofDepartmentInstituteCN}{資訊管理與財務金融學系財務金融碩士班}
+\newcommand{\NameofDepartmentInstituteCN}{資訊管理與財務金融學系財務金融碩士班} % 系所名稱, 請看下方[說明1]
 \newcommand{\NameofDepartmentInstituteEN}{Graduate Program of Finance, Department of Information Management and Finance}
 \newcommand{\NameofDegree}{Master of Science} % 學位名稱, 常見的是Master of Science, 不同系所採用不同寫法, 記得查學校的資料.
-\newcommand{\ResearchTopic}{Quantitative Finance} % 研究領域
+\newcommand{\ResearchTopic}{Quantitative Finance} % 研究領域, 請看下方[說明2]
 
 % [說明1]
 % 這邊需要填寫 XX系 or OO所 的名稱
@@ -59,9 +59,9 @@
 % 只有所, 沒有大學部的話, 就用 Institute. 如: 電信所請用Institute
 
 % [說明2]
-% 書名頁的最後會有 in OOOO 的內容. 這個目前找不到通用性的寫法.
+% 書名頁的最後會有 in OOOO 的內容. 這個目前找不到通用性的寫法. 
 % 大家就自行找前人的畢業論文, 看同系所的人是怎麼寫, 就跟他們寫一樣的吧.
-% 不過有些系所不需要寫這個東西, ex: 教育所.
+% 不過有些系所不需要寫這個東西, ex: 教育所. 
 % 不需要的話就把\ResearchTopic整句刪掉
 
 % --------------------------------------------
@@ -71,16 +71,10 @@
 
 % 注意: 有簽名的表單不用放到論文電子檔裡面, 上傳圖書館的時候會有相應欄位讓你上傳.
 
-
-\makeatletter
-% 若已定義則重新定義，未定義則直接建立
-\renewcommand*\l@figure[2]{\@dottedtocline{1}{1.5em}{2.3em}{#1}{#2}}
-\renewcommand*\l@table[2]{\@dottedtocline{1}{1.5em}{2.3em}{#1}{#2}}
-\makeatother
-
 \begin{document}
 
 % ====================================================
+% 封面的設定, 像是日期之類的 settings for cover 
 \newgeometry{top=3cm,bottom=3cm,left=3cm,right=3cm}
 
 % 1. 第一頁的封面, 系所資訊使用變數代入
@@ -91,6 +85,7 @@
 \input{covers/inside_var.tex}       % 論文的書名頁
 
 \restoregeometry
+
 % ====================================================
 % 書名頁起至最後一頁皆須加入浮水印
 % 目前語法不知道怎麼設定透明度, 就直接放刷淡的圖片放在頁面中央
@@ -104,20 +99,21 @@
         }
     }
 }
+
 % ====================================================
 
 % [補充] 圖書館有說: 授權書(3)&審定書(5)要裝訂於紙本論文中，不用放在PDF電子檔裡面，要記得請口委簽名。
 
 % 3. 論文電子檔著作權授權書: (要裝訂在紙本論文)
 
-% 4. 博士論文指導教授推薦書(碩士論文免附) 由各所自定，可有可無。檔名 phd_recommend.pdf
+% 4. 博士論文指導教授推薦書(碩士論文免附) 由各所自定，可有可無。: phd_recommend.pdf
 %\includepdf[pages={1},pagecommand={\thispagestyle{empty}}]{phd_recommend.pdf}
+% (我當年畢業不需要4 XD)
 
 % 5. 學位論文審定同意書(審定書): (要裝訂在紙本論文)
 
 % 6. 致謝 Acknowledgement {Sections/0.1.Acknowledgement}
 \input{Sections/0.1.Acknowledgement}\newpage
-% 誌謝（依個人意願自行決定是否撰寫）：以不超過一頁為原則。
 
 % 頁碼設定
 \frontmatter
@@ -127,10 +123,10 @@
 % 中英文目錄設定放在covers/toc_var.tex 裡面, 主頁看起來比較清爽, 包含下面項目 (這邊的語法應該不太需要調整)
 \input{covers/toc_var.tex}
 
-% 7. 中文摘要及關鍵詞 5-7 個 {Sections/0.2.Abstract_chinese}
-% 8. 英文摘要及關鍵詞 5-7 個 {Sections/0.3.Abstract}
+% 7. 中文摘要 {Sections/0.2.Abstract_chinese}
+% 8. 英文摘要 {Sections/0.3.Abstract}
 % 9. 目錄 toc
-% 10. 圖片目錄 lof
+% 10. 圖片目錄 lof 
 % 11. 表格目錄 lot
 
 % 頁碼設定
@@ -140,13 +136,12 @@
 % ====================================================
 % 12. 論文正文, 可以每個章節一個.tex檔案
 % put your statements in the following
-% 章節待填寫，目前保持註解
-%\input{Sections/1.Introduction} \newpage
-%\input{Sections/2.Relatedwork} \newpage
-%\input{Sections/3.Architecture} \newpage
-%\input{Sections/4.Methodology} \newpage
-%\input{Sections/5.Evaluation} \newpage
-%\input{Sections/6.Conclusion} \newpage
+\input{Sections/1.Introduction} \newpage
+\input{Sections/2.Relatedwork} \newpage
+\input{Sections/3.Architecture} \newpage
+\input{Sections/4.Methodology} \newpage
+\input{Sections/5.Evaluation} \newpage
+\input{Sections/6.Conclusion} \newpage
 
 
 % ====================================================
@@ -156,10 +151,10 @@
 
 \iftoggle{toc-use-cn} % 使用中文
 {\addcontentsline{toc}{chapter}{參考文獻}
-\renewcommand{\bibname}{參考文獻}}
+\renewcommand{\bibname}{參考文獻}} 
 {\addcontentsline{toc}{chapter}{References}
 \renewcommand{\bibname}{References}
-}
+} 
 
 
 \bibliographystyle{IEEEtran}
@@ -168,12 +163,12 @@
 }
 
 
-% 14. 附錄 Appendix (用不到可以直接註解)
+% 14. 附錄 Appendix (有需要再刪除註解 & 編輯該檔案)
 %\input{Sections/appendix} \newpage
 
 
 % =========================================
-% [113年2月19日後上傳圖書館博碩士論文系統者適用]
+% [113年2月19日後上傳圖書館博碩士論文系統者適用] 
 % 15. 學位論文發表形式確認書
 % 16. 著作彙編之學位論文資訊及彙編學術著作之共同作者貢獻聲明書
 % 這兩個不用附在論文PDF檔裡面
@@ -183,7 +178,7 @@
 
 % [心得感想]
 % 畢業論文有使用到"就學期間發表"的論文, 就要填寫. 畢業後才刊登論文, 就屬於"不是".
-% 對博士生來說, 在學期間可能發表很多篇論文, 可以放在畢業論文裡, 只是要記得填寫著作彙編的表格.
+% 對博士生來說, 在學期間可能發表很多篇論文, 可以放在畢業論文裡, 只是要記得填寫著作彙編的表格. 
 
 % 著作彙編的說明
 % https://ethics.moe.edu.tw/resource/epaper/html/27/
