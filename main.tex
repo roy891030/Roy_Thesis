@@ -153,12 +153,11 @@
 % ====================================================
 % 12. 論文正文, 可以每個章節一個.tex檔案
 % put your statements in the following
-\input{Sections/1.Introduction} \newpage
-\input{Sections/2.Relatedwork} \newpage
-\input{Sections/3.Architecture} \newpage
-\input{Sections/4.Methodology} \newpage
-\input{Sections/5.Evaluation} \newpage
-\input{Sections/6.Conclusion} \newpage
+\input{Sections/1.Introduction} \newpage      % 第一章：緒論
+\input{Sections/2.Relatedwork} \newpage       % 第二章：文獻回顧
+\input{Sections/3.Architecture} \newpage      % 第三章：實驗設計
+\input{Sections/4.Methodology} \newpage       % 第四章：實驗結果
+\input{Sections/6.Conclusion} \newpage        % 第五章：結論
 
 
 % ====================================================
@@ -180,8 +179,10 @@
 }
 
 
-% 14. 附錄 Appendix (有需要再刪除註解 & 編輯該檔案)
-%\input{Sections/appendix} \newpage
+% 14. 附錄 Appendix
+\appendix
+\input{Sections/appendixA} \newpage  % 附錄 A：詳細表格與補充圖表
+\input{Sections/appendixB} \newpage  % 附錄 B：詳細模型設計程式碼
 
 
 % =========================================

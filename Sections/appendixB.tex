@@ -1,0 +1,88 @@
+\chapter{詳細模型設計程式碼}
+\label{appendix:code}
+
+% 附錄 B：放置關鍵的程式碼片段
+
+\section{LSTM 模型實作}
+\label{appendix:lstm_code}
+
+% 在此放置 LSTM 模型的關鍵程式碼
+
+以下為 LSTM 模型的 PyTorch 實作範例：
+
+\begin{lstlisting}[language=Python, caption=LSTM 模型架構]
+import torch
+import torch.nn as nn
+
+class LSTMModel(nn.Module):
+    def __init__(self, input_dim, hidden_dim, num_layers):
+        super(LSTMModel, self).__init__()
+        self.lstm = nn.LSTM(input_dim, hidden_dim,
+                           num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_dim, 1)
+
+    def forward(self, x):
+        lstm_out, _ = self.lstm(x)
+        predictions = self.fc(lstm_out[:, -1, :])
+        return predictions
+\end{lstlisting}
+
+（可根據實際程式碼調整）
+
+\section{GAT 模型實作}
+\label{appendix:gat_code}
+
+% 在此放置 GAT 模型的關鍵程式碼
+
+以下為 GAT 模型的關鍵實作：
+
+\begin{lstlisting}[language=Python, caption=GAT 模型架構]
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class GATLayer(nn.Module):
+    def __init__(self, in_features, out_features, heads=8):
+        super(GATLayer, self).__init__()
+        # GAT implementation
+        # (根據實際實作填寫)
+        pass
+
+    def forward(self, x, adj):
+        # Attention mechanism
+        # (根據實際實作填寫)
+        pass
+\end{lstlisting}
+
+（可根據實際程式碼調整）
+
+\section{DMFM 模型實作}
+\label{appendix:dmfm_code}
+
+% 在此放置 DMFM 模型的關鍵程式碼
+
+以下為 DMFM 提案模型的實作：
+
+\begin{lstlisting}[language=Python, caption=DMFM 模型架構]
+# DMFM model implementation
+# (根據實際實作填寫)
+\end{lstlisting}
+
+（可根據實際程式碼調整）
+
+\section{資料預處理程式碼}
+\label{appendix:preprocessing_code}
+
+% 在此放置資料預處理的關鍵程式碼
+
+\begin{lstlisting}[language=Python, caption=資料預處理流程]
+import pandas as pd
+import numpy as np
+
+def preprocess_data(df):
+    # Data preprocessing steps
+    # (根據實際實作填寫)
+    pass
+\end{lstlisting}
+
+（可根據實際程式碼調整）
