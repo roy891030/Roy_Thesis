@@ -103,6 +103,11 @@ Style2*=\tiny$\blacksquare$ ,Style3*=$\circ$ ,Style4*=-- )
 \usepackage{titlesec}
 \usepackage{titletoc}
 
+% 調整章節標題與頁面頂部的距離
+\titlespacing*{\chapter}{0pt}{-30pt}{40pt}
+% 參數說明：{左縮排}{頂部間距}{標題後間距}
+% -30pt 表示向上移動 30pt（數字越小越靠近頂部）
+
 % 自訂語法
 \usepackage{etoolbox}
 \newtoggle{toc-use-cn}
