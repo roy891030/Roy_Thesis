@@ -3,9 +3,10 @@
 
 \usepackage[no-math]{fontspec}   %加這個就可以設定字體 
 
-\usepackage{xeCJK}       %讓中英文字體分開設置 
+\usepackage{xeCJK}       %讓中英文字體分開設置
 \usepackage[UTF8,fontset=none,scheme=plain]{ctex}
-\setCJKmainfont[AutoFakeBold={4}, AutoFakeSlant=0.2]{TW-Kai}
+% Mac 使用內建楷體，如果編譯失敗可改用 Songti TC 或 PingFang TC
+\setCJKmainfont[AutoFakeBold={4}, AutoFakeSlant=0.2]{Kaiti TC}
 %\setmainfont{Times New Roman}
 
 \usepackage[T1]{fontenc}
