@@ -4,7 +4,7 @@
         \parbox[b][\paperheight]{\paperwidth}{%
             \vfill
             \centering
-            {\includegraphics[scale=0.65]{covers/logo2.pdf}}%
+            {\includegraphics[scale=0.5]{covers/logo2.pdf}}%
             \vfill
         }
     }
@@ -18,9 +18,9 @@
 % 如果論文標題太長的話, 可以修改下面的標題字型大小
 % 預設是LARGE, 可以換成其他比較小的語法
 % 大小依序為: LARGE > Large > large > normalsize
-    \begin{minipage}[t][5cm][t]{\textwidth}
-        \centering \LARGE \chineseTitle \\[0.5cm]
-        \centering \LARGE \englishTitle \\
+    \begin{minipage}[t][4cm][t]{\textwidth}
+        \centering \large \chineseTitle \\[0.1cm]
+        \centering \large \englishTitle \\
     \end{minipage}
   
     \fontsize{14}{14}\selectfont{
@@ -41,11 +41,12 @@
 
 
 
-    \vspace{1.8cm}
+    \vspace{1cm}
 
     \fontsize{14}{14}\selectfont{
     A \iftoggle{iamphd}{Dissertation}{Thesis} ~\\
     Submitted to \NameofDepartmentInstituteEN \\
+    \NameofDepartmentEN \\
     \NameofCollegeEN \\
     National Yang Ming Chiao Tung University \\
     in partial Fulfillment of the Requirements \\

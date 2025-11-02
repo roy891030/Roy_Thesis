@@ -5,7 +5,7 @@
 %xelatex -synctex=1 -shell-escape -interaction=nonstopmode main.tex
 
 % 即時查看現在 pdf 預覽
-%latexmk -xelatex -pvc main.tex
+%/usr/local/texlive/2025/bin/universal-darwin/latexmk -xelatex -pvc main.tex
 
 
 % update date: 2024.09.04
@@ -30,8 +30,9 @@
 %\toggletrue{iamphd}
 
 % 論文名稱
-\newcommand{\chineseTitle}{圖神經網絡的多因子選股模型}
-\newcommand{\englishTitle}{Graph Neural Networks for Multi-Factor Stock Selection}
+\newcommand{\chineseTitle}{基於圖神經網絡的股票收益預測與選股策略 — 融合市場結構的多因子模型}
+\newcommand{\englishTitle}{Stock Return Prediction and Selection via 
+        Graph Neural Networks: Integrating Market Structure into a Multi-Factor Model}
 % 論文名稱太長的話, 可以修改covers/inside_var.tex 的顯示語法, 詳情寫在那邊
 
 % 自己的名字 (英文名字有兩種寫法, 一個是姓在後, 一個是放前面還有逗號. )
@@ -63,7 +64,9 @@
 \newcommand{\NameofCollegeCN}{管理學院} % 這個其實沒用到, 不過為了一致還是放進來
 \newcommand{\NameofCollegeEN}{College of Management}
 \newcommand{\NameofDepartmentInstituteCN}{資訊管理與財務金融學系財務金融碩士班} % 系所名稱, 請看下方[說明1]
-\newcommand{\NameofDepartmentInstituteEN}{Graduate Program of Finance, Department of Information Management and Finance}
+\newcommand{\NameofDepartmentInstituteEN}{Graduate Program of Finance}
+\newcommand{\NameofDepartmentCN}{資訊管理與財務金融學系}
+\newcommand{\NameofDepartmentEN}{Department of Information Management and Finance}
 \newcommand{\NameofDegree}{Master of Science} % 學位名稱, 常見的是Master of Science, 不同系所採用不同寫法, 記得查學校的資料.
 \newcommand{\ResearchTopic}{Finance} % 研究領域, 請看下方[說明2]
 
@@ -103,16 +106,16 @@
 % ====================================================
 % 書名頁起至最後一頁皆須加入浮水印
 % 目前語法不知道怎麼設定透明度, 就直接放刷淡的圖片放在頁面中央
-\AddToShipoutPicture{
-    \put(-5,-15){
-        \parbox[b][\paperheight]{\paperwidth}{%
-            \vfill
-            \centering
-            {\includegraphics[scale=0.65]{covers/logo2.pdf}}%
-            \vfill
-        }
-    }
-}
+%\AddToShipoutPicture{
+%    \put(-5,-15){
+%        \parbox[b][\paperheight]{\paperwidth}{%
+%            \vfill
+%            \centering
+%            {\includegraphics[scale=0.10]{covers/logo2.pdf}}%
+%            \vfill
+%        }
+%    }
+%}
 
 % ====================================================
 
