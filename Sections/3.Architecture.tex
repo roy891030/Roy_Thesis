@@ -1,44 +1,83 @@
-\chapter{System Model}
-\label{ch:architecture}
+\chapter{實驗設計}
+\label{ch:experiment_design}
 
-如果想在latex裡面插入表格, 可以搜尋latex table generator, 有很多線上網站可以參考. 我個人都是使用線上網站去產生大致的語法, 然後再根據個人喜好去做微調, wikibook有很多資料可以參考, 網址在這邊: https://en.wikibooks.org/wiki/LaTeX/Tables
+% 本章介紹實驗的完整設計，包含資料、特徵、模型、損失函數與評估指標
 
-如果要引用表格, 記得在table裡加上label的語法, 然後就可以呼叫 Tab~\ref{tab1}, 寫中文的就是表~\ref{tab1}. 通常Table的caption是寫在表格的上面, 圖片則是放在下面.
+\section{資料來源與預處理}
+\label{sec:data}
 
-\begin{table}[!ht]
-    \centering
-    \caption{This is a table.}
-    \label{tab1}
-    \begin{tabular}{|l|l|l|l|}
-    \hline
-        A & 1 & 4 & 7 \\ \hline
-        B & 2 & 5 & 8 \\ \hline
-        C & 3 & 6 & 9 \\ \hline
-    \end{tabular}
-\end{table}
+% 在此撰寫：
+% - 資料來源（台股/美股、時間範圍）
+% - 資料欄位（OHLCV、技術指標等）
+% - 預處理步驟（缺失值處理、標準化等）
+% - 訓練/驗證/測試集劃分
 
-後來在圖書館的``2022 研究攻略營 論文寫作實戰技巧(顏安孜老師)''看到另一種作法，網址: http://bit.ly/3yE06Hx
+（此處撰寫資料來源與預處理內容）
 
-裡面的講義有提到Excel2LaTeX，細節可以去看圖書館的連結，裡面有放講義，下方是顏安孜老師的講義截圖
+\section{特徵工程與圖結構}
+\label{sec:features}
 
-\begin{figure}[htb]
-	\centering
-	\includegraphics[width=0.8\textwidth]{img/excel2latex.png}
-	\caption{Excel2LaTeX.}
-	\label{fig:excel2latex}
-\end{figure}
+% 在此撰寫：
+% - 技術指標特徵
+% - 產業圖的建構方法
+% - 市場圖的建構方法
+% - 圖的鄰接矩陣設計
 
+（此處撰寫特徵工程與圖結構內容）
 
-\begin{table} [h]
-\centering
-\caption{Comparison on model efficiency and model size.}
-\begin{tabular}{c|c|c}
-\toprule[1.25pt]
-Model   & {Training \& Test }  & {Model Size }      \\ 
-\midrule
-LTD-GCN   & \textbf{11ms}    \& \textbf{4.5ms}       & 2.50M             \& 2.50M     \\ 
-LTD-GCN-i & \underline{13ms} \& \underline{4.6ms}    & 2.75M             \& 2.76M     \\  
-\bottomrule[1.25pt]
-\end{tabular}
-\label{table:model_com}
-\end{table}
+\section{模型設計}
+\label{sec:models}
+
+本研究設計三種模型進行對比實驗：LSTM 模型、GAT 模型與 DMFM 提案模型。
+
+\subsection{LSTM 模型}
+\label{subsec:lstm_model}
+
+% 在此撰寫：
+% - LSTM 架構設計
+% - 輸入輸出格式
+% - 超參數設定
+
+（此處撰寫 LSTM 模型內容）
+
+\subsection{GAT 模型}
+\label{subsec:gat_model}
+
+% 在此撰寫：
+% - GAT 架構設計
+% - 注意力機制
+% - 多頭注意力設定
+% - 超參數設定
+
+（此處撰寫 GAT 模型內容）
+
+\subsection{DMFM 提案模型}
+\label{subsec:dmfm_model}
+
+% 在此撰寫：
+% - DMFM (Dynamic Multi-Factor Model) 架構
+% - 與 GAT 的差異
+% - 動態因子選擇機制
+% - 超參數設定
+
+（此處撰寫 DMFM 提案模型內容）
+
+\section{損失函數}
+\label{sec:loss}
+
+% 在此撰寫：
+% - 使用的損失函數（MSE, MAE 等）
+% - 損失函數的選擇理由
+% - 優化器與學習率設定
+
+（此處撰寫損失函數內容）
+
+\section{評估指標}
+\label{sec:metrics}
+
+% 在此撰寫：
+% - 預測準確度指標（RMSE, MAE, R² 等）
+% - 投資組合績效指標（Sharpe Ratio, 年化報酬率、最大回撤等）
+% - 評估方法說明
+
+（此處撰寫評估指標內容）
