@@ -1,83 +1,204 @@
+% 請確保在 main.tex 或 preamble 中已載入以下套件:
+% \usepackage{algorithm}
+% \usepackage{algpseudocode}
+% \usepackage{amsmath}
+% \usepackage{booktabs}
+
 \chapter{實驗設計}
 \label{ch:experiment_design}
 
-% 本章介紹實驗的完整設計，包含資料、特徵、模型、損失函數與評估指標
+本章詳細介紹實驗的完整設計，包含資料來源與預處理、特徵工程與圖結構建構、模型架構設計等。實驗旨在驗證 Deep Multi-Factor Model (DMFM) 在台灣股票市場預測的有效性，並與時間序列基準模型進行對比分析。
 
 \section{資料來源與預處理}
 \label{sec:data}
 
-% 在此撰寫：
-% - 資料來源（台股/美股、時間範圍）
-% - 資料欄位（OHLCV、技術指標等）
-% - 預處理步驟（缺失值處理、標準化等）
-% - 訓練/驗證/測試集劃分
+\subsection{資料來源}
+本研究使用台灣股票市場資料，時間範圍涵蓋 2019 年第三季至 2025 年第三季，共計約 6 年的交易資料，涵蓋約 771 檔股票。資料集包含以下主要欄位:
 
-（此處撰寫資料來源與預處理內容）
+\begin{itemize}
+    \item \textbf{價格資料}: 開盤價 (Open)、最高價 (High)、最低價 (Low)、收盤價 (Close)、成交量 (Volume)
+    \item \textbf{估值指標}: 本益比 (P/E Ratio)、股價淨值比 (P/B Ratio)、股價營收比 (P/S Ratio)
+    \item \textbf{技術指標}: 移動平均線 (MA)、相對強弱指標 (RSI)、布林通道 (Bollinger Bands)、MACD 等
+    \item \textbf{產業分類}: TEJ 產業代碼與名稱，用於建構產業關聯圖
+\end{itemize}
+
+資料來源包括台灣經濟新報 (TEJ) 資料庫與公開市場資訊，確保資料的準確性與完整性。
+
+\subsection{資料預處理}
+
+資料預處理是確保模型訓練品質的關鍵步驟，本研究採用的預處理流程如演算法 \ref{alg:preprocessing} 所示。
+
+\begin{algorithm}[htbp]
+\caption{資料預處理流程}
+\label{alg:preprocessing}
+\begin{algorithmic}[1]
+\State 讀取原始股票資料 (OHLCV， 技術指標， 估值指標)
+\State 移除缺失值以 0 填補 \Comment{避免資料洩漏}
+\State 計算標籤: $y_t = \frac{P_{t+k} - P_t}{P_t}$ \Comment{$k$ 日未來報酬率}
+\State 建構產業圖鄰接矩陣 $E_{ind}$
+\State 建構全市場圖鄰接矩陣 $E_{uni}$
+\State 儲存為 PyTorch tensor 格式
+\State {特徵標準化由模型內部的 BatchNorm 完成}
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{缺失值處理}
+
+為確保模型輸入的穩定性，本研究採用簡潔的缺失值處理策略:對所有缺失值以 0 填補。此方法在金融時間序列預測中廣泛使用，既能保留資料結構，又能避免引入額外假設。相較於複雜的插補方法，零填補不會造成資料洩漏 (data leakage)，符合實際交易情境。
+
+\subsubsection{特徵標準化}
+
+不同於傳統做法在資料預處理階段進行 Z-score 標準化，本研究遵循 Wei et al. (2022) 的設計，在模型內部使用 \textbf{Batch Normalization} 進行特徵標準化:
+
+\begin{equation}
+x_{normalized} = \frac{x - \mu_{batch}}{\sqrt{\sigma^2_{batch} + \epsilon}}
+\label{eq:batchnorm}
+\end{equation}
+
+其中 $\mu_{batch}$ 與 $\sigma^2_{batch}$ 為當前 mini-batch 的均值與變異數，$\epsilon$ 為數值穩定項 (通常設為 $10^{-5}$)。
+
+此設計具有以下優勢:
+
+\begin{itemize}
+    \item \textbf{動態標準化}: 每個 batch 獨立計算統計量，適應市場環境變化
+    \item \textbf{訓練穩定性}: BatchNorm 有助於梯度流動，加速收斂
+    \item \textbf{正則化效果}: 訓練時的 mini-batch 隨機性提供額外正則化
+    \item \textbf{等價性}: Wei et al. (2022) 指出，BatchNorm 在金融時間序列建模中等價於截面標準化 (cross-sectional normalization)
+\end{itemize}
+
+\subsubsection{標籤定義}
+
+本研究預測未來 $k$ 日的報酬率，標籤定義為:
+
+\begin{equation}
+y_t = \frac{P_{t+k} - P_t}{P_t}
+\label{eq:return}
+\end{equation}
+
+其中 $P_t$ 為時間 $t$ 的收盤價，$k$ 為預測視窗 (本研究設定為 5，即預測未來 5 日報酬率)。此定義方式符合金融實務，直接對應投資報酬率。
+
+\subsection{資料集劃分}
+
+考慮金融時間序列的時序特性，本研究採用時間序列劃分方式，將資料依 80:20 比例切分為訓練集與測試集:
+
+\begin{itemize}
+    \item \textbf{訓練集}: 前 80\% 時間點的資料 (約 1，168 個交易日)，用於模型參數學習
+    \item \textbf{測試集}: 後 20\% 時間點的資料 (約 292 個交易日)，用於評估模型泛化能力
+\end{itemize}
+
+此劃分方式嚴格遵守時間順序，確保模型訓練時不會使用未來資訊 (look-ahead bias)，符合實際交易情境。
 
 \section{特徵工程與圖結構}
 \label{sec:features}
 
-% 在此撰寫：
-% - 技術指標特徵
-% - 產業圖的建構方法
-% - 市場圖的建構方法
-% - 圖的鄰接矩陣設計
+\subsection{特徵選取與分類}
 
-（此處撰寫特徵工程與圖結構內容）
+本研究選用 56 個技術指標與估值特徵，涵蓋動量、波動率、成交量、技術指標、統計特性等面向，詳細分類如表 \ref{tab:features} 所示。
+
+\begin{table}[htbp]
+\centering
+\caption{特徵分類與說明}
+\label{tab:features}
+\begin{tabular}{llp{6cm}}
+\toprule
+\textbf{類別} & \textbf{代表特徵} & \textbf{說明} \\
+\midrule
+動量類 & ret\_1， ret\_5， ret\_10， ret\_20， mom\_diff\_10/20 & 不同時間窗口的價格報酬率與動量差 \\
+移動平均 & px\_over\_sma\_5/10/20/60 & 價格相對於移動平均的偏離度 \\
+波動率 & std\_ret\_5/10/20/60， atr\_14 & 報酬率標準差與平均真實波幅 \\
+成交量 & vol\_over\_ma\_5/10/20/60 & 成交量相對於均值的偏離度 \\
+技術指標 & rsi\_14， macd， stoch\_k/d & 常用技術分析指標 \\
+統計特性 & skew\_20， kurt\_20， zscore\_close & 報酬率分布的偏度、峰度與 Z-score \\
+反轉 & rev\_1/5/10 & 短期價格反轉指標 \\
+極值 & roll\_max/min\_5/10/20/60 & 滾動窗口的最高/最低價 \\
+流動性 & amihud\_5/20 & Amihud 非流動性指標 \\
+估值 & pb， ps & 股價淨值比、股價營收比 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\subsection{圖結構設計}
+
+\subsubsection{產業圖 (Industry Graph)}
+
+\subsubsection{全市場圖 (Universe Graph)}
+
+\subsubsection{鄰接矩陣表示}
+
+\subsection{圖結構的建構流程}
+
 
 \section{模型設計}
 \label{sec:models}
 
-本研究設計三種模型進行對比實驗：LSTM 模型、GAT 模型與 DMFM 提案模型。
+\subsection{LSTM 基準模型}
+\label{subsec:lstm_baseline}
 
-\subsection{LSTM 模型}
-\label{subsec:lstm_model}
+\subsubsection{模型架構}
 
-% 在此撰寫：
-% - LSTM 架構設計
-% - 輸入輸出格式
-% - 超參數設定
+\subsubsection{超參數配置}
 
-（此處撰寫 LSTM 模型內容）
+\subsubsection{與 DMFM 的差異}
 
-\subsection{GAT 模型}
-\label{subsec:gat_model}
-
-% 在此撰寫：
-% - GAT 架構設計
-% - 注意力機制
-% - 多頭注意力設定
-% - 超參數設定
-
-（此處撰寫 GAT 模型內容）
-
-\subsection{DMFM 提案模型}
+\subsection{DMFM 模型架構（Wei et al. 2022）}
 \label{subsec:dmfm_model}
 
-% 在此撰寫：
-% - DMFM (Dynamic Multi-Factor Model) 架構
-% - 與 GAT 的差異
-% - 動態因子選擇機制
-% - 超參數設定
+\subsubsection{整體架構概覽}
 
-（此處撰寫 DMFM 提案模型內容）
+\subsubsection{步驟 1: 特徵編碼器}
+
+\subsubsection{步驟 2: 產業中性化 (Industry Neutralization)}
+
+\subsubsection{步驟 3: 全市場中性化 (Universe Neutralization)}
+
+\subsubsection{步驟 4: 階層式特徵拼接}
+
+\subsubsection{步驟 5: 深度因子學習}
+
+\subsubsection{步驟 6: 因子注意力模組（解釋性）}
+
+\subsubsection{超參數配置}
 
 \section{損失函數}
 \label{sec:loss}
 
-% 在此撰寫：
-% - 使用的損失函數（MSE, MAE 等）
-% - 損失函數的選擇理由
-% - 優化器與學習率設定
+\subsection{總損失函數}
 
-（此處撰寫損失函數內容）
+\subsection{Information Coefficient (IC)}
+
+\subsection{優化器設定}
+
 
 \section{評估指標}
 \label{sec:metrics}
 
-% 在此撰寫：
-% - 預測準確度指標（RMSE, MAE, R² 等）
-% - 投資組合績效指標（Sharpe Ratio, 年化報酬率、最大回撤等）
-% - 評估方法說明
+\subsection{預測準確度指標}
 
-（此處撰寫評估指標內容）
+\subsubsection{Information Coefficient (IC)}
+
+\subsubsection{IC Information Ratio (ICIR)}
+
+\subsubsection{產業中性 IC (Industry-Neutral IC)}
+
+\subsubsection{方向準確率 (Directional Accuracy)}
+
+\subsubsection{均方誤差指標 (MSE， RMSE， MAE)}
+
+\subsection{投資組合績效指標}
+
+\subsubsection{年化報酬率 (Annualized Return)}
+
+\subsubsection{Sharpe Ratio}
+
+\subsubsection{最大回撤 (Maximum Drawdown)}
+
+\subsubsection{勝率 (Win Rate)}
+
+\subsection{基準比較}
+
+\subsubsection{LSTM 基準}
+
+\subsubsection{台灣 50 ETF 基準}
+
+\subsection{評估流程}
