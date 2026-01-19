@@ -20,6 +20,11 @@
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{longtable} % 54 個變數表需要跨頁
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{array}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
 % 載入會用到的套件, 通常不需要修改這邊的資料
 \input{covers/load_env.tex} 
 
@@ -183,9 +188,9 @@
 }
 
 
-% 14. 附錄 Appendix（本論文無附錄）
-% \appendix
-% \input{Sections/appendix} \newpage
+% 14. 附錄 Appendix
+\appendix
+\input{Sections/appendix} \newpage
 
 
 % =========================================

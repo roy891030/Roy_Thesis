@@ -3,4 +3,100 @@
 \chapter{Appendix 附錄}
 \label{ch:appendix}
 
-附錄資料
+本附錄彙整本研究模型輸入特徵之完整清單。
+
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{p{3.1cm} p{2.6cm} p{7.4cm} p{1.6cm}}
+\caption{本研究實際使用之模型輸入特徵（\texttt{feature\_cols}，共 54 項；全部由 TEJ 原始欄位衍生）}
+\label{tab:feature_cols_54_full}\\
+\toprule
+\textbf{特徵名稱} & \textbf{類別} & \textbf{定義（由 TEJ 欄位計算）} & \textbf{視窗} \\
+\midrule
+\endfirsthead
+
+\toprule
+\textbf{特徵名稱} & \textbf{類別} & \textbf{定義（由 TEJ 欄位計算）} & \textbf{視窗} \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{4}{r}{（續下頁）}\\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+ret\_1  & 報酬 & $P_t/P_{t-1}-1$，其中 $P_t$ 為 TEJ 收盤價(元) & 1 \\
+ret\_3  & 報酬 & $P_t/P_{t-3}-1$（TEJ 收盤價） & 3 \\
+ret\_5  & 報酬 & $P_t/P_{t-5}-1$（TEJ 收盤價） & 5 \\
+ret\_10 & 報酬 & $P_t/P_{t-10}-1$（TEJ 收盤價） & 10 \\
+ret\_20 & 報酬 & $P_t/P_{t-20}-1$（TEJ 收盤價） & 20 \\
+
+rev\_1  & 反轉 & $-\texttt{ret\_1}$（由 TEJ 收盤價衍生） & 1 \\
+rev\_5  & 反轉 & $-\texttt{ret\_5}$（由 TEJ 收盤價衍生） & 5 \\
+rev\_10 & 反轉 & $-\texttt{ret\_10}$（由 TEJ 收盤價衍生） & 10 \\
+
+px\_over\_sma\_5  & 趨勢 & $P_t/\text{SMA}_5(P)_t-1$（TEJ 收盤價） & 5 \\
+px\_over\_sma\_10 & 趨勢 & $P_t/\text{SMA}_{10}(P)_t-1$（TEJ 收盤價） & 10 \\
+px\_over\_sma\_20 & 趨勢 & $P_t/\text{SMA}_{20}(P)_t-1$（TEJ 收盤價） & 20 \\
+px\_over\_sma\_60 & 趨勢 & $P_t/\text{SMA}_{60}(P)_t-1$（TEJ 收盤價） & 60 \\
+
+mom\_diff\_10 & 動能差 & $\texttt{ret\_10}-\texttt{ret\_1}$（由 TEJ 收盤價衍生） & -- \\
+mom\_diff\_20 & 動能差 & $\texttt{ret\_20}-\texttt{ret\_1}$（由 TEJ 收盤價衍生） & -- \\
+
+std\_ret\_5  & 波動 & $\text{Std}(r_{t-4},\ldots,r_t)$，$r_t$ 由 TEJ 收盤價計算 & 5 \\
+std\_ret\_10 & 波動 & $\text{Std}(r_{t-9},\ldots,r_t)$（TEJ 收盤價） & 10 \\
+std\_ret\_20 & 波動 & $\text{Std}(r_{t-19},\ldots,r_t)$（TEJ 收盤價） & 20 \\
+std\_ret\_60 & 波動 & $\text{Std}(r_{t-59},\ldots,r_t)$（TEJ 收盤價） & 60 \\
+
+skew\_20 & 分配 & 20 日報酬偏度（由 TEJ 收盤價計算之 $r_t$） & 20 \\
+kurt\_20 & 分配 & 20 日報酬峰度（由 TEJ 收盤價計算之 $r_t$） & 20 \\
+
+vol\_over\_ma\_5  & 量能 & $V_t/\text{SMA}_5(V)_t-1$，$V_t$ 為 TEJ 成交量(千股) & 5 \\
+vol\_over\_ma\_10 & 量能 & $V_t/\text{SMA}_{10}(V)_t-1$（TEJ 成交量） & 10 \\
+vol\_over\_ma\_20 & 量能 & $V_t/\text{SMA}_{20}(V)_t-1$（TEJ 成交量） & 20 \\
+vol\_over\_ma\_60 & 量能 & $V_t/\text{SMA}_{60}(V)_t-1$（TEJ 成交量） & 60 \\
+
+up\_vol\_20 & 量能 & 20 日內上漲日平均量：$\frac{\sum V\,\mathbb{I}(r>0)}{\sum \mathbb{I}(r>0)+\varepsilon}$（TEJ 成交量、TEJ 收盤價計算 $r$） & 20 \\
+down\_vol\_20 & 量能 & 20 日內下跌日平均量：$\frac{\sum V\,\mathbb{I}(r<0)}{\sum \mathbb{I}(r<0)+\varepsilon}$（TEJ 成交量、TEJ 收盤價計算 $r$） & 20 \\
+
+amihud\_5  & 流動性 & Amihud illiquidity：$\frac{1}{5}\sum \frac{|r|}{\text{Amt}+\varepsilon}$，Amt 為 TEJ 成交值(千元) & 5 \\
+amihud\_20 & 流動性 & 同上（TEJ 成交值、TEJ 收盤價計算 $r$） & 20 \\
+
+rsi\_14 & 技術指標 & RSI（TA-Lib 預設參數；由 TEJ 收盤價計算） & 14 \\
+stoch\_k\_14 & 技術指標 & Stochastic \%K（TA-Lib 預設；由 TEJ 最高/最低/收盤價計算） & 14 \\
+stoch\_d\_3  & 技術指標 & Stochastic \%D（\%K 的平滑；TA-Lib 預設） & 3 \\
+macd & 技術指標 & MACD 主線（TA-Lib 預設；由 TEJ 收盤價計算） & -- \\
+macd\_signal & 技術指標 & MACD 訊號線（TA-Lib 預設） & -- \\
+macd\_hist & 技術指標 & MACD 柱狀差（\texttt{macd}-\texttt{macd\_signal}） & -- \\
+
+atr\_14 & 風險 & ATR（Average True Range；由 TEJ 最高/最低/收盤價計算） & 14 \\
+mdd\_20 & 風險 & 20 日最大回撤：$\max_{\tau\le t}\left(\frac{\max P - P}{\max P}\right)$（TEJ 收盤價） & 20 \\
+
+beta\_60 & 風險 & 60 日 rolling beta（由 TEJ 資料計算）：以個股日報酬 $r_{i,t}$ 對市場日報酬 $r_{m,t}$ 做 OLS，$\beta=\frac{\text{Cov}(r_i,r_m)}{\text{Var}(r_m)}$。本研究之市場報酬 $r_{m,t}$ 使用 TEJ 匯出之 0050（證券代碼 0050）收盤價計算日報酬。 & 60 \\
+idio\_vol\_60 & 風險 & 60 日特質波動：上述 rolling 回歸殘差 $\varepsilon_{i,t}$ 的標準差 $\text{Std}(\varepsilon)$。回歸所用市場報酬同 \texttt{beta\_60}，亦由 TEJ 匯出之 0050 收盤價計算。 & 60 \\
+
+roll\_max\_5  & 區間極值 & 5 日 rolling maximum：$\max(P_{t-4},\ldots,P_t)$（TEJ 收盤價） & 5 \\
+roll\_min\_5  & 區間極值 & 5 日 rolling minimum：$\min(P_{t-4},\ldots,P_t)$（TEJ 收盤價） & 5 \\
+pct\_pos\_5   & 區間位置 & $\frac{P_t-\texttt{roll\_min\_5}}{\texttt{roll\_max\_5}-\texttt{roll\_min\_5}+\varepsilon}$（TEJ 收盤價） & 5 \\
+
+roll\_max\_10 & 區間極值 & 10 日 rolling maximum（TEJ 收盤價） & 10 \\
+roll\_min\_10 & 區間極值 & 10 日 rolling minimum（TEJ 收盤價） & 10 \\
+pct\_pos\_10  & 區間位置 & $\frac{P_t-\texttt{roll\_min\_10}}{\texttt{roll\_max\_10}-\texttt{roll\_min\_10}+\varepsilon}$（TEJ 收盤價） & 10 \\
+
+roll\_max\_20 & 區間極值 & 20 日 rolling maximum（TEJ 收盤價） & 20 \\
+roll\_min\_20 & 區間極值 & 20 日 rolling minimum（TEJ 收盤價） & 20 \\
+pct\_pos\_20  & 區間位置 & $\frac{P_t-\texttt{roll\_min\_20}}{\texttt{roll\_max\_20}-\texttt{roll\_min\_20}+\varepsilon}$（TEJ 收盤價） & 20 \\
+
+roll\_max\_60 & 區間極值 & 60 日 rolling maximum（TEJ 收盤價） & 60 \\
+roll\_min\_60 & 區間極值 & 60 日 rolling minimum（TEJ 收盤價） & 60 \\
+pct\_pos\_60  & 區間位置 & $\frac{P_t-\texttt{roll\_min\_60}}{\texttt{roll\_max\_60}-\texttt{roll\_min\_60}+\varepsilon}$（TEJ 收盤價） & 60 \\
+
+pct\_to\_high\_20 & 位置差距 & 距 20 日高點比例：$\frac{P_t}{\texttt{roll\_max\_20}}-1$（TEJ 收盤價） & 20 \\
+pct\_to\_low\_20  & 位置差距 & 距 20 日低點比例：$\frac{P_t}{\texttt{roll\_min\_20}}-1$（TEJ 收盤價） & 20 \\
+
+zscore\_close\_20 & 標準化 & 20 日 z-score：$\frac{P_t-\mu_{20}}{\sigma_{20}+\varepsilon}$（TEJ 收盤價；$\mu,\sigma$ 為 rolling mean/std） & 20 \\
+zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60}+\varepsilon}$（TEJ 收盤價） & 60 \\
+
+\end{longtable}
+\renewcommand{\arraystretch}{1.0}

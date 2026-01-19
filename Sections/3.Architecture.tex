@@ -3,185 +3,236 @@
 % \usepackage{algpseudocode}
 % \usepackage{amsmath}
 % \usepackage{booktabs}
+% \usepackage{longtable} % 54 個變數表需要跨頁
 
 \chapter{實驗設計}
 \label{ch:experiment_design}
 
-本章詳細介紹實驗的完整設計，包含資料來源與預處理、特徵工程與圖結構建構、模型架構設計等。實驗旨在驗證 Deep Multi-Factor Model (DMFM) 在台灣股票市場預測的有效性，並與時間序列基準模型進行對比分析。
+本章說明整體實驗流程，涵蓋資料來源與預處理、特徵工程與圖結構建構、模型架構與訓練設定、損失函數與評估指標。實驗目標在於檢驗 Deep Multi-Factor Model（DMFM）於台灣股票市場之預測表現，並與基準模型進行對照。
 
+% =========================================================
 \section{資料來源與預處理}
 \label{sec:data}
-
-本研究採用單一日頻股票資料 CSV 檔作為輸入資料，資料包含每日價格與成交資訊，並同時內含產業分類欄位以利建構產業圖。程式支援中英文欄位對照，最少需具備日期、股票代碼與收盤價欄位，其餘欄位（開高低價、成交量/成交值、市值、流通股數、PB/PS 等）作為因子特徵使用。資料期間由參數 start\_date 與 end\_date 指定，並以交易日序列為主軸建立時間索引。若資料來源為 TEJ/TSE 等第三方資料庫，請在此節補充實際來源、授權或取得方式。【待補：資料來源、時間區間與股池說明】
+% =========================================================
 
 \subsection{資料來源}
-本研究使用【待補：資料來源名稱】之台灣股票市場日頻資料。資料表至少包含以下欄位：日期、股票代碼、收盤價；其餘可選欄位包含開高低價、成交量、成交值、市值、流通股數、PB/PS 與產業分類欄位（如 TEJ 產業名稱/代碼）。為確保可重現性，程式內已定義中英文欄位映射，當 CSV 欄位名稱不同時仍可正確辨識。
+\label{subsec:data_source}
+
+資料取自 \textbf{TEJ 台灣經濟新報（Taiwan Economic Journal, TEJ）}之台灣股票市場日頻資料，並以 CSV 形式匯出以供後續處理與模型訓練使用。資料以「交易日\(\times\)股票」為觀測單位，至少包含日期（Date）、股票代碼（Stock ID）與收盤價（Close）等必要欄位；同時保留開高低收（OHLC）、成交量／成交值、市值、流通股數、估值指標（如 PB、PS）與產業分類等資訊，以支援特徵建置與圖結構構建。樣本期間由參數 \texttt{start\_date} 與 \texttt{end\_date} 控制，並以台股交易日序列作為時間索引基準。
+
+除 TEJ 可直接取得之原始欄位外，模型輸入之技術特徵由價格與成交量等基礎序列計算而得；其中 RSI、MACD、KD 等指標主要透過 \texttt{TA-Lib} 套件生成，再彙整為固定的特徵集合供模型輸入。為避免於文字中重複列舉欄位與變數定義，TEJ 原始欄位彙整於表 \ref{tab:tej_raw_fields}，最終模型輸入之 54 個特徵摘要見表 \ref{tab:feature_cols_54}（完整清單見附錄表 \ref{tab:feature_cols_54_full}）。
+
+\subsection{TEJ 資料欄位與研究變數表格}
+\label{subsec:tej_variables}
+
+所有輸入資料均由 TEJ 匯出為日頻 CSV。匯出檔案包含：（1）市場交易與公司屬性之原始欄位（表 \ref{tab:tej_raw_fields}），以及（2）由程式以 TEJ 原始欄位衍生之技術特徵集合 \texttt{feature\_cols (n=54)}（表 \ref{tab:feature_cols_54}）。
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{TEJ 匯出之原始欄位（資料來源欄位）}
+\label{tab:tej_raw_fields}
+\begin{tabular}{lll}
+\toprule
+\textbf{TEJ 欄位名稱} & \textbf{用途} & \textbf{備註（單位/說明）} \\
+\midrule
+年月日 & 時間索引 & 交易日（Date）\\
+開盤價(元) & 交易價格 & Open（元）\\
+最高價(元) & 交易價格 & High（元）\\
+最低價(元) & 交易價格 & Low（元）\\
+收盤價(元) & 交易價格 & Close（元）\\
+成交量(千股) & 交易量能 & Volume（千股）\\
+成交值(千元) & 交易金額 & Amount（千元）\\
+本益比-TEJ & 估值資訊 & Price-to-Earnings（TEJ 口徑）\\
+股價淨值比-TSE & 估值資訊 & Price-to-Book（TSE 口徑）\\
+證券代碼\_純代碼 & 個股識別 & Stock ID\\
+證券名稱 & 個股識別 & 公司名稱\\
+TEJ產業\_名稱 & 產業資訊 & 產業分類（TEJ 分類；用於建構產業圖）\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{資料預處理}
+\label{subsec:preprocess}
 
-資料預處理是確保模型訓練品質的關鍵步驟，本研究採用的預處理流程如演算法 \ref{alg:preprocessing} 所示。
+資料預處理主要涵蓋資料格式統一、特徵與標籤計算、以及張量化整理，並以一致規則處理缺失值以降低訓練偏誤。整體流程如演算法 \ref{alg:preprocessing} 所示。
 
 \begin{algorithm}[htbp]
 \caption{資料預處理流程}
 \label{alg:preprocessing}
 \begin{algorithmic}[1]
-\State 讀取原始股票資料 (OHLCV，成交量/成交值，估值指標，產業分類)
-\State 依股票代碼與日期排序，數值欄位轉為數值型態
-\State 計算標籤: $y_t = \frac{P_{t+k} - P_t}{P_t}$ \Comment{$k$ 日未來報酬率}
-\State 建構產業圖鄰接矩陣 $E_{ind}$
-\State 建構全市場圖鄰接矩陣 $E_{uni}$
+\State 讀取 TEJ 匯出之日頻資料（至少包含 Date、Stock ID、Close；其餘欄位供特徵與圖結構使用）
+\State 依 Stock ID 與 Date 排序；進行日期格式與數值型態轉換，並做基本缺漏/異常檢核
+\State 依價格與量能序列計算技術特徵（含 TA-Lib 指標），形成 \texttt{feature\_cols}
+\State 計算標籤: $y_t = \frac{P_{t+k} - P_t}{P_t}$ \Comment{$k$ 日未來報酬率（forward return）}
+\State 由產業欄位建構產業圖 $E_{ind}$；由股票清單建構全市場圖 $E_{uni}$
 \State 建立特徵張量 $F^t \in \mathbb{R}^{T \times N \times F}$ 與標籤張量 $y^t \in \mathbb{R}^{T \times N}$
-\State 以 0 取代特徵中的 NaN/Inf，標籤 NaN 保留並以 mask 排除
-\State {特徵標準化由模型內部的 BatchNorm 完成}
+\State 特徵 NaN/Inf 以 0 取代；標籤 NaN 保留並於訓練/評估以 mask 排除
+\State 特徵正規化由模型端 Batch Normalization（BatchNorm）處理
 \end{algorithmic}
 \end{algorithm}
 
-\textbf{缺失值處理：}本研究不對缺失值進行插補。特徵層面，所有 NaN/Inf 以 0 取代（以保持張量完整性）；標籤層面，NaN 標籤在訓練與評估時以有效樣本 mask 排除，使模型僅學習可觀測資料。此作法可避免以非實際市場資訊填補所造成的估計偏誤。
+\textbf{缺失值處理（Missing values）：}不對缺失值進行插補，以避免引入主觀假設。特徵層面將 NaN/Inf 以 0 取代以維持張量完整性；標籤層面保留 NaN，並在訓練與評估時以有效樣本遮罩（mask）排除，使模型僅在可觀測標籤上學習。
 
-\textbf{特徵標準化：}資料前處理階段不進行截面標準化，特徵保留原始尺度。模型端在輸入層使用 \textbf{Batch Normalization} 進行正規化:
-
+\textbf{特徵標準化（Normalization）：}資料前處理階段不額外做截面標準化，特徵保留原始尺度；模型端於輸入層使用 \textbf{Batch Normalization（BatchNorm）} 進行正規化：
 \begin{equation}
 x_{normalized} = \frac{x - \mu_{batch}}{\sqrt{\sigma^2_{batch} + \epsilon}}
 \label{eq:batchnorm}
 \end{equation}
+其中 $\mu_{batch}$ 與 $\sigma^2_{batch}$ 為 mini-batch 統計量，$\epsilon$ 為數值穩定項（預設 $10^{-5}$）。
 
-其中 $\mu_{batch}$ 與 $\sigma^2_{batch}$ 為當前 mini-batch 的均值與變異數，$\epsilon$ 為數值穩定項 (通常設為 $10^{-5}$)。
-
-此設計具有以下優勢:
-
-\begin{itemize}
-    \item \textbf{動態標準化}: 每個 batch 獨立計算統計量，適應市場環境變化
-    \item \textbf{訓練穩定性}: BatchNorm 有助於梯度流動，加速收斂
-    \item \textbf{正則化效果}: 訓練時的 mini-batch 隨機性提供額外正則化
-    \item \textbf{等價性}: BatchNorm 在金融時間序列建模中可視為截面標準化的近似
-\end{itemize}
-
-\textbf{標籤定義：}標籤定義為未來 $k$ 日報酬率，公式如下:
-
+\textbf{標籤定義（Label definition）：}標籤定義為未來 $k$ 日報酬率（forward-$k$ return）：
 \begin{equation}
 y_t = \frac{P_{t+k} - P_t}{P_t}
 \label{eq:return}
 \end{equation}
-
-其中 $P_t$ 為時間 $t$ 的收盤價，$k$ 為預測視窗 (預設 $k=5$)。此定義屬於 forward return，避免使用當期或過去資料洩漏未來資訊。
+其中 $P_t$ 為時間 $t$ 收盤價，$k$ 為預測視窗（預設 $k=5$）。
 
 \subsection{資料集劃分}
+\label{subsec:split}
 
-本研究採用時間序列切分，避免未來資訊洩漏。資料以時間順序切分為訓練集與測試集，預設比例為 80\%:20\%（前 80\% 為訓練、後 20\% 為測試）。訓練過程採用 early stopping，並以測試期 ICIR 作為模型保存依據。若需更嚴謹實驗，可進一步拆出 validation set 以獨立調參。【可選補充】
+採時間序列切分以避免資訊洩漏（look-ahead bias）。資料依時間順序切分為訓練集與測試集，比例為 80\%:20\%（前 80\% 為訓練、後 20\% 為測試）。另為檢驗不同樣本長度下之穩健性，設計短期／中期／長期三種資料長度，並皆採用相同的 80\%/20\% 時間切分：
+\begin{itemize}
+    \item \textbf{短期資料：}2019-09-16 $\sim$ 2020-12-31（共 319 個交易日；訓練 255 日、測試 64 日）
+    \item \textbf{中期資料：}2019-09-16 $\sim$ 2022-12-31（共 809 個交易日；訓練 647 日、測試 162 日）
+    \item \textbf{長期資料：}2019-09-16 $\sim$ 2025-09-12（共 1460 個交易日；訓練 1168 日、測試 292 日）
+\end{itemize}
 
+% =========================================================
 \section{特徵工程與圖結構}
 \label{sec:features}
+% =========================================================
 
 \subsection{特徵選取與分類}
+\label{subsec:feature_groups}
 
-本研究特徵涵蓋多種技術面與統計面訊號，主要可分為：
-\begin{itemize}
-    \item \textbf{報酬與動能特徵}: 1/3/5/10/20 日報酬、短長動能差 (ret10$-$ret1、ret20$-$ret1)。
-    \item \textbf{趨勢特徵}: 價格相對移動平均 (5/10/20/60 日)、價格相對近 20 日高低點位置。
-    \item \textbf{波動與風險特徵}: 5/10/20/60 日報酬標準差、ATR、最大回撤 (20 日)、beta 與特質波動。
-    \item \textbf{量能特徵}: 成交量相對均值、上/下漲日平均量。
-    \item \textbf{技術指標}: RSI、KD、MACD。
-    \item \textbf{統計特徵}: 偏度、峰度、價格 z-score。
-    \item \textbf{流動性與估值}: Amihud illiquidity、PB、PS。
-\end{itemize}
-上述特徵由單一 CSV 自動衍生，不需額外外部因子資料。
+模型輸入特徵涵蓋報酬、趨勢、波動、量能、流動性與技術指標等訊號來源，並以多視窗（rolling window）構建不同時間尺度之市場資訊。各特徵之\textbf{實際使用變數名稱、定義、視窗長度與對應 TEJ 原始欄位}已於附錄表 \ref{tab:feature_cols_54_full} 完整列示。除 TEJ 匯出欄位外，技術指標部分由 \texttt{TA-Lib} 依價格與量能序列計算，不另引入外部第三方因子資料。
 
+\renewcommand{\arraystretch}{1.15}
+\begin{table}[htbp]
+\centering
+\caption{模型輸入特徵摘要（完整 54 項清單見附錄表 \ref{tab:feature_cols_54_full}）}
+\label{tab:feature_cols_54}
+\begin{tabular}{p{3.1cm} p{3.0cm} p{6.8cm} p{1.6cm}}
+\toprule
+\textbf{類別} & \textbf{代表特徵} & \textbf{定義（由 TEJ 欄位計算）} & \textbf{視窗} \\
+\midrule
+報酬 & ret & $P_t/P_{t-k}-1$（TEJ 收盤價） & 1/5/20 \\
+反轉 & rev & $-\texttt{ret}_k$（TEJ 收盤價） & 1/5/10 \\
+趨勢 & px\_over\_sma & $P_t/\text{SMA}_k(P)_t-1$（TEJ 收盤價） & 5/20/60 \\
+動能差 & mom\_diff & $\texttt{ret}_{k_1}-\texttt{ret}_{k_2}$（例如 $10-1$, $20-1$；TEJ 收盤價） & -- \\
+波動 & std\_ret & $\text{Std}(r_{t-k+1},\ldots,r_t)$（TEJ 收盤價） & 5/20/60 \\
+分配 & skew, kurt & 20 日報酬偏度/峰度（TEJ 收盤價） & 20 \\
+量能 & vol\_over\_ma & $V_t/\text{SMA}_k(V)_t-1$（TEJ 成交量） & 5/20 \\
+量能 & up\_vol, down\_vol & 上/下漲日平均量（TEJ 成交量；以日報酬正負分組） & 20 \\
+流動性 & amihud & $\frac{1}{k}\sum \frac{|r|}{\text{Amt}+\varepsilon}$（TEJ 成交值） & 5/20 \\
+技術指標 & rsi, macd, stoch\_k & RSI / MACD / KD（以 TEJ 序列由 TA-Lib 計算） & 14/20 \\
+風險 & atr, mdd & ATR（TEJ 高低收）/ 最大回撤（TEJ 收盤價） & 14/20 \\
+風險 & beta, idio\_vol & rolling beta / 特質波動（以個股與市場報酬 rolling 估計） & 60 \\
+區間極值 & roll\_max, roll\_min & rolling max/min（TEJ 收盤價） & 5/10/20/60 \\
+區間位置 & pct\_pos & $\frac{P_t-\min(P)}{\max(P)-\min(P)+\varepsilon}$（TEJ 收盤價） & 5/10/20/60 \\
+位置差距 & pct\_to\_high, pct\_to\_low & 距高/低點比例（以區間 $\max/\min$ 與 $P_t$ 計；TEJ 收盤價） & 20 \\
+標準化 & zscore\_close & $\frac{P_t-\mu_k}{\sigma_k+\varepsilon}$（TEJ 收盤價） & 20/60 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\renewcommand{\arraystretch}{1.0}
+
+\textbf{產業分類（Industry classification）：}產業欄位採用 TEJ 提供之 \texttt{TEJ產業\_名稱}。該分類於樣本期間內具相對穩定性，適合用於建構產業層級圖結構；實驗中不額外進行主觀重分群。
 
 \subsection{圖結構設計與建構流程}
-\textbf{產業圖 (Industry Graph)：}產業圖以「同產業股票完全連結」為設計原則，將屬於同一產業的股票視為相互連結，並為每檔股票加入自環。此設計能捕捉同產業內的共通訊號與產業影響。
+\label{subsec:graph_build}
 
-\textbf{全市場圖 (Universe Graph)：}全市場圖採完全圖設計，所有股票相互連結並包含自環，用以表徵跨產業的市場共同因子影響。此設計對應 DMFM 論文中的 Universe-level 關係，能強化市場共同變動的抽取。
+\textbf{產業圖（Industry Graph）：}以「同產業股票完全連結」為原則，將同一產業內之股票視為相互連結，並為每檔股票加入自環（self-loop），以捕捉產業內共通訊號。
 
-\textbf{鄰接矩陣表示：}圖結構以 PyG 的 edge\_index 表示，即 [2, E] 形式之邊索引。實作上先以鄰接矩陣建立連結，再轉換為邊索引格式，以利 GAT 層使用。
+\textbf{全市場圖（Universe Graph）：}採完全圖（complete graph）設計，所有股票相互連結並包含自環，用以表徵跨產業之市場共同因子影響。
 
-\textbf{建構流程：}由輸入 CSV 讀取產業欄位（如 TEJ 產業名稱/代碼），依股票代碼分組建立產業圖；若缺少產業欄，則預設所有股票屬於同一產業。全市場圖則依股票清單建立完全圖。圖結構與特徵張量一併存入 artifacts，供模型訓練與評估重複使用。
+\textbf{表示方式（Representation）：}圖結構以 PyTorch Geometric（PyG）之 \texttt{edge\_index} 表示（形狀為 $[2, E]$）。實作上先依規則建立連結關係，再轉換為 \texttt{edge\_index} 以供 GAT 層運算。
 
+\textbf{建構流程（Construction）：}由輸入 CSV 讀取產業欄位並依股票代碼分組建立產業圖；若產業欄缺漏，則以單一產業處理。全市場圖依股票清單建立完全連結。圖結構與特徵張量共同保存為 artifacts，以支援訓練與評估之重複使用。
 
+% =========================================================
 \section{模型設計}
 \label{sec:models}
+% =========================================================
 
-\subsection{LSTM 基準模型}
+\subsection{基準模型：GATRegressor}
 \label{subsec:lstm_baseline}
 
-\textbf{模型架構：}目前程式碼未包含 LSTM 實作。若需保留此節，建議改為「GATRegressor 基準模型」，或自行補上 LSTM baseline。以下提供兩種處理方式：
-\begin{itemize}
-    \item 改寫為 GATRegressor 基準：兩層 GAT + 線性輸出，僅使用產業圖。
-    \item 新增 LSTM baseline：以時間序列特徵輸入 LSTM，再用 MLP 輸出預測。
-\end{itemize}
-【待選：採用 GATRegressor 或補上 LSTM baseline】
+基準模型採用 \textbf{GATRegressor} 作為對照：以兩層 Graph Attention Network（GAT）於產業圖上進行訊息傳遞，並以線性層輸出預測值。相較於 DMFM，GATRegressor 不包含「產業中性化＋全市場中性化」之階層式結構，亦不含因子注意力模組，因此可作為較簡化之圖模型基準。超參數設定盡量與 DMFM 對齊（例如 hidden dimension、heads、dropout），以提升可比性。
 
-\textbf{超參數配置：}若採 GATRegressor 基準，建議使用與 DMFM 相同的 hidden\_dim、heads 與 dropout，以確保可比性；若採 LSTM baseline，則需補充 LSTM 的 hidden size、層數、dropout 與輸出頭設定。【待補：基準模型超參數】
-
-\textbf{與 DMFM 的差異：}LSTM 基準僅利用時間序列特徵，不顯式建模股票間關係；DMFM 則透過產業圖與全市場圖進行中性化，並以階層式拼接整合多層語境，因此能同時捕捉個股特徵與結構性訊號。【待補：是否保留 LSTM baseline】
+%（若後續補上 LSTM baseline，可在此節加一小段描述，或另設小節。）
 
 \subsection{DMFM 模型架構（Wei et al. 2022）}
 \label{subsec:dmfm_model}
 
-DMFM 以「特徵編碼 $\rightarrow$ 產業中性化 $\rightarrow$ 全市場中性化 $\rightarrow$ 階層式拼接 $\rightarrow$ 深度因子學習 $\rightarrow$ 因子注意力」為主要流程。模型在每個交易日 $t$ 對股票截面進行運算，輸出每檔股票的預測因子值。
+DMFM 之核心流程可概括為：「特徵編碼 $\rightarrow$ 產業中性化 $\rightarrow$ 全市場中性化 $\rightarrow$ 階層式拼接 $\rightarrow$ 深度因子學習 $\rightarrow$ 因子注意力」。模型在每個交易日 $t$ 以截面方式處理所有股票之特徵，並輸出每檔股票之預測因子值。
 
-\textbf{步驟 1：特徵編碼器：}原始特徵 $F^t$ 經過 BatchNorm 進行截面標準化，再以 MLP 編碼為 $C^t$（hidden\_dim 維度），作為原始股票語境表示。
+\textbf{步驟 1：特徵編碼（Feature encoder）：}原始特徵 $F^t$ 經 BatchNorm 後輸入 MLP，映射為 $C^t$（維度為 \texttt{hidden\_dim}），作為股票之語境表示。
 
-\textbf{步驟 2：產業中性化：}以產業圖為圖結構進行 GAT 運算，得到產業影響 $H_I^t$。產業中性特徵定義為：$C_I^t = C^t - H_I^t$，藉此移除產業共通影響。
+\textbf{步驟 2：產業中性化（Industry neutralization）：}以產業圖進行 GAT 運算得到產業影響 $H_I^t$，並定義產業中性特徵為
+$C_I^t = C^t - H_I^t$。
 
-\textbf{步驟 3：全市場中性化：}在產業中性特徵 $C_I^t$ 上，再以全市場圖進行 GAT 運算得到 $H_U^t$。全市場中性特徵定義為：$C_U^t = C_I^t - H_U^t$，用以移除市場共同影響。
+\textbf{步驟 3：全市場中性化（Universe neutralization）：}以全市場圖在 $C_I^t$ 上進行 GAT 運算得到 $H_U^t$，並定義全市場中性特徵為
+$C_U^t = C_I^t - H_U^t$。
 
-\textbf{步驟 4：階層式特徵拼接：}將三層特徵拼接形成階層表示：$H^t = [C^t \, || \, C_I^t \, || \, C_U^t]$。此設計保留原始語境與兩層中性化資訊，提升模型表達力。
+\textbf{步驟 4：階層式特徵拼接（Hierarchical concatenation）：}拼接三層表示形成
+$H^t = [C^t \, || \, C_I^t \, || \, C_U^t]$，
+以同時保留原始語境與兩層中性化資訊。
 
-\textbf{步驟 5：深度因子學習：}拼接後的階層特徵輸入 MLP decoder，輸出深度因子 $f^t$（每檔股票 1 個數值），作為預測信號。
+\textbf{步驟 5：深度因子學習（Deep factor learning）：}將 $H^t$ 輸入 decoder MLP，輸出深度因子 $f^t$（每檔股票一個預測值）。
 
-\textbf{步驟 6：因子注意力模組：}模型同時對原始特徵學習注意力權重，計算 $\hat{f}^t = F^t \odot a^t$，用以估計「哪些特徵驅動因子輸出」，並作為解釋與監督項。
+\textbf{步驟 6：因子注意力（Factor attention）：}模型同時學習特徵注意力權重 $a^t$，形成 $\hat{f}^t = F^t \odot a^t$，用以估計驅動因子輸出之重要特徵，並作為監督與解釋性分析依據。
 
-\textbf{超參數配置：}預設配置如下：hidden\_dim=64、heads=2、dropout=0.1、epochs=200、learning rate=1e$-$4、weight decay=0.01、lambda\_attn=0.1、lambda\_ic=1.0、patience=30。
+\textbf{超參數配置（Hyperparameters）：}預設為 \texttt{hidden\_dim}=64、\texttt{heads}=2、\texttt{dropout}=0.1、\texttt{epochs}=200、\texttt{learning rate}=1e$-$4、\texttt{weight decay}=0.01、$\lambda_{attn}=0.1$、$\lambda_{IC}=1.0$、\texttt{patience}=30。
 
+% =========================================================
 \section{損失函數}
 \label{sec:loss}
+% =========================================================
 
 \subsection{總損失函數}
-本研究使用 DMFM 對應之損失：
+採用 DMFM 對應之損失函數：
 \begin{equation}
 L = \lambda_{attn} \cdot \lVert f - \hat{f} \rVert + \lambda_{IC} \cdot (1 - IC) - \lambda_b \cdot b
 \label{eq:loss}
 \end{equation}
-其中 $\lVert f - \hat{f} \rVert$ 代表注意力估計誤差；$IC$ 為資訊係數；$b$ 為截面回歸得到的因子收益。程式中 $\lambda_b$ 固定為 0.01，以降低因子收益項之不穩定性。
+其中 $\lVert f - \hat{f} \rVert$ 為注意力估計誤差，$IC$ 為資訊係數（Information Coefficient, IC），$b$ 為截面回歸得到的因子收益項。實作中 $\lambda_b$ 固定為 0.01，以降低因子收益項之不穩定性。
 
-\textbf{Information Coefficient (IC)：}IC 以 Pearson correlation 計算，基於每個交易日的截面預測與真實報酬，衡量預測排序的有效性。
+\textbf{IC（Information Coefficient）：}以 Pearson correlation 計算，基於每個交易日之截面預測與真實 forward-$k$ 日報酬，衡量預測排序有效性。
 
-\textbf{優化器設定：}使用 AdamW 優化器，並加入 weight decay 以抑制過度擬合。
+\textbf{優化器（Optimizer）：}使用 AdamW，並加入 weight decay 以抑制過度擬合。
 
-
+% =========================================================
 \section{評估指標}
 \label{sec:metrics}
+% =========================================================
 
-\subsection{預測準確度指標}
-\textbf{IC / Daily IC / ICIR：}IC 為整體樣本的 Pearson correlation；Daily IC 為每交易日 IC 的平均值；ICIR 定義為 IC 平均值除以 IC 標準差，用以衡量資訊係數的穩定性。
+\subsection{預測品質指標}
+\textbf{IC / Daily IC / ICIR：}IC 為整體樣本之 Pearson correlation；Daily IC 為逐交易日 IC 之平均；ICIR（Information Coefficient Information Ratio, ICIR）定義為 Daily IC 平均除以其標準差，用以衡量穩健性。
 
-\textbf{產業中性 IC：}【待補：若有計算產業中性 IC，請補充定義與計算方式；若未使用，可刪此項。】
+\textbf{產業中性 IC（Industry-neutral IC）：}為排除產業共同波動之影響，先在每交易日、每產業內分別對預測與真實報酬去均值（industry de-meaning），再對殘差計算 Pearson correlation。令 $\hat{y}_{i,t}$ 與 $y_{i,t}$ 分別為股票 $i$ 在日 $t$ 的預測與真實報酬，$g(i)$ 表示產業別，則
+\begin{align}
+\tilde{\hat{y}}_{i,t} &= \hat{y}_{i,t} - \frac{1}{|G_{g(i),t}|}\sum_{j \in G_{g(i),t}} \hat{y}_{j,t}, \\
+\tilde{y}_{i,t} &= y_{i,t} - \frac{1}{|G_{g(i),t}|}\sum_{j \in G_{g(i),t}} y_{j,t},
+\end{align}
+其中 $G_{g(i),t}$ 為日 $t$ 時產業 $g(i)$ 的有效股票集合（排除標籤為 NaN 者）。產業中性 IC 定義為
+\begin{equation}
+IC^{\text{ind-neutral}}_t = \text{Corr}\left(\tilde{\hat{y}}_{\cdot,t}, \tilde{y}_{\cdot,t}\right).
+\end{equation}
 
-\textbf{方向準確率：}方向準確率定義為預測方向與真實方向一致的比例，用以衡量模型對漲跌方向的掌握程度。
-
-\textbf{誤差指標：}以全部測試樣本誤差衡量預測偏差，包含 MSE、RMSE 與 MAE。
+\textbf{誤差指標（Error metrics）：}以 MSE、RMSE 與 MAE 衡量預測誤差。
 
 \subsection{投資組合績效指標}
+\textbf{年化報酬率（Annualized return）：}以每次再平衡選取預測分數最高之 \texttt{top\_pct} 股票等權做多，計算截面平均報酬作為策略報酬，並依再平衡頻率年化。
 
-\textbf{年化報酬率：}策略以每次再平衡取預測分數最高的 top\_pct 股票做多，計算該截面平均報酬作為策略報酬，並依再平衡頻率換算年化報酬率。
+\textbf{Sharpe Ratio：}以平均報酬除以波動後再乘年化因子，衡量風險調整後報酬。
 
-\textbf{Sharpe Ratio：}Sharpe Ratio 定義為平均報酬除以波動後乘上年化因子，用於衡量風險調整後報酬。
+\textbf{勝率（Hit ratio）：}正報酬期間比例，用以衡量策略穩定性。
 
-\textbf{勝率：}勝率為正報酬期間比例，用於衡量策略穩定性。
+\subsection{基準比較與流程摘要}
+\textbf{天真基準（Naive baseline）：}令所有股票預測值為 0，計算 MSE/RMSE/MAE 作為誤差下界參考。
 
-\textbf{最大回撤：}程式中未計算最大回撤，若需納入，可額外補實作或引用後處理結果。【待補：是否加入最大回撤】
+\textbf{台灣 50 ETF 基準：}以 0050 之 forward-$k$ 日報酬作為市場基準，與策略累積報酬比較。
 
-\subsection{基準比較}
-
-\textbf{天真基準：}天真基準設定所有股票預測值為 0，計算 MSE/RMSE/MAE，並與模型結果比較改善幅度。
-
-\textbf{台灣 50 ETF 基準：}使用 0050 報酬資料計算 forward-$k$ 日報酬，與策略累積報酬比較。
-
-\subsection{評估流程}
-流程為：
-\begin{itemize}
-    \item 載入 artifacts 與模型權重。
-    \item 對訓練期與測試期分別計算預測指標。
-    \item 產生 Daily IC、方向命中率、預測離散度、IC 分佈與累積報酬等視覺化報告。
-    \item 若為 DMFM，另外輸出注意力權重分佈以進行解釋性分析。
-\end{itemize}
+評估流程為：載入 artifacts 與模型權重後，分別於訓練期與測試期計算預測與投資組合指標；並輸出 Daily IC、IC 分佈與累積報酬等視覺化結果，以利比較不同模型之表現。對於 DMFM，另輸出注意力權重分佈作為解釋性分析依據。
