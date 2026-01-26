@@ -4,6 +4,7 @@
 % \usepackage{amsmath}
 % \usepackage{booktabs}
 % \usepackage{longtable} % 54 個變數表需要跨頁
+% \usepackage{placeins}  % 建議加入：避免表格/演算法漂移到錯的小節（搭配 \FloatBarrier）
 
 \chapter{實驗設計}
 \label{ch:experiment_design}
@@ -26,17 +27,13 @@
 
 \subsection{資料來源}
 \label{subsec:data_source}
+\FloatBarrier
 
 資料取自 \textbf{TEJ 台灣經濟新報（Taiwan Economic Journal, TEJ）}之台灣股票市場日頻資料，並以 CSV 形式匯出以供後續處理與模型訓練使用。資料以「交易日\(\times\)股票」為觀測單位，至少包含日期（Date）、股票代碼（Stock ID）與收盤價（Close）等必要欄位；同時保留開高低收（OHLC）、成交量／成交值、市值、流通股數、估值指標（如 PB、PS）與產業分類等資訊，以支援特徵建置與圖結構構建。樣本期間由參數 \texttt{start\_date} 與 \texttt{end\_date} 控制，並以台股交易日序列作為時間索引基準。
 
 除 TEJ 可直接取得之原始欄位外，模型輸入之技術特徵由價格與成交量等基礎序列計算而得；其中 RSI、MACD、KD 等指標主要透過 \texttt{TA-Lib} 套件生成，再彙整為固定的特徵集合供模型輸入。為避免於文字中重複列舉欄位與變數定義，TEJ 原始欄位彙整於表 \ref{tab:tej_raw_fields}，最終模型輸入之 54 個特徵摘要見表 \ref{tab:feature_cols_54}（完整清單見附錄表 \ref{tab:feature_cols_54_full}）。
 
-\subsection{TEJ 資料欄位與研究變數表格}
-\label{subsec:tej_variables}
-
-所有輸入資料均由 TEJ 匯出為日頻 CSV。匯出檔案包含：（1）市場交易與公司屬性之原始欄位（表 \ref{tab:tej_raw_fields}），以及（2）由程式以 TEJ 原始欄位衍生之技術特徵集合 \texttt{feature\_cols (n=54)}（表 \ref{tab:feature_cols_54}）。
-
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \small
 \caption{TEJ 匯出之原始欄位（資料來源欄位）}
@@ -61,12 +58,27 @@ TEJ產業\_名稱 & 產業資訊 & 產業分類（TEJ 分類；用於建構產�
 \end{tabular}
 \end{table}
 
+\FloatBarrier
+
+
+
+\subsection{TEJ 資料欄位與研究變數表格}
+\label{subsec:tej_variables}
+\FloatBarrier
+
+所有輸入資料均由 TEJ 匯出為日頻 CSV。匯出檔案包含：（1）市場交易與公司屬性之原始欄位（表 \ref{tab:tej_raw_fields}），以及（2）由程式以 TEJ 原始欄位衍生之技術特徵集合 \texttt{feature\_cols (n=54)}（表 \ref{tab:feature_cols_54}）。
+
+\FloatBarrier
+
+
+
 \subsection{資料預處理}
 \label{subsec:preprocess}
+\FloatBarrier
 
 資料預處理主要涵蓋資料格式統一、特徵與標籤計算、以及張量化整理，並以一致規則處理缺失值以降低訓練偏誤。整體流程如演算法 \ref{alg:preprocessing} 所示。
 
-\begin{algorithm}[htbp]
+\begin{algorithm}[H]
 \caption{資料預處理流程}
 \label{alg:preprocessing}
 \begin{algorithmic}[1]
@@ -80,6 +92,8 @@ TEJ產業\_名稱 & 產業資訊 & 產業分類（TEJ 分類；用於建構產�
 \State 特徵正規化由模型端 Batch Normalization（BatchNorm）處理
 \end{algorithmic}
 \end{algorithm}
+
+\FloatBarrier
 
 \textbf{缺失值處理（Missing values）：}不對缺失值進行插補，以避免引入主觀假設。特徵層面將 NaN/Inf 以 0 取代以維持張量完整性；標籤層面保留 NaN，並在訓練與評估時以有效樣本遮罩（mask）排除，使模型僅在可觀測標籤上學習。
 
@@ -97,8 +111,11 @@ y_t = \frac{P_{t+k} - P_t}{P_t}
 \end{equation}
 其中 $P_t$ 為時間 $t$ 收盤價，$k$ 為預測視窗（預設 $k=5$）。
 
+
+
 \subsection{資料集劃分}
 \label{subsec:split}
+\FloatBarrier
 
 為避免模型訓練過程產生未來資訊滲入（look-ahead bias），本文採用時間序列切分（time-series split）進行訓練集與測試集的劃分。具體而言，資料依日期由早至晚排序後，以前 80\% 交易日作為訓練集（Train），後 20\% 交易日作為測試集（Test），確保模型僅能利用過去資訊進行預測與評估。
 
@@ -117,6 +134,8 @@ y_t = \frac{P_{t+k} - P_t}{P_t}
     \label{fig:train_test_split}
 \end{figure}
 
+\FloatBarrier
+
 % =========================================================
 \section{特徵工程與圖結構}
 \label{sec:features}
@@ -124,11 +143,12 @@ y_t = \frac{P_{t+k} - P_t}{P_t}
 
 \subsection{特徵選取與分類}
 \label{subsec:feature_groups}
+\FloatBarrier
 
-模型輸入特徵涵蓋報酬、趨勢、波動、量能、流動性與技術指標等訊號來源，並以多視窗（rolling window）構建不同時間尺度之市場資訊。各特徵之\textbf{實際使用變數名稱、定義、視窗長度與對應 TEJ 原始欄位}已於附錄表 \ref{tab:feature_cols_54_full} 完整列示。除 TEJ 匯出欄位外，技術指標部分由 \texttt{TA-Lib} 依價格與量能序列計算，不另引入外部第三方因子資料。
+模型輸入特徵涵蓋報酬、趨勢、波動、量能、流動性與技術指標等訊號來源如表 \ref{tab:feature_cols_54}，並以多視窗（rolling window）構建不同時間尺度之市場資訊。各特徵之\textbf{實際使用變數名稱、定義、視窗長度與對應 TEJ 原始欄位}已於附錄表 \ref{tab:feature_cols_54_full} 完整列示。除 TEJ 匯出欄位外，技術指標部分由 \texttt{TA-Lib} 依價格與量能序列計算，不另引入外部第三方因子資料。
 
 \renewcommand{\arraystretch}{1.15}
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{模型輸入特徵摘要（完整 54 項清單見附錄表 \ref{tab:feature_cols_54_full}）}
 \label{tab:feature_cols_54}
@@ -157,16 +177,54 @@ y_t = \frac{P_{t+k} - P_t}{P_t}
 \end{table}
 \renewcommand{\arraystretch}{1.0}
 
+\FloatBarrier
+
 \textbf{產業分類（Industry classification）：}產業欄位採用 TEJ 提供之 \texttt{TEJ產業\_名稱}。該分類於樣本期間內具相對穩定性，適合用於建構產業層級圖結構；實驗中不額外進行主觀重分群。
 
 \subsection{圖結構設計與建構流程}
 \label{subsec:graph_build}
+\FloatBarrier
 
-\textbf{產業圖（Industry Graph）：}以「同產業股票完全連結」為原則，將同一產業內之股票視為相互連結，並為每檔股票加入自環（self-loop），以捕捉產業內共通訊號。
+\textbf{產業圖（Industry Graph）：}
+以「同產業股票完全連結」為原則，將同一產業內之股票視為相互連結，
+並為每檔股票加入自環（self-loop），以捕捉產業內共通訊號與個股自身資訊。
+圖 \ref{fig:industry_graph_demo} 以三個示例產業為例，展示同產業節點形成高密度子圖（cluster），且每個節點皆具有自環結構。
 
-\textbf{全市場圖（Universe Graph）：}採完全圖（complete graph）設計，所有股票相互連結並包含自環，用以表徵跨產業之市場共同因子影響。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{img/industry_graph.png}
+    \caption{產業圖示意（Industry Graph）：同產業股票完全連結並加入自環（self-loop）。圖中每個子圖對應一個產業群集，群集內節點兩兩相連以表示產業內共同訊號傳遞。}
+    \label{fig:industry_graph_demo}
+\end{figure}
+\FloatBarrier
 
-\textbf{表示方式（Representation）：}圖結構以 PyTorch Geometric（PyG）之 \texttt{edge\_index} 表示（形狀為 $[2, E]$）。實作上先依規則建立連結關係，再轉換為 \texttt{edge\_index} 以供 GAT 層運算。
+\textbf{全市場圖（Universe Graph）：}
+全市場圖採完全圖（complete graph）設計，所有股票之間皆存在連結，並同樣包含自環。
+此設計目的在於表徵跨產業之市場共同因子影響，使模型可在截面層級整合全市場訊息。
+圖 \ref{fig:universe_graph_demo} 顯示完全連結圖結構下，節點之間呈現高度稠密的連線關係。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{img/market_graph.png}
+    \caption{全市場圖示意（Universe Graph）：完全連結並包含自環（self-loop）。在此圖結構下，每個節點可與所有其他節點交換訊息，以表徵跨產業的市場共通因子影響。}
+    \label{fig:universe_graph_demo}
+\end{figure}
+\FloatBarrier
+\textbf{表示方式（Representation）：}
+圖結構以 PyTorch Geometric（PyG）之 \texttt{edge\_index} 表示，其為一個形狀為 $[2, E]$ 的整數張量，
+其中 $E$ 為邊（edges）數量。具體而言，\texttt{edge\_index} 的每一欄對應一條邊，
+第一列為起點節點（source / start node），第二列為終點節點（target / end node）。
+在實作上，本文先依預定規則建立節點間的連結關係（例如同產業完全連結、全市場完全連結與自環），
+再將邊集合轉換為 \texttt{edge\_index}，以供 GAT 層進行訊息傳遞與注意力權重計算。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{img/edge_index_demo.png}
+    \caption{\texttt{edge\_index} 表示方式示意圖：左側為小型圖結構（節點 A、B、C），右側為其對應之 \texttt{edge\_index}。
+    \texttt{edge\_index} 以 $[2, E]$ 形式紀錄所有邊，每一欄代表一條由起點（start）指向終點（end）的連結關係。}
+    \label{fig:edge_index_demo}
+\end{figure}
+\FloatBarrier
 
 \textbf{建構流程（Construction）：}由輸入 CSV 讀取產業欄位並依股票代碼分組建立產業圖；若產業欄缺漏，則以單一產業處理。全市場圖依股票清單建立完全連結。圖結構與特徵張量共同保存為 artifacts，以支援訓練與評估之重複使用。
 
@@ -255,4 +313,3 @@ IC^{\text{ind-neutral}}_t = \text{Corr}\left(\tilde{\hat{y}}_{\cdot,t}, \tilde{y
 \textbf{台灣 50 ETF 基準：}以 0050 之 forward-$k$ 日報酬作為市場基準，與策略累積報酬比較。
 
 評估流程為：載入 artifacts 與模型權重後，分別於訓練期與測試期計算預測與投資組合指標；並輸出 Daily IC、IC 分佈與累積報酬等視覺化結果，以利比較不同模型之表現。對於 DMFM，另輸出注意力權重分佈作為解釋性分析依據。
-
