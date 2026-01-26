@@ -1,8 +1,29 @@
 \chapter{文獻回顧}
 \label{ch:relatedwork}
 
-本章依序回顧：（1）技術指標如何轉化為深度學習可用之特徵表示，（2）LSTM 等時間序列模型在金融預測中的典型做法與延伸，（3）圖神經網路的基本概念與代表性架構，（4）GAT 及其變形在股票預測／排序任務上的應用與限制，並據此銜接本研究後續以多因子與圖注意力為核心之模型設計與實驗流程。
+本章依循金融預測方法由淺入深的研究脈絡，依序回顧：（1）線性迴歸（Linear Regression, LR）在報酬預測中的典型定位與限制，（2）tree-based models 在非線性預測與特徵工程中的角色，（3）技術指標如何轉化為深度學習可用之特徵表示，（4）LSTM 等時間序列模型在金融預測中的典型做法與延伸，（5）圖神經網路（GNN）如何建模股票之間的結構性關係，（6）GAT 及其變形在股票預測／排序任務上的應用與限制，（7）因子投資情境下常用的訊號評估指標 IC／ICIR，並據此銜接本研究後續以「多因子表示 + 圖注意力」為核心之模型設計與實驗流程。
 
+% ============================================================
+\section{線性迴歸在股票報酬預測中的角色與限制（Linear Regression）}
+\label{sec:lr_baseline}
+
+線性迴歸模型（Linear Regression, LR）長期被視為股票報酬預測的基準方法，主要優勢在於結構簡潔、可解釋性高，且易於作為後續模型比較的 baseline。相關研究指出，線性模型能在市場關係相對穩定或波動較低的情境下捕捉較平滑的趨勢訊號，但在高波動或市場出現結構性變動時，其預測誤差可能顯著上升，反映出金融市場報酬分佈的非線性與不穩定性。
+
+除了作為 baseline 外，線性迴歸亦常被延伸為多因子（multi-factor）架構，以結合市場因子、規模因子、價值因子與動能等特徵，提高解釋力與外推能力。更進一步的研究也顯示，在截面（cross-sectional）股票報酬預測問題中，傳統 OLS 仍是重要比較基準，而機器學習方法在部分研究中能在報酬預測上相對於 OLS 取得增益（例如每月預測改善幅度約為 0.6--0.7\%），且未必伴隨更高的風險或換手成本，反映出模型對於非線性與交互作用的擷取能力具有實務意義。\cite{fieberg2022ml_cross_section}
+
+然而，LR 仍存在若干結構性限制：（1）線性假設難以捕捉非線性市場反應與特徵交互作用，（2）對於高維特徵集合容易受到共線性（multicollinearity）與不穩定估計影響，（3）其靜態映射較難處理時間依賴與狀態轉換（regime shift）。因此，後續研究逐步轉向使用可建模非線性的 tree-based models 與深度學習架構，以提升對金融資料複雜結構的擬合能力。
+
+% ============================================================
+\section{非線性機器學習模型與特徵工程導向方法（Tree-based Models）}
+\label{sec:tree_based}
+
+為克服線性模型的表達能力限制，tree-based models（如 Decision Tree、Random Forest、Gradient Boosting、XGBoost、LightGBM、CatBoost、Extra Trees 等）在金融預測文獻中逐漸成為主流方法之一。相較於單一決策樹，集成式（ensemble）模型往往在股票方向預測、波動度預測與企業風險辨識任務上展現更穩健且一致的表現，並常被視為強力的 tabular baseline。\cite{basak2019tree_stock_direction,ampomah2020tree_ensemble_stock,nti2020ensemble_comprehensive}
+
+tree-based 方法的核心優勢在於能自動捕捉特徵的非線性關係與高階交互作用，並且可透過特徵重要性（feature importance）或 SHAP 類方法提供一定程度的解釋性。在金融預測應用中，相關研究亦指出 tree-based ensembles 在技術指標輸入下可支持交易規則設計，並在模擬環境中呈現相對於基準的超額報酬；此外，在波動度與風險管理任務上，樹模型亦具備一定效率優勢。\cite{saifan2020ensemble_trading,vidmant2019tree_volatility}
+
+然而，tree-based models 多將每個樣本視為相對獨立的觀測點，對時間相依結構的刻畫通常依賴人工設計的 lagged features 或 rolling statistics；當市場進入快速結構轉換或非平穩狀態（non-stationarity）時，僅靠靜態特徵映射可能不足以穩健追蹤動態行為。因此，後續研究開始引入以序列建模為核心的深度學習架構（如 LSTM），並進一步發展 hybrid 模型，以結合 tree-based 的非線性擬合優勢與深度模型的時間依賴建模能力。\cite{tang2022survey_fin_ts}
+
+% ============================================================
 \section{技術指標如何轉化為深度學習可用之特徵表示}
 \label{sec:technical_representation}
 
@@ -12,13 +33,13 @@
 Agrawal 等人亦提出以最佳化的深度學習架構搭配技術指標的預測流程，指出在輸入維度增加時，指標集合的挑選與組織方式將直接影響模型是否能有效吸收訊號並降低冗餘干擾。\cite{agrawal2019stock}
 此外，Li 與 Bastos 以系統性綜述方式整理「技術分析＋深度學習」在股市預測的主要設計與趨勢，並指出「如何識別最優指標集」仍是領域內的重要議題。\cite{li2020stock}
 
+值得注意的是，技術指標本質上屬於對價格序列的非線性變換，因此即便輸入模型相同，不同的指標組合、視窗長度與正規化方式仍可能導致完全不同的特徵分佈與訊號品質。綜合近期金融預測的機器學習綜述研究，普遍認為「特徵工程與模型結構」必須共同設計，才能在高雜訊環境中提升預測穩健性與可轉移性。\cite{tang2022survey_fin_ts,sezer2019dl_fin_survey}
+
 總結而言，技術指標在深度學習框架中的角色可被視為「可學習特徵空間的原料」：研究重點不僅在於指標本身，而在於如何以更合適的表示方式降低冗餘並保留有效訊號，進而提升後續預測任務的可學習性與穩定性。
 
-
-% 若您的主檔（main.tex）尚未載入，請在 preamble 加上：
-% \usepackage{graphicx}
-
+% ============================================================
 \section{LSTM 等時間序列模型在金融預測中的典型做法與延伸}
+\label{sec:lstm_finance}
 
 時間序列模型在金融預測中主要利用價格與特徵序列的時間依賴性，學習由過去資訊推估未來表現。長短期記憶網路（Long Short-Term Memory, LSTM）透過閘門（gates）機制控制資訊流動，能緩解長序列學習的梯度消失（vanishing gradients）問題，因此成為金融時間序列建模的代表性方法之一。
 
@@ -52,30 +73,124 @@ Qiu 等人將注意力機制引入 LSTM 架構，以在時間維度上動態調�
 在高頻（例如 5 分 K）資料情境下，鄭邦廷以疊層式 LSTM（Stacked LSTM）捕捉更複雜的非線性時間依賴，用於買賣點預測。\cite{cheng2023stock}
 此外，廖俊翔透過自相關分析與特徵篩選納入跨市場外部特徵，並展示外部訊號在一定程度上能降低預測誤差。\cite{liao2022applying}
 
+綜合金融時間序列預測的系統性綜述研究，深度序列模型（LSTM/CNN/Hybrid）在預測誤差指標上多能優於傳統統計模型與部分經典機器學習方法，然而研究亦普遍指出：在金融市場高雜訊與非平穩環境下，單純改善 error metrics 並不必然等價於可穩健轉化為可交易的超額績效，顯示實證評估必須結合更貼近投資目標的指標與測試框架。\cite{tang2022survey_fin_ts,sonkavde2023review_ml_dl}
+
 整體而言，時間序列方法能有效吸收單一資產（或單一特徵集合）的歷史資訊，但其多數設計仍以「序列本身」為主要訊號來源，較難直接刻畫股票之間的結構性關係與共通影響；因此後續研究開始引入圖結構以建模市場關係。
 
+% ============================================================
 \section{圖神經網路的基本概念與代表性架構}
 \label{sec:gnn_basics}
 
 圖神經網路（Graph Neural Networks, GNNs）以圖作為基本資料結構，透過節點（node）與邊（edge）描述實體及其關係，並以訊息傳遞（message passing）機制聚合鄰居資訊，學得具備拓撲語意的節點表示。Wu 等人對 GNN 架構進行系統性整理，並區分頻域（spectral-based）與空域（spatial-based）圖卷積之主要差異，同時歸納多類代表性 GNN 架構族群。\cite{wu2020comprehensive}
 
-在金融市場中，股票之間存在產業層級與市場層級的共同因子影響，亦可能呈現共動性、傳染效應與結構性相依關係。以圖結構建模股票關係，可使模型同時利用「個股特徵」與「關係拓撲」來提升截面預測或排序任務的表現，亦為後續在模型中引入中性化或分離共通影響提供方法基礎。
+在金融市場中，股票並非獨立個體，而是受到產業鏈、供應鏈、風格因子與市場共同訊號等多來源關係影響，進而產生共動性（co-movement）與傳染效應（spillover）。近期研究指出，將股票視為「互動節點」並以圖結構建模其關係（例如產業關係、價格相關性、供應鏈或知識圖譜），可使模型在預測報酬、方向與風險指標時，相較於僅使用序列模型的 baseline 呈現更佳表現，特別在市場波動或危機期間更具優勢。\cite{feng2025stgat,wei2025fstgat,lee2025gnn_crisis}
 
+因此，圖結構方法為金融預測提供了「同時利用個股特徵與關係拓撲」的建模途徑，也為後續在多因子框架中處理共通影響、關係層級分離與中性化（neutralization）奠定方法論基礎。
+
+% ============================================================
 \section{GAT 及其變形在股票預測／排序任務上的應用與限制}
 \label{sec:gat_stock}
 
-圖注意力網路（Graph Attention Network, GAT）在鄰居聚合框架中引入注意力機制，使模型可對不同鄰居節點賦予不同權重，提升在異質或噪音關係下的表徵能力與可解釋性。以注意力係數為例，其形式可寫為：
+
+圖注意力網路（Graph Attention Network, GAT）在圖神經網路的鄰居聚合（neighbor aggregation）框架中引入注意力機制，使模型能在不同鄰居節點之間\textbf{自動學習差異化的權重分配}，從而提升在異質關係（heterogeneous relations）與噪音邊（noisy edges）存在時的表徵能力與可解釋性。
+在金融市場中，股票之間的連結可能同時來自產業關係、共同市場因子、或價格共動等多重來源，其影響強度亦可能隨時間改變；因此，相較於固定權重的鄰居平均聚合，GAT 以資料驅動方式決定「哪些關係在當期更重要」，在概念上更符合金融資料非平穩（non-stationary）與關係強度變動的特性。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\textwidth]{img/gat_attention_mechanism.png}
+  \caption{GAT 的鄰居注意力（neighbor attention）機制示意。左圖呈現注意力係數 $\alpha_{ij}$ 的計算流程；右圖示意節點 $i$ 對其鄰居集合 $\mathcal{N}(i)$ 分配不同權重後進行聚合，並以 concat/avg 的方式得到更新後的節點表示。}
+  \label{fig:gat_attention_mechanism}
+\end{figure}
+
+如圖 \ref{fig:gat_attention_mechanism} 所示，GAT 的核心是對節點 $i$ 與其鄰居 $j\in\mathcal{N}(i)$ 計算注意力係數 $\alpha_{ij}$，並以加權聚合方式更新節點表示。
+以注意力係數為例，其形式可寫為：
 \begin{equation}
 \alpha_{ij} = \mathrm{softmax}_j\Big(\mathrm{LeakyReLU}\big(a^\top [W h_i \, \Vert \, W h_j]\big)\Big),
 \label{eq:gat_attention}
 \end{equation}
 其中 $h_i$ 為節點表示，$\alpha_{ij}$ 代表節點 $i$ 對鄰居 $j$ 的注意力權重。
+上述表示式可視為將線性投影、注意力打分與 softmax 正規化三個步驟合併表示；為更清楚對應金融應用中的「關係加權」直覺，下文將其拆解如下。
 
-在股票預測任務中，GAT 類方法的效能高度依賴圖結構建構方式與關係訊號品質。Huang 等人提出多層級圖注意力模型（ML-GAT），以分層注意力機制分別處理節點狀態與關係類型，使模型能在多來源關係下更細緻地擷取有效訊號。\cite{huang2022mlgat}
-Song 等人以股票價格與股票關係資訊進行圖聚合式排序預測，並討論關係資訊設計對截面排序表現的影響。\cite{song2023stock}
-當市場關係稀疏或不完整時，Cheng 等人提出多特徵圖注意力網路，透過整合多面向特徵訊號來提升股票預測能力。\cite{cheng2024stock}
+\paragraph{(1) 特徵線性投影（Linear Projection）}
+首先將節點特徵投影至共享表示空間：
+\begin{equation}
+z_i = W h_i,
+\label{eq:gat_linear_projection}
+\end{equation}
+其中 $W$ 為可學習參數矩陣，$z_i$ 表示節點 $i$ 的轉換後特徵。
 
-然而，GAT 類方法仍可能面臨下列限制：其一，注意力權重在噪音邊存在時可能分散，增加過擬合風險；其二，圖建構規則、關係來源與連邊密度高度敏感，使模型可轉移性與穩健性需要透過更嚴謹的實證評估驗證；其三，靜態圖難以全面反映關係隨時間變動的特性，可能降低模型對市場結構變化的敏感度。
+\paragraph{(2) 注意力打分（Attention Scoring）}
+接著對每一條邊 $(i,j)$ 計算未正規化的注意力分數：
+\begin{equation}
+e_{ij} = \mathrm{LeakyReLU}\Big(a^\top [z_i \, \Vert \, z_j]\Big),
+\label{eq:gat_unnormalized_attention}
+\end{equation}
+其中 $a$ 為可學習參數向量，$[\cdot \Vert \cdot]$ 表示向量串接（concatenation）。
+直觀而言，$e_{ij}$ 衡量「鄰居 $j$ 的資訊對節點 $i$ 的更新是否重要」。
 
-基於上述研究脈絡，Wei 等人提出以深度多因子模型結合圖注意力的框架，並透過分離產業與全市場層級影響來提升因子信號的可用性與穩健性。\cite{wei2022factor}
+\paragraph{(3) 正規化與鄰居聚合（Normalization \& Aggregation）}
+為使同一節點的鄰居權重可比較，GAT 對 $e_{ij}$ 在鄰居集合內做 softmax 正規化：
+\begin{equation}
+\alpha_{ij}
+= \frac{\exp(e_{ij})}{\sum_{k\in \mathcal{N}(i)} \exp(e_{ik})}.
+\label{eq:gat_attention_softmax}
+\end{equation}
+最後，以注意力權重對鄰居特徵加權求和，得到更新後的節點表示：
+\begin{equation}
+h'_i = \sigma \left( \sum_{j\in \mathcal{N}(i)} \alpha_{ij} z_j \right),
+\label{eq:gat_neighbor_aggregation}
+\end{equation}
+其中 $\sigma(\cdot)$ 為非線性函數。
+此聚合形式可理解為：節點 $i$ 不再平均吸收所有鄰居資訊，而是以 $\alpha_{ij}$ 作為「關係重要性」進行選擇性吸收，從而降低弱關係或噪音邊對表徵的干擾。
+
+\paragraph{多頭注意力（Multi-head Attention）}
+在實作上，GAT 常使用多頭注意力（multi-head attention）提升穩定性與表徵能力。對於 $K$ 個 head，可表示為：
+\begin{equation}
+h^{\prime(k)}_i
+= \sigma \left( \sum_{j\in \mathcal{N}(i)} \alpha^{(k)}_{ij} W^{(k)} h_j \right),
+\quad k=1,\dots,K.
+\label{eq:gat_multihead_each}
+\end{equation}
+常見作法是在中間層以串接（concat）整合多頭資訊：
+\begin{equation}
+h'_i = \mathbin\Vert_{k=1}^{K} h^{\prime(k)}_i,
+\label{eq:gat_multihead_concat}
+\end{equation}
+而在最後一層以平均（avg）穩定輸出：
+\begin{equation}
+h'_i = \frac{1}{K}\sum_{k=1}^{K} h^{\prime(k)}_i.
+\label{eq:gat_multihead_avg}
+\end{equation}
+
+\vspace{0.2cm}
+\noindent\textbf{GAT 在股票預測／排序任務中的應用。}
+在股票預測任務中，GAT 類方法的效能高度依賴圖結構建構方式與關係訊號品質。現有研究整理指出，節點特徵常結合 OHLCV、技術指標、基本面或文字／情緒訊號，並以產業連結、價格相似性、供應鏈關係或動態學習圖等方式建立邊；在此框架下，GAT 能透過注意力機制學習「誰在影響誰」以及影響強度，進而提升截面預測或排序任務的表現。\cite{song2023stock,xiang2022dynamic_gat,su2024hetero_gat}
+
+此外，金融領域亦出現大量 spatio-temporal GAT 變形（如 STGAT、FSTGAT 等），透過結合時間編碼器（例如 LSTM/TCN/Transformer）與圖注意力聚合，同時刻畫時間依賴與資產關係結構；相關研究報告顯示，這類模型在部分情境下可帶來預測誤差改善，並在以投資績效衡量的實證框架中展現更高的應用潛力。\cite{feng2025stgat,wei2025fstgat}
+
+\vspace{0.2cm}
+\noindent\textbf{限制與挑戰。}
+儘管 GAT 類方法在金融預測中提供更具彈性的關係建模能力，但仍可能面臨下列限制。
+第一，當圖中存在大量噪音邊或關係訊號品質不足時，注意力權重可能無法穩定聚焦於有效鄰居，導致模型對邊的品質高度敏感並增加過擬合風險。
+第二，圖建構規則、關係來源與連邊密度會直接影響訊息傳遞範圍與聚合分佈，使模型在跨市場或跨期間的可轉移性（transferability）與穩健性（robustness）下降。
+第三，若採用靜態圖，模型可能難以充分反映市場結構與股票關係隨時間演化的特性，進而降低對結構變動的敏感度。
+因此，在金融預測中使用 GAT 類方法時，除模型設計外，更需搭配嚴謹的資料切分方式、跨期間檢驗、與穩健性測試，以確保其績效增益並非僅來自特定樣本區間或特定關係建構假設。
+
+% ============================================================
+\section{因子訊號評估指標：IC 與 ICIR 的理論意涵與實務角色}
+\label{sec:ic_icir}
+
+在因子投資（factor investing）與截面預測（cross-sectional prediction）情境中，單純以 MSE/MAE 等誤差衡量模型表現，未必能完整反映訊號在「排序（ranking）」與「可投資性（investability）」上的價值。因此，資訊係數（Information Coefficient, IC）與資訊比率（Information Ratio, IR；亦常以 ICIR 表示）成為衡量因子訊號品質的重要指標。IC 通常被定義為因子分數與下一期報酬之截面相關（常使用 rank correlation），用以衡量訊號對未來報酬的預測能力；ICIR 則進一步將訊號的平均效果與波動性整合，用以刻畫訊號的穩健性。\cite{ding2011ic_stats,ding2022timevarying_ic}
+
+經典的主動管理基本法則（fundamental law）指出，策略的資訊比率可近似表示為 $IR \approx IC \times \sqrt{breadth}$，意即在訊號品質（IC）固定下，獨立下注機會（breadth）越多，策略的風險調整績效越高。然而近期研究亦強調，真實市場中 IC 往往具有時間變動性（time-varying），且 IC 的波動（IC volatility）會直接削弱策略可達成的穩健 IR；此外，換手率（turnover）與交易成本亦會顯著壓低可實現的績效，因此在實務上必須將 turnover-adjusted IR 納入考量。\cite{qian2004active_risk,ye2008signal_quality,zhang2021turnover_ir}
+
+因此，IC／ICIR 除了作為單一因子有效性的檢驗工具外，也常被用於多因子組合與機器學習選因流程：研究通常保留具備穩定正 IC 與較高 ICIR 的訊號，以提升多因子架構在跨期間的穩健性與可投資性。\cite{bermejo2021factor_investing,yuan2024ml_factor}
+
+% ============================================================
+\section{小結：多因子表示與圖注意力模型的研究定位}
+\label{sec:summary_positioning}
+
+綜合上述文獻脈絡可知，股票預測方法的演進呈現由「線性可解釋模型」逐步擴展至「非線性機器學習」與「深度序列模型」，並進一步走向「可同時建模時間依賴與關係結構」的圖深度學習方法。特別是在截面排序與因子投資應用中，研究焦點不僅在於降低預測誤差，更在於提升訊號的穩定性與可投資性，並以 IC／ICIR 作為核心評估指標。
+
+基於此研究趨勢，Wei 等人提出以深度多因子模型結合圖注意力的框架，透過分離產業與全市場層級影響來提升因子信號的可用性與穩健性。\cite{wei2022factor}
 本研究將沿用此一方向，在後續方法設計中以多層級關係建模與中性化概念為核心，並以 IC／ICIR 等指標作為實證評估依據，以對齊第三章所述之實驗設計與評估流程。

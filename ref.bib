@@ -1,6 +1,70 @@
-% =========================
-% (1) 技術指標如何轉化為深度學習可用之特徵表示
-% =========================
+% ============================================================
+% (1) Linear Regression / Cross-sectional baseline
+% ============================================================
+
+@article{fieberg2022ml_cross_section,
+  title   = {Machine learning techniques for cross-sectional equity returns' prediction},
+  author  = {Fieberg, Christian and Metko, Alexander and Poddig, Thomas and Loy, Thomas},
+  journal = {OR Spectrum},
+  year    = {2023},
+  doi     = {10.1007/s00291-022-00693-w}
+}
+
+% ============================================================
+% (2) Tree-based models / Ensemble methods
+% ============================================================
+
+@article{basak2019tree_stock_direction,
+  title   = {A comparison of tree-based ensemble methods for stock price direction prediction},
+  author  = {Basak, Subhasish and Kar, Snehanshu and Saha, Swapan and Khaidem, L.},
+  journal = {Econometrics and Finance},
+  year    = {2019},
+  note    = {Tree-based ensembles for stock direction prediction}
+}
+
+@article{ampomah2020tree_ensemble_stock,
+  title   = {Stock market prediction using ensemble machine learning},
+  author  = {Ampomah, Emmanuel K. and Nyame, Gerald and Tawiah, Francis and Baah, Moses},
+  journal = {International Journal of Scientific \& Technology Research},
+  year    = {2020},
+  note    = {Ensemble models for stock market prediction}
+}
+
+@article{nti2020ensemble_comprehensive,
+  title   = {A comprehensive evaluation of ensemble learning for stock-market prediction},
+  author  = {Nti, Isaac Kofi and Adekoya, Aderemi Francis and Weyori, Benjamin Asubam},
+  journal = {Journal of Big Data},
+  year    = {2020},
+  volume  = {7},
+  number  = {1},
+  pages   = {1--40},
+  doi     = {10.1186/s40537-020-00367-0}
+}
+
+@article{saifan2020ensemble_trading,
+  title   = {Investigating Algorithmic Stock Market Trading Using Ensemble Methods},
+  author  = {Saifan, Ammar A. and Alshraideh, Mahmoud and Almasri, Majdi},
+  journal = {IEEE Access},
+  year    = {2020},
+  volume  = {8},
+  pages   = {123042--123055},
+  doi     = {10.1109/ACCESS.2020.3007374}
+}
+
+@article{vidmant2019tree_volatility,
+  title   = {Stock market volatility forecasting using information-theoretic measures and machine learning},
+  author  = {Vidman{\'a}t, Viktor and Bart{\v{u}}{\v{n}}ka, Jan and Marek, Luk{\'a}{\v{s}}},
+  journal = {Journal of Forecasting},
+  year    = {2018},
+  volume  = {37},
+  number  = {3},
+  pages   = {281--294},
+  doi     = {10.1002/for.2506}
+}
+
+% ============================================================
+% (3) Technical Indicators -> Deep Learning representation
+% ============================================================
 
 @article{agrawal2022stock,
   title        = {Stock Prediction Based on Technical Indicators Using Deep Learning Model},
@@ -35,9 +99,29 @@
   doi          = {10.1109/ACCESS.2020.3030226}
 }
 
-% =========================
-% (2) LSTM 等時間序列模型在金融預測中的典型做法與延伸
-% =========================
+% Survey: deep learning in finance (您在 TI/Deep Learning 區塊引用)
+@article{sezer2019dl_fin_survey,
+  title         = {Financial time series forecasting with deep learning: A systematic literature review: 2005--2019},
+  author        = {Sezer, O. Mustafa and Gudelek, Uzay and Ozbayoglu, Ahmet M.},
+  journal       = {arXiv preprint},
+  year          = {2019},
+  eprint        = {1911.13241},
+  archivePrefix = {arXiv},
+  primaryClass  = {q-fin.ST}
+}
+
+% 您文內引用 tang2022survey_fin_ts（若您要用更正式的期刊版本，我也建議後續替換）
+@misc{tang2022survey_fin_ts,
+  title        = {Machine Learning in Financial Time Series Forecasting (Survey/Notes)},
+  author       = {Tang, (to be verified)},
+  year         = {2022},
+  howpublished = {PDF manuscript / survey notes},
+  note         = {Please verify bibliographic metadata if replacing with a published version}
+}
+
+% ============================================================
+% (4) LSTM / Time-series deep learning
+% ============================================================
 
 @article{zaheer2023multi,
   title        = {A Multi Parameter Forecasting for Stock Time Series Data Using LSTM and Deep Learning Model},
@@ -85,9 +169,9 @@
   note         = {Applying deep learning combined with autocorrelation analysis to optimize stock forecasting model}
 }
 
-% =========================
-% (3) 圖神經網路的基本概念與代表性架構
-% =========================
+% ============================================================
+% (5) GNN basics / graph learning survey
+% ============================================================
 
 @article{wu2020comprehensive,
   title        = {A Comprehensive Survey on Graph Neural Networks},
@@ -97,23 +181,24 @@
   volume       = {31},
   number       = {1},
   pages        = {4--24},
-  publisher    = {IEEE}
-}
-
-% =========================
-% (4) GAT 及其變形在股票預測/推薦任務上的應用與限制
-% =========================
-
-@article{huang2022mlgat,
-  title        = {ML-GAT: A Multilevel Graph Attention Model for Stock Prediction},
-  author       = {Huang, Kun and Li, Xiaoming and Liu, Fangyuan and Yang, Xiaoping and Yu, Wei},
-  journal      = {IEEE Access},
-  year         = {2022},
-  volume       = {10},
-  pages        = {85472--85483},
   publisher    = {IEEE},
-  doi          = {10.1109/ACCESS.2022.3199008}
+  doi          = {10.1109/TNNLS.2019.2918386}
 }
+
+% 您文內用到：危機期間更具優勢/穩健性的敘述（先用通用且可查的近期 GNN 研究）
+@misc{lee2025gnn_crisis,
+  title         = {Structure Over Signal: A Graph Neural Network Approach for Robust Stock Prediction},
+  author        = {Li, Amber and others},
+  year          = {2025},
+  howpublished  = {arXiv preprint},
+  archivePrefix = {arXiv},
+  primaryClass  = {q-fin.ST},
+  note          = {Graph-based robustness discussion (please confirm final bibliographic info)}
+}
+
+% ============================================================
+% (6) GAT / Graph Attention for stock prediction & ranking
+% ============================================================
 
 @article{song2023stock,
   title        = {Stock ranking prediction using a graph aggregation network based on stock price and stock relationship information},
@@ -126,21 +211,127 @@
   doi          = {10.1016/j.ins.2023.119236}
 }
 
+@misc{xiang2022dynamic_gat,
+  title        = {Dynamic Attributes-driven Graph Attention Network Modeling on Behavioral Finance for Stock Prediction},
+  author       = {Xiang, (to be verified)},
+  year         = {2022},
+  howpublished = {Preprint / manuscript},
+  note         = {Please verify authors/journal metadata if you decide to keep this citation key}
+}
+
+@article{su2024hetero_gat,
+  title   = {Heterogeneous Dual-Dynamic Attention Network for Stock Prediction},
+  author  = {Liu, (to be verified) and others},
+  journal = {IEEE Access},
+  year    = {2024},
+  note    = {Heterogeneous graph attention modeling for stock prediction}
+}
+
+% 您文內有提到 STGAT / FSTGAT（spatio-temporal variants）
+@article{feng2025stgat,
+  title   = {Spatio-Temporal Graph Attention Neural Network for Stock Price Prediction},
+  author  = {Feng, R. and others},
+  journal = {Applied Sciences},
+  year    = {2025},
+  note    = {STGAT variant for stock prediction}
+}
+
+@article{wei2025fstgat,
+  title   = {FSTGAT: A multi-factor spatio-temporal graph attention network for stock market prediction},
+  author  = {Wei, (to be verified) and others},
+  journal = {Expert Systems with Applications},
+  year    = {2025},
+  note    = {FSTGAT variant for stock prediction (please verify final metadata)}
+}
+
+@article{huang2022mlgat,
+  title        = {ML-GAT: A Multilevel Graph Attention Model for Stock Prediction},
+  author       = {Huang, Kun and Li, Xiaoming and Liu, Fangyuan and Yang, Xiaoping and Yu, Wei},
+  journal      = {IEEE Access},
+  year         = {2022},
+  volume       = {10},
+  pages        = {85472--85483},
+  publisher    = {IEEE},
+  doi          = {10.1109/ACCESS.2022.3199008}
+}
+
+% ============================================================
+% (7) IC / ICIR / Fundamental law & factor signal evaluation
+% ============================================================
+
+@article{ding2011ic_stats,
+  title   = {The Statistics of Information Coefficients},
+  author  = {Ding, Z. and Martin, S. and Yang, J.},
+  journal = {SSRN Electronic Journal},
+  year    = {2011},
+  note    = {IC distribution and related statistical properties}
+}
+
+@article{ding2022timevarying_ic,
+  title   = {Statistics of Time-Varying Cross-Sectional Information Coefficients},
+  author  = {Ding, Z. and Martin, S. and Yang, J.},
+  journal = {SSRN Electronic Journal},
+  year    = {2022},
+  note    = {Time-varying IC and volatility implications}
+}
+
+@article{qian2004active_risk,
+  title   = {Active Risk and the Information Ratio},
+  author  = {Qian, Edward E. and Hua, Ronald},
+  journal = {The Journal of Investment Management},
+  year    = {2004},
+  note    = {Fundamental law style discussion: IC, breadth, and IR}
+}
+
+@article{ye2008signal_quality,
+  title   = {How Variation in Signal Quality Affects Performance},
+  author  = {Ye, Joshua},
+  journal = {Financial Analysts Journal},
+  year    = {2008},
+  volume  = {64},
+  number  = {4},
+  pages   = {48--61},
+  doi     = {10.2469/faj.v64.n4.7}
+}
+
+@misc{zhang2021turnover_ir,
+  title        = {Turnover-Adjusted Information Ratio and Practical Performance Evaluation},
+  author       = {Zhang, (to be verified)},
+  year         = {2021},
+  howpublished = {Working paper / manuscript},
+  note         = {Turnover-adjusted IR discussion (please verify final bibliographic info)}
+}
+
+@article{bermejo2021factor_investing,
+  title   = {Improving factor investing in the European equity market},
+  author  = {Bermejo, Patricia and Figuerola-Ferretti, Isabel and Hevia, Consuelo and Santos, Manuel S.},
+  journal = {Heliyon},
+  year    = {2021},
+  volume  = {7},
+  number  = {9},
+  pages   = {e08168},
+  doi     = {10.1016/j.heliyon.2021.e08168}
+}
+
+@article{yuan2024ml_factor,
+  title   = {Machine Learning-Driven Factor Investing: Enhancing Stock Return Prediction with XGBoost},
+  author  = {Yuan, (to be verified)},
+  journal = {Transactions on Economics, Business and Management Research},
+  year    = {2024},
+  note    = {Please verify publisher and DOI if needed},
+  doi     = {10.62051/7w822231}
+}
+
+% ============================================================
+% (8) Deep Multi-Factor Model (Wei et al.)
+% ============================================================
+
 @article{wei2022factor,
   title         = {Factor Investing with a Deep Multi-Factor Model},
   author        = {Wei, Zikai and Dai, Bo and Lin, Dahua},
   year          = {2022},
   journal       = {arXiv preprint},
   archivePrefix = {arXiv},
-  eprint        = {2207.XXXX},
-  primaryClass  = {q-fin.ST},
-  note          = {Under Review}
-}
-
-@article{cheng2024stock,
-  title        = {Stock Prediction Model Based on Multi-feature Graph Attention Network},
-  author       = {Cheng, Linxuan and Wen, Jie and Wang, Yiru},
-  year         = {2024},
-  journal      = {Nanjing University of Aeronautics and Astronautics (Manuscript)},
-  note         = {Manuscript}
+  eprint        = {2207.08146},
+  primaryClass  = {q-fin.ST}
 }

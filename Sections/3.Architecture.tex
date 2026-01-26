@@ -8,7 +8,16 @@
 \chapter{實驗設計}
 \label{ch:experiment_design}
 
-本章說明整體實驗流程，涵蓋資料來源與預處理、特徵工程與圖結構建構、模型架構與訓練設定、損失函數與評估指標。實驗目標在於檢驗 Deep Multi-Factor Model（DMFM）於台灣股票市場之預測表現，並與基準模型進行對照。
+本章旨在說明本文之整體實驗設計與實作流程，內容涵蓋資料來源與預處理、特徵工程與圖結構建構、模型架構與訓練設定、損失函數設計，以及評估指標與策略驗證方法。本文以台灣股票市場日頻資料為研究對象，重點檢驗 Deep Multi-Factor Model（DMFM）在超額報酬率預測任務上的表現，並與基準模型 GATRegressor 進行系統性比較。為使讀者能快速掌握各小節之方法銜接與處理順序，圖 \ref{fig:exp-flow} 彙整本文完整實驗流程，後續將依據該流程逐步展開說明。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{img/exp_flow.png}
+    \caption{本文實驗設計流程總覽（對應第三章各小節之處理步驟與順序）}
+    \label{fig:exp-flow}
+\end{figure}
+
+
 
 % =========================================================
 \section{資料來源與預處理}
@@ -91,12 +100,22 @@ y_t = \frac{P_{t+k} - P_t}{P_t}
 \subsection{資料集劃分}
 \label{subsec:split}
 
-採時間序列切分以避免資訊洩漏（look-ahead bias）。資料依時間順序切分為訓練集與測試集，比例為 80\%:20\%（前 80\% 為訓練、後 20\% 為測試）。另為檢驗不同樣本長度下之穩健性，設計短期／中期／長期三種資料長度，並皆採用相同的 80\%/20\% 時間切分：
+為避免模型訓練過程產生未來資訊滲入（look-ahead bias），本文採用時間序列切分（time-series split）進行訓練集與測試集的劃分。具體而言，資料依日期由早至晚排序後，以前 80\% 交易日作為訓練集（Train），後 20\% 交易日作為測試集（Test），確保模型僅能利用過去資訊進行預測與評估。
+
+此外，為檢驗模型在不同樣本長度下之穩健性，本文設計短期、中期與長期三種樣本視窗，並皆採用相同的 80\%/20\% 時間切分方式。圖 \ref{fig:train_test_split} 彙整三種視窗之資料涵蓋區間與對應的訓練／測試切分位置，以利直觀比較各樣本長度下可用資訊量與測試期間差異。
+
 \begin{itemize}
     \item \textbf{短期資料：}2019-09-16 $\sim$ 2020-12-31（共 319 個交易日；訓練 255 日、測試 64 日）
     \item \textbf{中期資料：}2019-09-16 $\sim$ 2022-12-31（共 809 個交易日；訓練 647 日、測試 162 日）
     \item \textbf{長期資料：}2019-09-16 $\sim$ 2025-09-12（共 1460 個交易日；訓練 1168 日、測試 292 日）
 \end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{img/train_test_split.png}
+    \caption{三種樣本視窗之資料劃分（短期/中期/長期）}
+    \label{fig:train_test_split}
+\end{figure}
 
 % =========================================================
 \section{特徵工程與圖結構}
@@ -236,3 +255,4 @@ IC^{\text{ind-neutral}}_t = \text{Corr}\left(\tilde{\hat{y}}_{\cdot,t}, \tilde{y
 \textbf{台灣 50 ETF 基準：}以 0050 之 forward-$k$ 日報酬作為市場基準，與策略累積報酬比較。
 
 評估流程為：載入 artifacts 與模型權重後，分別於訓練期與測試期計算預測與投資組合指標；並輸出 Daily IC、IC 分佈與累積報酬等視覺化結果，以利比較不同模型之表現。對於 DMFM，另輸出注意力權重分佈作為解釋性分析依據。
+
