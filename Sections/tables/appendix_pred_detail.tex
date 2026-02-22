@@ -1,0 +1,30 @@
+\begin{table}[H]
+\centering
+\caption{各模型於不同時間窗之完整預測輸出補充（測試集）}
+\label{tab:appendix_pred_detail}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{llrrr}
+\toprule
+時間窗 & 模型 & 樣本數（筆） & MSE & Daily IC \\
+\midrule
+Short & Linear & 49280 & 0.003078 & 0.0281 \\
+ & XGBoost & 49280 & 0.003130 & 0.0646 \\
+ & LSTM & 49280 & 0.004373 & 0.0211 \\
+ & GAT & 49280 & 0.014555 & -0.0175 \\
+ & DMFM & 49280 & 0.003168 & 0.0717 \\
+\midrule
+Medium & Linear & 121734 & 0.002522 & 0.0225 \\
+ & XGBoost & 121734 & 0.002533 & 0.0688 \\
+ & LSTM & 121734 & 0.003179 & 0.0488 \\
+ & GAT & 121734 & 0.016715 & -0.0007 \\
+ & DMFM & 121734 & 0.003930 & 0.0826 \\
+\midrule
+Long & Linear & 221277 & 0.003101 & 0.0363 \\
+ & XGBoost & 221277 & 0.003094 & 0.0804 \\
+ & LSTM & 221277 & 0.003650 & 0.0323 \\
+ & GAT & 221277 & 0.006532 & -0.0085 \\
+ & DMFM & 221277 & 0.014716 & 0.0823 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}

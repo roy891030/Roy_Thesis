@@ -3,7 +3,9 @@
 \chapter{Appendix 附錄}
 \label{ch:appendix}
 
-本附錄彙整本研究模型輸入特徵之完整清單。
+本附錄彙整本研究模型輸入特徵與完整實驗輸出補充。
+
+\section{模型輸入特徵完整清單}
 
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{p{3.1cm} p{2.6cm} p{7.4cm} p{1.6cm}}
@@ -100,3 +102,340 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
 
 \end{longtable}
 \renewcommand{\arraystretch}{1.0}
+
+\section{完整實驗輸出補充}
+\label{sec:appendix_extra_outputs}
+
+\subsection{各模型於不同時間窗之完整預測輸出補充（測試集）}
+
+\input{Sections/tables/appendix_pred_detail.tex}
+
+\clearpage
+\subsection{完整累積報酬圖}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_linear/plots/cum_returns.png}
+    \caption{Linear}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_xgboost/plots/cum_returns.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_lstm/plots/cum_returns.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/gat/plots/cum_returns.png}
+    \caption{GAT}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/dmfm/plots/cum_returns.png}
+    \caption{DMFM}
+  \end{subfigure}
+  \caption{short 時間窗各模型累積報酬曲線。}
+  \label{fig:appendix_cumret_short_all}
+\end{figure}
+
+\clearpage
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_linear/plots/cum_returns.png}
+    \caption{Linear}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_xgboost/plots/cum_returns.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_lstm/plots/cum_returns.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/gat/plots/cum_returns.png}
+    \caption{GAT}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/dmfm/plots/cum_returns.png}
+    \caption{DMFM}
+  \end{subfigure}
+  \caption{medium 時間窗各模型累積報酬曲線。}
+  \label{fig:appendix_cumret_medium_all}
+\end{figure}
+
+\clearpage
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_linear/plots/cum_returns.png}
+    \caption{Linear}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_xgboost/plots/cum_returns.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_lstm/plots/cum_returns.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/gat/plots/cum_returns.png}
+    \caption{GAT}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/dmfm/plots/cum_returns.png}
+    \caption{DMFM}
+  \end{subfigure}
+  \caption{long 時間窗各模型累積報酬曲線。}
+  \label{fig:appendix_cumret_long_all}
+\end{figure}
+
+\clearpage
+\subsection{Daily IC 補充結果}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_linear/plots/daily_ic.png}
+    \caption{Linear}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_xgboost/plots/daily_ic.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_lstm/plots/daily_ic.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/gat/plots/daily_ic.png}
+    \caption{GAT}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/dmfm/plots/daily_ic.png}
+    \caption{DMFM}
+  \end{subfigure}
+  \caption{short 時間窗各模型 Daily IC。}
+  \label{fig:appendix_dailyic_short_all}
+\end{figure}
+
+\clearpage
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_linear/plots/daily_ic.png}
+    \caption{Linear}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_xgboost/plots/daily_ic.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_lstm/plots/daily_ic.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/gat/plots/daily_ic.png}
+    \caption{GAT}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/dmfm/plots/daily_ic.png}
+    \caption{DMFM}
+  \end{subfigure}
+  \caption{medium 時間窗各模型 Daily IC。}
+  \label{fig:appendix_dailyic_medium_all}
+\end{figure}
+
+\clearpage
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_linear/plots/daily_ic.png}
+    \caption{Linear}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_xgboost/plots/daily_ic.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_lstm/plots/daily_ic.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/gat/plots/daily_ic.png}
+    \caption{GAT}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/dmfm/plots/daily_ic.png}
+    \caption{DMFM}
+  \end{subfigure}
+  \caption{long 時間窗各模型 Daily IC。}
+  \label{fig:appendix_dailyic_long_all}
+\end{figure}
+
+\clearpage
+\subsection{IC 分佈補充結果}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_linear/plots/ic_distribution.png}
+    \caption{Linear}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_xgboost/plots/ic_distribution.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_lstm/plots/ic_distribution.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/gat/plots/ic_distribution.png}
+    \caption{GAT}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/dmfm/plots/ic_distribution.png}
+    \caption{DMFM}
+  \end{subfigure}
+  \caption{short 時間窗各模型 IC 分佈。}
+  \label{fig:appendix_icdist_short_all}
+\end{figure}
+
+\clearpage
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_linear/plots/ic_distribution.png}
+    \caption{Linear}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_xgboost/plots/ic_distribution.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_lstm/plots/ic_distribution.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/gat/plots/ic_distribution.png}
+    \caption{GAT}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/dmfm/plots/ic_distribution.png}
+    \caption{DMFM}
+  \end{subfigure}
+  \caption{medium 時間窗各模型 IC 分佈。}
+  \label{fig:appendix_icdist_medium_all}
+\end{figure}
+
+\clearpage
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_linear/plots/ic_distribution.png}
+    \caption{Linear}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_xgboost/plots/ic_distribution.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_lstm/plots/ic_distribution.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/gat/plots/ic_distribution.png}
+    \caption{GAT}
+  \end{subfigure}
+  \vspace{0.15em}
+  \begin{subfigure}[t]{0.98\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/dmfm/plots/ic_distribution.png}
+    \caption{DMFM}
+  \end{subfigure}
+  \caption{long 時間窗各模型 IC 分佈。}
+  \label{fig:appendix_icdist_long_all}
+\end{figure}

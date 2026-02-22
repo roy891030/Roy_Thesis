@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-02-21T21:44:14",
+  "started_at": "2026-02-22T17:44:45",
   "mode": "full",
   "models": [
     "baseline",
@@ -16,6 +16,8 @@
     "medium",
     "long"
   ],
+  "train_ratio": 0.8,
+  "val_ratio": 0.1,
   "artifacts": {},
   "runs": [
     {
@@ -113,5 +115,5 @@
     }
   ],
   "dry_run": false,
-  "finished_at": "2026-02-21T22:50:28"
+  "finished_at": "2026-02-22T19:44:58"
 }

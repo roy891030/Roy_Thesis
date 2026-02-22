@@ -4,28 +4,10 @@
 \section{未來研究}
 \label{sec:future_work}
 
-本研究目前的主要後續工作是先修正程式流程中的關鍵問題，再重新評估模型效能，並與 0050 以一致口徑比較。重點如下。
+未來研究將聚焦於下列三項工作：
 
-\begin{enumerate}
-  \item \textbf{DMFM 訓練訊號梯度中斷}\\
-  問題：IC 與 factor return 相關項在計算時轉成常數，未真正參與反向傳播。\\
-  修正：將損失改為全可微分實作，確保 supervised 訊號能有效更新模型參數。
-
-  \item \textbf{資料切分造成測試洩漏}\\
-  問題：目前用測試集做 early stopping，並同時回報最終成績。\\
-  修正：改為 train/validation/test 三段切分，validation 僅用於調參與 early stopping，test 僅保留最終一次評估。
-
-  \item \textbf{GAT 損失設計扭曲預測尺度}\\
-  問題：現有損失含鼓勵預測方差擴大的項，容易導致輸出振幅不穩。\\
-  修正：移除或弱化該項，重新平衡 correlation 與誤差項權重，提升訓練穩定性。
-
-  \item \textbf{跨流程設定未一致貫穿}\\
-  問題：如 \texttt{train\_ratio} 在訓練與評估流程未完全一致，影響跨模型公平比較。\\
-  修正：統一參數在 artifact 建置、訓練、評估與回測全流程一致使用。
-
-  \item \textbf{圖結構與評估框架仍可強化}\\
-  問題：目前 GAT 實作未完整使用 universe graph，且指標解讀仍偏重 MSE。\\
-  修正：導入完整市場關係圖，並以 IC/ICIR 與投組績效作為主要判讀依據。
-\end{enumerate}
-
-整體而言，後續研究將先完成上述程式修正，再以一致且可重現的評估流程重新驗證 DMFM 與 GAT 的實際增益。
+\begin{itemize}
+  \item \textbf{補齊 benchmark model 的投組績效比較：}除既有預測指標外，將 Linear、XGBoost、LSTM 也納入投組回測，與 GAT、DMFM 以同一口徑輸出年化報酬、Sharpe、勝率與累積報酬，提供完整數值比較結果。
+  \item \textbf{增加資料筆數：}擴充訓練與測試樣本區間，提升模型估計穩健性，並降低單一期間市場狀態對結論的影響。
+  \item \textbf{加入更多特徵：}在既有特徵基礎上增加更多不同型態訊號（如基本面、技術面、流動性與風險特徵），並透過特徵篩選與消融分析評估其對預測與投組績效的增益。
+\end{itemize}

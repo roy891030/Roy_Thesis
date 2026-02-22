@@ -6,7 +6,9 @@
 \section{模型對比}
 \label{sec:model_comparison}
 
-本節比較五個模型（Linear、XGBoost、LSTM、GAT、DMFM）在三種時間窗（Short/Medium/Long）之測試表現。主要指標如下：
+\subsection{評估指標說明}
+
+本研究比較五個模型（Linear、XGBoost、LSTM、GAT、DMFM）在三種時間窗（Short/Medium/Long）之測試表現。指標設計分成兩類：RMSE/MAE 用於衡量點預測誤差，IC/ICIR/DirAcc 用於衡量排序與方向判斷是否可用於選股決策。
 
 \begin{itemize}
   \item \textbf{RMSE}：$\sqrt{\frac{1}{M}\sum_{t,i}(\hat{y}_{i,t}-y_{i,t})^2}$。
@@ -18,59 +20,70 @@
 
 其中 $M$ 為測試集中「交易日$\times$股票」樣本總數，$\hat{y}_{i,t}$ 與 $y_{i,t}$ 分別為模型預測值與實際報酬。
 
+\subsection{模型比較結果}
+
 \input{Sections/tables/results_pred_metrics.tex}
 
-由表 \ref{tab:results_pred_metrics} 得到的主要觀察如下：
-\begin{itemize}
-  \item \textbf{排序能力}：XGBoost 在 Short/Medium/Long 三個時間窗皆有最高 IC 與 ICIR，代表排序訊號最穩定。
-  \item \textbf{誤差表現}：Short、Medium 以 Linear 的 RMSE/MAE 最低；Long 則由 XGBoost 略優。
-  \item \textbf{方向準確率與排序品質分離}：GAT 在 Short 的 DirAcc 較高，但 IC/ICIR 偏弱，顯示方向命中率高不必然代表排序訊號品質佳。
-\end{itemize}
+表 \ref{tab:results_pred_metrics} 先呈現完整數值，圖 \ref{fig:results_model_comparison_metrics} 進一步以視覺化方式呈現同一組比較結果，便於跨模型與跨時間窗對照。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.90\textwidth]{img/results_model_comparison_metrics.png}
   \caption{各模型在不同時間窗之關鍵預測指標比較（ICIR、IC、RMSE、DirAcc）。}
   \label{fig:results_model_comparison_metrics}
 \end{figure}
 
+由表 \ref{tab:results_pred_metrics} 與圖 \ref{fig:results_model_comparison_metrics} 可得：
+\begin{itemize}
+  \item \textbf{誤差表現}：點預測誤差仍以 Linear/XGBoost 較低；DMFM 與 GAT 的 RMSE/MAE 較高，顯示排序訊號優勢不必然伴隨最小化誤差。
+  \item \textbf{排序能力}：DMFM 在 Short/Medium 的 IC 與 DirAcc 皆為最佳；在 Long 視窗中，DMFM 與 XGBoost 的 IC 接近（0.0834 vs 0.0837），且 DMFM 的 ICIR 最高（0.7854）。
+  \item \textbf{模型定位差異}：DMFM 在排序相關指標與方向準確率上有明顯提升，而 Linear/XGBoost 仍在誤差指標上保有優勢。
+\end{itemize}
+其餘預測輸出（含 MSE、Daily IC 與完整模型彙整）見附錄 \ref{sec:appendix_extra_outputs}。
+\FloatBarrier
+
 \section{投組績效驗證}
 \label{sec:portfolio_performance}
 
-本節比較 GAT、DMFM 與基準組合在不同時間窗的年化報酬、Sharpe 與勝率。
+本節比較 GAT、DMFM 與 0050 在不同時間窗的年化報酬、Sharpe 與勝率。回測選股流程為：在每次再平衡日，先依模型預測分數由高至低排序，再選取前 \texttt{top\_pct} 股票等權做多，持有至下一次再平衡。表 \ref{tab:results_portfolio_metrics} 彙整績效指標；圖 \ref{fig:results_cum_returns_grid} 對應呈現 Short/Medium/Long 三種時間窗的累積報酬曲線比較（已收錄於圖目錄）。
+其中「對齊的天數」表示策略與 0050 在同一時間軸可直接比較的對齊後樣本天數。
 
 \input{Sections/tables/results_portfolio_metrics.tex}
 
-由表 \ref{tab:results_portfolio_metrics} 的比較可得：
-\begin{itemize}
-  \item \textbf{Short}：Benchmark 最佳；DMFM 為正報酬但仍落後基準，GAT 為負報酬。
-  \item \textbf{Medium}：三者年化皆為負，且 DMFM 的 Sharpe 最弱。
-  \item \textbf{Long}：GAT 取得最佳年化（0.0566）與 Sharpe（0.816），顯著優於同期基準。
-\end{itemize}
-
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{img/results_cum_returns_grid.png}
   \caption{GAT 與 DMFM 在 Short/Medium/Long 三種時間窗之累積報酬曲線比較。}
   \label{fig:results_cum_returns_grid}
 \end{figure}
 
+由表 \ref{tab:results_portfolio_metrics} 與圖 \ref{fig:results_cum_returns_grid} 搭配比較可得：
+\begin{itemize}
+  \item \textbf{Short}：DMFM 年化 0.9298、Sharpe 8.002、勝率 0.846，優於 GAT 與 0050。
+  \item \textbf{Medium}：DMFM（年化 0.3734、Sharpe 1.274）優於 GAT（0.1158、0.570）與 0050（負年化）。
+  \item \textbf{Long}：DMFM 仍維持最佳（年化 0.3131、Sharpe 1.369），GAT 在長窗轉為負年化。
+\end{itemize}
+完整累積報酬圖（含各時間窗、各模型）見附錄 \ref{sec:appendix_extra_outputs}；其餘回測輸出（Daily IC、IC 分佈、月度命中率等）亦整理於附錄。
+\FloatBarrier
+
 \section{特徵重要性排名}
 \label{sec:feature_importance}
 
-為了解 DMFM 在不同時間窗下偏好的訊號來源，本節依注意力權重統計前五特徵。表 \ref{tab:results_dmfm_attention} 列出各時間窗的 Top-5 結果。
+為了解 DMFM 在不同時間窗下偏好的訊號來源，本節依注意力權重統計前五特徵。表 \ref{tab:results_dmfm_attention} 列出各時間窗的 Top-5 結果，圖 \ref{fig:results_dmfm_attention_top5} 以圖形方式對照相同資訊。
 
 \input{Sections/tables/results_dmfm_attention.tex}
 
-由表 \ref{tab:results_dmfm_attention} 可得兩項重點：
-\begin{itemize}
-  \item \texttt{amihud\_5} 與 \texttt{roll\_max\_10} 在多個時間窗重複出現，代表短期流動性與區間位置特徵具有持續影響力。
-  \item \texttt{ps} 在 Medium/Long 皆為第一，顯示中長期設定下估值訊號的重要性提升。
-\end{itemize}
-
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{img/results_dmfm_attention_top5.png}
   \caption{DMFM 在不同時間窗的注意力前五特徵權重。}
   \label{fig:results_dmfm_attention_top5}
 \end{figure}
+
+由表 \ref{tab:results_dmfm_attention} 與圖 \ref{fig:results_dmfm_attention_top5} 可得兩項重點：
+\begin{itemize}
+  \item 區間位置與量價特徵在多個時間窗持續出現（如 \texttt{roll\_max\_5}、\texttt{pct\_to\_low\_20}、\texttt{down\_vol\_20}），顯示 DMFM 偏好結合價格區間與量能訊號。
+  \item 流動性與動能訊號仍具影響力（如 \texttt{amihud\_20}、\texttt{amihud\_5}、\texttt{ret\_20}、\texttt{macd\_signal}），反映模型在不同時間窗會切換關注的主導因子。
+\end{itemize}
+更多注意力與輔助輸出亦整理於附錄 \ref{sec:appendix_extra_outputs}。
+\FloatBarrier
