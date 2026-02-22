@@ -22,16 +22,17 @@
 
 \subsection{模型比較結果}
 
+\begin{samepage}
 \input{Sections/tables/results_pred_metrics.tex}
-
-表 \ref{tab:results_pred_metrics} 先呈現完整數值，圖 \ref{fig:results_model_comparison_metrics} 進一步以視覺化方式呈現同一組比較結果，便於跨模型與跨時間窗對照。
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.90\textwidth]{img/results_model_comparison_metrics.png}
+  \includegraphics[width=0.86\textwidth]{img/results_model_comparison_metrics.png}
   \caption{各模型在不同時間窗之關鍵預測指標比較（ICIR、IC、RMSE、DirAcc）。}
   \label{fig:results_model_comparison_metrics}
 \end{figure}
+表 \ref{tab:results_pred_metrics} 先呈現完整數值，圖 \ref{fig:results_model_comparison_metrics} 進一步以視覺化方式呈現同一組比較結果，便於跨模型與跨時間窗對照。
+\end{samepage}
 
 由表 \ref{tab:results_pred_metrics} 與圖 \ref{fig:results_model_comparison_metrics} 可得：
 \begin{itemize}
