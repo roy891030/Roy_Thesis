@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\caption{GAT、DMFM 與基準於回測區間之績效比較}
+\label{tab:results_portfolio_metrics}
+\begin{adjustbox}{max width=0.92\textwidth}
+\begin{tabular}{llrrrr}
+\toprule
+時間窗 & 組合 & 對齊期數($n$) & 年化報酬 & Sharpe & 勝率 \\
+\midrule
+Short & Benchmark & 13 & \textbf{0.7584} & \textbf{4.201} & \textbf{0.615} \\
+ & GAT & 13 & -0.1206 & -2.526 & 0.462 \\
+ & DMFM & 13 & 0.1085 & 2.929 & 0.538 \\
+\midrule
+Medium & Benchmark & 33 & -0.0890 & \textbf{-0.341} & 0.424 \\
+ & GAT & 33 & \textbf{-0.0746} & -0.501 & \textbf{0.515} \\
+ & DMFM & 33 & -0.1611 & -2.341 & 0.364 \\
+\midrule
+Long & Benchmark & 35 & -0.0335 & -0.113 & 0.486 \\
+ & GAT & 35 & \textbf{0.0566} & \textbf{0.816} & \textbf{0.514} \\
+ & DMFM & 35 & -0.0286 & -0.330 & 0.514 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}

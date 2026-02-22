@@ -1,81 +1,76 @@
 \chapter{實驗結果}
 \label{ch:results}
 
-% 本章呈現實驗結果，包含模型對比、投組績效與特徵重要性分析
+本章整理各模型在相同資料切分下的測試結果，從（1）預測能力、（2）投組績效、（3）DMFM 特徵權重三個面向進行比較。
 
 \section{模型對比}
 \label{sec:model_comparison}
 
-% 在此撰寫：
-% - LSTM vs GAT vs DMFM 預測準確度比較
-% - 各模型的 RMSE, MAE, R² 等指標
-% - 不同市場條件下的表現差異
-% - 結果分析與討論
+本節比較五個模型（Linear、XGBoost、LSTM、GAT、DMFM）在三種時間窗（Short/Medium/Long）之測試表現。主要指標如下：
 
-（此處撰寫模型對比內容）
+\begin{itemize}
+  \item \textbf{RMSE}：$\sqrt{\frac{1}{M}\sum_{t,i}(\hat{y}_{i,t}-y_{i,t})^2}$。
+  \item \textbf{MAE}：$\frac{1}{M}\sum_{t,i}\left|\hat{y}_{i,t}-y_{i,t}\right|$。
+  \item \textbf{IC}：以每日截面相關係數 $IC_t=\mathrm{corr}(\hat{y}_{:,t},y_{:,t})$ 計算，再彙整其平均值。
+  \item \textbf{ICIR}：$\frac{\mathrm{mean}(IC_t)}{\mathrm{std}(IC_t)}$，衡量排序訊號的穩定性。
+  \item \textbf{DirAcc}：$\frac{1}{M}\sum_{t,i}\mathbf{1}\!\left[\mathrm{sign}(\hat{y}_{i,t})=\mathrm{sign}(y_{i,t})\right]$。
+\end{itemize}
 
-% 範例：可以插入比較表格
-% \begin{table}[h]
-% \centering
-% \caption{模型預測準確度比較}
-% \begin{tabular}{c|c|c|c}
-% \toprule[1.25pt]
-% 模型 & RMSE & MAE & R² \\
-% \midrule
-% LSTM & 0.025 & 0.018 & 0.65 \\
-% GAT & 0.022 & 0.016 & 0.71 \\
-% DMFM & \textbf{0.019} & \textbf{0.014} & \textbf{0.76} \\
-% \bottomrule[1.25pt]
-% \end{tabular}
-% \label{table:model_comparison}
-% \end{table}
+其中 $M$ 為測試集中「交易日$\times$股票」樣本總數，$\hat{y}_{i,t}$ 與 $y_{i,t}$ 分別為模型預測值與實際報酬。
+
+\input{Sections/tables/results_pred_metrics.tex}
+
+由表 \ref{tab:results_pred_metrics} 得到的主要觀察如下：
+\begin{itemize}
+  \item \textbf{排序能力}：XGBoost 在 Short/Medium/Long 三個時間窗皆有最高 IC 與 ICIR，代表排序訊號最穩定。
+  \item \textbf{誤差表現}：Short、Medium 以 Linear 的 RMSE/MAE 最低；Long 則由 XGBoost 略優。
+  \item \textbf{方向準確率與排序品質分離}：GAT 在 Short 的 DirAcc 較高，但 IC/ICIR 偏弱，顯示方向命中率高不必然代表排序訊號品質佳。
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.90\textwidth]{img/results_model_comparison_metrics.png}
+  \caption{各模型在不同時間窗之關鍵預測指標比較（ICIR、IC、RMSE、DirAcc）。}
+  \label{fig:results_model_comparison_metrics}
+\end{figure}
 
 \section{投組績效驗證}
 \label{sec:portfolio_performance}
 
-% 在此撰寫：
-% - 回測期間與設定
-% - 年化報酬率
-% - Sharpe Ratio
-% - 最大回撤
-% - 與基準指數的比較（例如大盤指數）
-% - 績效歸因分析
+本節比較 GAT、DMFM 與基準組合在不同時間窗的年化報酬、Sharpe 與勝率。
 
-（此處撰寫投組績效驗證內容）
+\input{Sections/tables/results_portfolio_metrics.tex}
 
-% 範例：可以插入績效圖表
-% \begin{figure}[htb]
-%   \centering
-%   \includegraphics[width=0.9\textwidth]{img/portfolio_performance.png}
-%   \caption{投資組合累積報酬曲線}
-%   \label{fig:portfolio_performance}
-% \end{figure}
+由表 \ref{tab:results_portfolio_metrics} 的比較可得：
+\begin{itemize}
+  \item \textbf{Short}：Benchmark 最佳；DMFM 為正報酬但仍落後基準，GAT 為負報酬。
+  \item \textbf{Medium}：三者年化皆為負，且 DMFM 的 Sharpe 最弱。
+  \item \textbf{Long}：GAT 取得最佳年化（0.0566）與 Sharpe（0.816），顯著優於同期基準。
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{img/results_cum_returns_grid.png}
+  \caption{GAT 與 DMFM 在 Short/Medium/Long 三種時間窗之累積報酬曲線比較。}
+  \label{fig:results_cum_returns_grid}
+\end{figure}
 
 \section{特徵重要性排名}
 \label{sec:feature_importance}
 
-% 在此撰寫：
-% - 使用的特徵重要性分析方法
-% - 技術指標重要性排名
-% - 圖結構對預測的影響
-% - 注意力權重分析（GAT/DMFM）
-% - 結果解釋與討論
+為了解 DMFM 在不同時間窗下偏好的訊號來源，本節依注意力權重統計前五特徵。表 \ref{tab:results_dmfm_attention} 列出各時間窗的 Top-5 結果。
 
-（此處撰寫特徵重要性排名內容）
+\input{Sections/tables/results_dmfm_attention.tex}
 
-% 範例：可以插入特徵重要性表格或圖表
-% \begin{table}[h]
-% \centering
-% \caption{前十大重要特徵}
-% \begin{tabular}{c|l|c}
-% \toprule[1.25pt]
-% 排名 & 特徵名稱 & 重要性分數 \\
-% \midrule
-% 1 & RSI\_14 & 0.156 \\
-% 2 & MACD & 0.142 \\
-% 3 & Volume\_MA\_20 & 0.128 \\
-% ... & ... & ... \\
-% \bottomrule[1.25pt]
-% \end{tabular}
-% \label{table:feature_importance}
-% \end{table}
+由表 \ref{tab:results_dmfm_attention} 可得兩項重點：
+\begin{itemize}
+  \item \texttt{amihud\_5} 與 \texttt{roll\_max\_10} 在多個時間窗重複出現，代表短期流動性與區間位置特徵具有持續影響力。
+  \item \texttt{ps} 在 Medium/Long 皆為第一，顯示中長期設定下估值訊號的重要性提升。
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{img/results_dmfm_attention_top5.png}
+  \caption{DMFM 在不同時間窗的注意力前五特徵權重。}
+  \label{fig:results_dmfm_attention_top5}
+\end{figure}

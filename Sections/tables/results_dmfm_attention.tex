@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\caption{DMFM 注意力權重前五特徵（依時間窗）}
+\label{tab:results_dmfm_attention}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lccccc}
+\toprule
+時間窗 & Rank1 & Rank2 & Rank3 & Rank4 & Rank5 \\
+\midrule
+Short & \texttt{amihud\_5} (0.0278) & \texttt{rev\_1} (0.0225) & \texttt{up\_vol\_20} (0.0205) & \texttt{roll\_min\_5} (0.0196) & \texttt{roll\_max\_10} (0.0196) \\
+Medium & \texttt{ps} (0.0608) & \texttt{roll\_max\_10} (0.0370) & \texttt{amihud\_5} (0.0318) & \texttt{down\_vol\_20} (0.0302) & \texttt{rev\_10} (0.0302) \\
+Long & \texttt{ps} (0.0274) & \texttt{amihud\_20} (0.0246) & \texttt{roll\_min\_5} (0.0226) & \texttt{amihud\_5} (0.0220) & \texttt{roll\_max\_10} (0.0220) \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}

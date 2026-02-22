@@ -1,0 +1,117 @@
+{
+  "started_at": "2026-02-21T21:44:14",
+  "mode": "full",
+  "models": [
+    "baseline",
+    "gat",
+    "dmfm"
+  ],
+  "baseline_models": [
+    "linear",
+    "xgboost",
+    "lstm"
+  ],
+  "windows": [
+    "short",
+    "medium",
+    "long"
+  ],
+  "artifacts": {},
+  "runs": [
+    {
+      "window": "short",
+      "model": "baseline_linear",
+      "artifact_dir": "artifacts/short",
+      "output_dir": "runs_full/short/baseline_linear"
+    },
+    {
+      "window": "short",
+      "model": "baseline_xgboost",
+      "artifact_dir": "artifacts/short",
+      "output_dir": "runs_full/short/baseline_xgboost"
+    },
+    {
+      "window": "short",
+      "model": "baseline_lstm",
+      "artifact_dir": "artifacts/short",
+      "output_dir": "runs_full/short/baseline_lstm"
+    },
+    {
+      "window": "short",
+      "model": "gat",
+      "artifact_dir": "artifacts/short",
+      "output_dir": "runs_full/short/gat"
+    },
+    {
+      "window": "short",
+      "model": "dmfm",
+      "artifact_dir": "artifacts/short",
+      "output_dir": "runs_full/short/dmfm",
+      "extra_analysis": false
+    },
+    {
+      "window": "medium",
+      "model": "baseline_linear",
+      "artifact_dir": "artifacts/medium",
+      "output_dir": "runs_full/medium/baseline_linear"
+    },
+    {
+      "window": "medium",
+      "model": "baseline_xgboost",
+      "artifact_dir": "artifacts/medium",
+      "output_dir": "runs_full/medium/baseline_xgboost"
+    },
+    {
+      "window": "medium",
+      "model": "baseline_lstm",
+      "artifact_dir": "artifacts/medium",
+      "output_dir": "runs_full/medium/baseline_lstm"
+    },
+    {
+      "window": "medium",
+      "model": "gat",
+      "artifact_dir": "artifacts/medium",
+      "output_dir": "runs_full/medium/gat"
+    },
+    {
+      "window": "medium",
+      "model": "dmfm",
+      "artifact_dir": "artifacts/medium",
+      "output_dir": "runs_full/medium/dmfm",
+      "extra_analysis": false
+    },
+    {
+      "window": "long",
+      "model": "baseline_linear",
+      "artifact_dir": "artifacts/long",
+      "output_dir": "runs_full/long/baseline_linear"
+    },
+    {
+      "window": "long",
+      "model": "baseline_xgboost",
+      "artifact_dir": "artifacts/long",
+      "output_dir": "runs_full/long/baseline_xgboost"
+    },
+    {
+      "window": "long",
+      "model": "baseline_lstm",
+      "artifact_dir": "artifacts/long",
+      "output_dir": "runs_full/long/baseline_lstm"
+    },
+    {
+      "window": "long",
+      "model": "gat",
+      "artifact_dir": "artifacts/long",
+      "output_dir": "runs_full/long/gat"
+    },
+    {
+      "window": "long",
+      "model": "dmfm",
+      "artifact_dir": "artifacts/long",
+      "output_dir": "runs_full/long/dmfm",
+      "extra_analysis": false
+    }
+  ],
+  "dry_run": false,
+  "finished_at": "2026-02-21T22:50:28"
+}

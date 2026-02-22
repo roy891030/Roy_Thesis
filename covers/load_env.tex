@@ -5,17 +5,25 @@
 
 \usepackage{xeCJK}       %讓中英文字體分開設置
 \usepackage[UTF8,fontset=none,scheme=plain]{ctex}
-% Mac 使用內建楷體 Kaiti TC，如果無法編譯可改用 Songti TC 或 PingFang TC
-\setCJKmainfont[
-  Path=/System/Library/AssetsV2/com_apple_MobileAsset_Font7/54a2ad3dac6cac875ad675d7d273dc425010a877.asset/AssetData/,
-  UprightFont=Kaiti.ttc,
-  AutoFakeBold={4},
-  AutoFakeSlant=0.2
-]{Kaiti TC}
-%\setmainfont{Times New Roman}
+% 可攜式字型設定：優先使用常見 macOS 字型，找不到時自動 fallback
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\setmainfont{TeX Gyre Termes}}
 
-\usepackage[T1]{fontenc}
-\usepackage{times}
+\IfFontExistsTF{Kaiti TC}
+  {\setCJKmainfont[AutoFakeBold={4},AutoFakeSlant=0.2]{Kaiti TC}}
+  {\IfFontExistsTF{Songti TC}
+    {\setCJKmainfont[AutoFakeBold={4},AutoFakeSlant=0.2]{Songti TC}}
+    {\setCJKmainfont[AutoFakeBold={4},AutoFakeSlant=0.2]{PingFang TC}}}
+
+\IfFontExistsTF{PingFang TC}
+  {\setCJKsansfont{PingFang TC}}
+  {\setCJKsansfont{Songti TC}}
+
+\IfFontExistsTF{Menlo}
+  {\setCJKmonofont{Menlo}}
+  {\setCJKmonofont{Courier New}}
+
 \usepackage{CJKnumb}
 
 \usepackage{subcaption}
