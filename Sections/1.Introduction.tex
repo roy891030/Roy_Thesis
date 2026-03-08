@@ -10,7 +10,7 @@
 
 另一方面，金融市場並非由彼此獨立的資產所構成。台灣股票之間普遍存在產業層級與市場層級的共同因子影響（common factors），使個股報酬在截面（cross-section）上呈現結構性相依。傳統時間序列模型（如 LSTM）多以單一資產的歷史序列為主要訊號來源，較難直接刻畫股票之間的關係拓撲；因此近年研究開始引入圖神經網路（Graph Neural Networks, GNNs），以「節點（股票）—邊（關係）」的方式建模產業或市場連結，並透過訊息傳遞（message passing）與注意力機制（attention mechanism）聚合鄰居資訊，以提升截面預測與排序任務的表現與可解釋性。
 
-在上述脈絡下，結合多因子表示（multi-factor representation）與圖注意力（graph attention）的模型架構，特別是能分離產業與全市場共同影響的設計，提供了一條兼顧「特徵可學習性」與「關係結構建模」的路徑。本文後續將採用深度多因子模型結合圖注意力之框架，並以台灣日頻資料進行實證檢驗。
+在上述脈絡下，結合多因子表示（multi-factor representation）與圖關注（graph attention）的模型架構，特別是能分離產業與全市場共同影響的設計，提供了一條兼顧「特徵可學習性」與「關係結構建模」的路徑。本文後續將採用深度多因子模型結合圖關注之框架，並以台灣日頻資料進行實證檢驗。
 
 \section{研究問題}
 \label{sec:problem}
@@ -44,14 +44,96 @@
 \section{論文架構}
 \label{sec:organization}
 
-本文共分為五章，各章內容如下。
+為使本文之章節承接關係更清楚，圖 \ref{fig:thesis-organization-flow} 以流程圖方式彙整五章內容與其對應子題。
 
-第一章為緒論，說明研究動機與背景、研究問題、研究方法與預期貢獻，並概述全文架構。
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        node distance=8mm,
+        chapterbox/.style={
+            draw,
+            rounded corners=3pt,
+            align=left,
+            font=\small,
+            inner sep=7pt,
+            minimum height=11mm,
+            text width=14.0cm
+        },
+        component/.style={
+            draw,
+            rounded corners=2pt,
+            align=left,
+            font=\small,
+            inner sep=5pt,
+            minimum height=11mm,
+            text width=6.4cm
+        },
+        componentwide/.style={
+            draw,
+            rounded corners=2pt,
+            align=left,
+            font=\small,
+            inner sep=5pt,
+            minimum height=11mm,
+            text width=14.0cm
+        },
+        groupbox/.style={
+            draw,
+            dashed,
+            rounded corners=4pt,
+            inner sep=10pt
+        },
+        grouptitle/.style={
+            font=\footnotesize\bfseries,
+            fill=white,
+            inner sep=1pt
+        },
+        flowarrow/.style={-{Stealth[length=2.8mm]}, thick}
+    ]
+        \node[chapterbox] (ch1) {\textbf{第一章 緒論}\\
+        研究背景與動機\\
+        研究問題\\
+        研究方法與研究貢獻\\
+        論文架構};
 
-第二章為文獻回顧，依序整理技術指標在深度學習中的特徵表示、時間序列模型（如 LSTM）於金融預測的典型做法、圖神經網路的基本概念與代表性架構，以及圖注意力模型（GAT）在股票預測／排序任務上的應用與限制，作為後續方法設計之理論與實證依據。
+        \node[component, below=10mm of ch1, xshift=-3.7cm] (b1) {線性迴歸在股票報酬預測中的角色與限制\\（Linear Regression）};
+        \node[component, right=10mm of b1] (b2) {非線性機器學習模型\\與特徵工程導向方法\\（Tree-based Models）};
+        \node[component, below=7mm of b1] (b3) {技術指標之特徵表示};
+        \node[component, below=7mm of b2] (b4) {時間序列模型在金融預測中的應用\\（LSTM）};
+        \node[component, below=7mm of b3] (b5) {圖神經網路的基本概念與代表性架構\\（以 GAT 為代表）};
+        \node[component, below=7mm of b4] (b6) {GAT 在股票預測與排序任務上\\的應用與限制};
+        \node[componentwide, below=7mm of b5, xshift=3.7cm] (b7) {IC 與 ICIR 的理論意涵與實務角色};
+        \node[groupbox, fit=(b1)(b7)] (groupb) {};
+        \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupb.north west) {第二章 文獻回顧};
 
-第三章為實驗設計，說明資料來源與預處理流程、特徵工程與圖結構建構方式、模型架構（基準模型 GATRegressor 與 DMFM）、損失函數設定，以及評估指標與實驗切分規則。
+        \node[component, below=10mm of groupb, xshift=-3.7cm] (c1) {資料來源與預處理};
+        \node[component, right=10mm of c1] (c2) {特徵工程與圖結構};
+        \node[component, below=7mm of c2] (c3) {模型設計};
+        \node[component, below=7mm of c1] (c4) {損失函數};
+        \node[component, below=7mm of c4] (c5) {評估指標\\（預測品質指標、投資組合績效指標）};
+        \node[component, below=7mm of c3] (c6) {基準比較與流程摘要};
+        \node[groupbox, fit=(c1)(c6)] (groupc) {};
+        \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupc.north west) {第三章 實驗設計};
 
-第四章為實驗結果，呈現不同模型之預測表現比較、IC／ICIR 與產業中性 IC 之結果分析，並以投資組合績效驗證模型訊號在策略層面的有效性與穩健性（含不同樣本長度設定之比較）。
+        \node[component, below=10mm of groupc, xshift=-3.7cm] (d1) {模型評估指標對比\\（Linear／XGBoost／LSTM／GAT）};
+        \node[component, right=10mm of d1] (d2) {投資組合績效驗證\\（與 0050 比較）};
+        \node[componentwide, below=7mm of d1, xshift=3.7cm] (d3) {特徵重要性分析};
+        \node[groupbox, fit=(d1)(d3)] (groupd) {};
+        \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupd.north west) {第四章 實驗結果};
 
-第五章為結論，總結本文之主要發現，討論方法限制與可能的改進方向，並提出後續在實務應用與研究延伸上的建議。
+        \node[chapterbox, below=10mm of groupd] (ch5) {\textbf{第五章 結論與未來研究}};
+
+        \coordinate (b2c) at ($(groupb.south |- groupc.north)$);
+        \draw[flowarrow] (ch1.south) -- (groupb.north);
+        \draw[flowarrow] (groupb.south) -- (b2c);
+        \draw[flowarrow] (groupc.south) -- (groupd.north);
+        \draw[flowarrow] (groupd.south) -- (ch5.north);
+        \draw[flowarrow] (c1.east) -- (c2.west);
+        \draw[flowarrow] (c2.south) -- (c3.north);
+        \draw[flowarrow] (c3.west) -- (c4.east);
+        \draw[flowarrow] (c4.south) -- (c5.north);
+        \draw[flowarrow] (c5.east) -- (c6.west);
+    \end{tikzpicture}
+    \caption{論文整體架構流程圖}
+    \label{fig:thesis-organization-flow}
+\end{figure}

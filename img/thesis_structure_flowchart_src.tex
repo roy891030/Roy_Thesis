@@ -1,0 +1,95 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{ctex}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc}
+\setCJKmainfont{DFBiaoKaiShu-B5}
+\setCJKsansfont{DFBiaoKaiShu-B5}
+
+\begin{document}
+\begin{tikzpicture}[
+    node distance=8mm,
+    chapterbox/.style={
+        draw,
+        rounded corners=3pt,
+        align=left,
+        font=\small,
+        inner sep=7pt,
+        minimum height=11mm,
+        text width=14.0cm
+    },
+    component/.style={
+        draw,
+        rounded corners=2pt,
+        align=left,
+        font=\small,
+        inner sep=5pt,
+        minimum height=11mm,
+        text width=6.4cm
+    },
+    componentwide/.style={
+        draw,
+        rounded corners=2pt,
+        align=left,
+        font=\small,
+        inner sep=5pt,
+        minimum height=11mm,
+        text width=14.0cm
+    },
+    groupbox/.style={
+        draw,
+        dashed,
+        rounded corners=4pt,
+        inner sep=10pt
+    },
+    grouptitle/.style={
+        font=\footnotesize\bfseries,
+        fill=white,
+        inner sep=1pt
+    },
+    flowarrow/.style={-{Stealth[length=2.8mm]}, thick}
+]
+    \node[chapterbox] (ch1) {\textbf{第一章 緒論}\\
+    研究背景與動機\\
+    研究問題\\
+    研究方法與研究貢獻\\
+    論文架構};
+
+    \node[component, below=10mm of ch1, xshift=-3.7cm] (b1) {線性迴歸在股票報酬預測中的角色與限制};
+    \node[component, right=10mm of b1] (b2) {非線性機器學習模型\\與特徵工程導向方法};
+    \node[component, below=7mm of b1] (b3) {技術指標之特徵表示};
+    \node[component, below=7mm of b2] (b4) {時間序列模型在金融預測中的應用};
+    \node[component, below=7mm of b3] (b5) {圖神經網路的基本概念與代表性架構};
+    \node[component, below=7mm of b4] (b6) {GAT 在股票預測與排序任務上\\的應用與限制};
+    \node[componentwide, below=7mm of b5, xshift=3.7cm] (b7) {IC 與 ICIR 的理論意涵與實務角色};
+    \node[groupbox, fit=(b1)(b7)] (groupb) {};
+    \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupb.north west) {第二章 文獻回顧};
+
+    \node[component, below=10mm of groupb, xshift=-3.7cm] (c1) {資料來源與預處理};
+    \node[component, right=10mm of c1] (c2) {特徵工程與圖結構};
+    \node[component, below=7mm of c2] (c3) {模型設計};
+    \node[component, below=7mm of c1] (c4) {損失函數};
+    \node[component, below=7mm of c4] (c5) {評估指標};
+    \node[component, below=7mm of c3] (c6) {基準比較與流程摘要};
+    \node[groupbox, fit=(c1)(c6)] (groupc) {};
+    \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupc.north west) {第三章 實驗設計};
+
+    \node[component, below=10mm of groupc, xshift=-3.7cm] (d1) {模型對比};
+    \node[component, right=10mm of d1] (d2) {投資組合績效驗證};
+    \node[componentwide, below=7mm of d1, xshift=3.7cm] (d3) {特徵重要性分析};
+    \node[groupbox, fit=(d1)(d3)] (groupd) {};
+    \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupd.north west) {第四章 實驗結果};
+
+    \node[chapterbox, below=10mm of groupd] (ch5) {\textbf{第五章 結論與未來研究}};
+
+    \coordinate (b2c) at ($(groupb.south |- groupc.north)$);
+    \draw[flowarrow] (ch1.south) -- (groupb.north);
+    \draw[flowarrow] (groupb.south) -- (b2c);
+    \draw[flowarrow] (groupc.south) -- (groupd.north);
+    \draw[flowarrow] (groupd.south) -- (ch5.north);
+    \draw[flowarrow] (c1.east) -- (c2.west);
+    \draw[flowarrow] (c2.south) -- (c3.north);
+    \draw[flowarrow] (c3.west) -- (c4.east);
+    \draw[flowarrow] (c4.south) -- (c5.north);
+    \draw[flowarrow] (c5.east) -- (c6.west);
+\end{tikzpicture}
+\end{document}

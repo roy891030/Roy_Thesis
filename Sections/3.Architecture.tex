@@ -9,15 +9,121 @@
 \chapter{實驗設計}
 \label{ch:experiment_design}
 
-本章旨在說明本文之整體實驗設計與實作流程，內容涵蓋資料來源與預處理、特徵工程與圖結構建構、模型架構與訓練設定、損失函數設計，以及評估指標與策略驗證方法。本文以台灣股票市場日頻資料為研究對象，重點檢驗 Deep Multi-Factor Model（DMFM）在超額報酬率預測任務上的表現，並與基準模型 GATRegressor 進行系統性比較。為使讀者能快速掌握各小節之方法銜接與處理順序，圖 \ref{fig:exp-flow} 彙整本文完整實驗流程，後續將依據該流程逐步展開說明。
+本章旨在說明本文之整體實驗設計與實作流程，內容涵蓋資料來源與預處理、特徵工程與圖結構建構、模型架構與訓練設定、損失函數設計，以及評估指標與策略驗證方法。本文以台灣股票市場日頻資料為研究對象，重點檢驗 Deep Multi-Factor Model（DMFM）在超額報酬率預測任務上的表現，並與基準模型 GATRegressor 進行系統性比較。為使讀者能快速掌握各小節之方法銜接與處理順序，圖 \ref{fig:exp-flow-data} 與圖 \ref{fig:exp-flow-model} 分別呈現資料特徵流程與模型評估流程，後續將依據該流程逐步展開說明。
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=\linewidth]{img/exp_flow.png}
-    \caption{本文實驗設計流程總覽（對應第三章各小節之處理步驟與順序）}
-    \label{fig:exp-flow}
+  \centering
+  \begin{tikzpicture}[
+    flowbox/.style={
+      draw,
+      rounded corners=3pt,
+      align=left,
+      font=\small,
+      inner sep=7pt,
+      text width=13.0cm,
+      minimum height=14mm
+    },
+    flowarrow/.style={-{Stealth[length=2.8mm]}, thick},
+    node distance=8mm
+  ]
+    \node[flowbox] (s311) {\textbf{3.1.1 資料來源}\\
+      \textbullet\ TEJ 台灣股票市場日頻資料 CSV 匯出\\
+      \textbullet\ 供後續處理與訓練};
+    \node[flowbox, below=of s311] (s312) {\textbf{3.1.2 TEJ 資料欄位與研究變數表格}\\
+      \textbullet\ 原始欄位彙整\\
+      \textbullet\ 特徵摘要\\
+      \textbullet\ 完整特徵清單};
+    \node[flowbox, below=of s312] (s313) {\textbf{3.1.3 資料預處理}\\
+      \textbullet\ 排序與格式統一\\
+      \textbullet\ 技術特徵計算\\
+      \textbullet\ 標籤計算\\
+      \textbullet\ 圖結構建構};
+    \node[flowbox, below=of s313] (s314) {\textbf{3.1.4 資料集劃分}\\
+      \textbullet\ 時間序列切分避免資料滲漏\\
+      \textbullet\ 80\% 訓練 / 20\% 測試\\
+      \textbullet\ 短期 / 中期 / 長期 三種樣本長度};
+    \node[flowbox, below=of s314] (s321) {\textbf{3.2.1 特徵選取與分類}\\
+      \textbullet\ 54 項輸入特徵\\
+      \textbullet\ 報酬 / 反轉 / 趨勢 / 波動\\
+      \textbullet\ 量能 / 流動性 / 技術指標};
+    \node[flowbox, below=of s321] (s322) {\textbf{3.2.2 圖結構設計與建構流程}\\
+      \textbullet\ 產業圖：同產業完全連結 + self-loop\\
+      \textbullet\ 全市場圖：完全圖 + self-loop\\
+      \textbullet\ 以 edge\_index 表示並保存為 artifacts};
+
+    \draw[flowarrow] (s311.south) -- (s312.north);
+    \draw[flowarrow] (s312.south) -- (s313.north);
+    \draw[flowarrow] (s313.south) -- (s314.north);
+    \draw[flowarrow] (s314.south) -- (s321.north);
+    \draw[flowarrow] (s321.south) -- (s322.north);
+  \end{tikzpicture}
+  \caption{本文實驗設計流程（資料來源、預處理與特徵工程；對應 3.1--3.2）}
+  \label{fig:exp-flow-data}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    flowboxwide/.style={
+      draw,
+      rounded corners=3pt,
+      align=left,
+      font=\small,
+      inner sep=6pt,
+      text width=6.1cm,
+      minimum height=14mm
+    },
+    flowboxmain/.style={
+      draw,
+      rounded corners=3pt,
+      align=left,
+      font=\small,
+      inner sep=7pt,
+      text width=13.0cm,
+      minimum height=14mm
+    },
+    flowarrow/.style={-{Stealth[length=2.8mm]}, thick},
+    node distance=10mm and 12mm
+  ]
+    \node[flowboxwide] (s331) {\textbf{3.3.1 基準模型 GATRegressor}\\
+      \textbullet\ 兩層 GAT 在產業圖上訊息傳遞\\
+      \textbullet\ 線性層輸出預測值};
+    \node[flowboxwide, right=12mm of s331] (s332) {\textbf{3.3.2 DMFM 模型架構}\\
+      \textbullet\ 特徵編碼\\
+      \textbullet\ 產業與市場中性化\\
+      \textbullet\ 深度因子學習及因子注意力};
+
+    \coordinate (mid33) at ($(s331.south)!0.5!(s332.south)$);
+    \node[flowboxmain, below=12mm of mid33] (s341) {\textbf{3.4.1 損失函數}\\
+      \textbullet\ 注意力誤差項、IC 相關項、因子收益項\\
+      \textbullet\ 並搭配 AdamW 與 weight decay};
+
+    \node[flowboxmain, below=10mm of s341] (s351) {\textbf{3.5.1 預測品質指標}\\
+      \textbullet\ IC / ICIR\\
+      \textbullet\ MSE / RMSE / MAE};
+    \node[flowboxmain, below=10mm of s351] (s352) {\textbf{3.5.2 投資組合績效指標}\\
+      \textbullet\ 依預測分數排序\\
+      \textbullet\ 選 top\_pct 股票等權做多\\
+      \textbullet\ 計算年化報酬 / Sharpe ratio / 勝率};
+    \node[flowboxmain, below=10mm of s352] (s353) {\textbf{3.5.3 基準比較}\\
+      \textbullet\ Naive baseline 預測固定為 0\\
+      \textbullet\ 0050 作市場基準\\
+      \textbullet\ 輸出 IC 分佈與累積報酬視覺化\\
+      \textbullet\ DMFM 額外輸出注意力權重分析};
+
+    \coordinate (s331_elbow) at ($(s331.south)+(0,-5mm)$);
+    \coordinate (s332_elbow) at ($(s332.south)+(0,-5mm)$);
+    \draw[flowarrow] (s331.south) -- (s331_elbow) -| (s341.north west);
+    \draw[flowarrow] (s332.south) -- (s332_elbow) -| (s341.north east);
+    \draw[flowarrow] (s341.south) -- (s351.north);
+    \draw[flowarrow] (s351.south) -- (s352.north);
+    \draw[flowarrow] (s352.south) -- (s353.north);
+  \end{tikzpicture}
+  \caption{本文實驗設計流程（模型設計、損失與評估；對應 3.3--3.5）}
+  \label{fig:exp-flow-model}
+\end{figure}
+
+\FloatBarrier
 
 
 % =========================================================
@@ -234,11 +340,9 @@ y_t = \frac{P_{t+k} - P_t}{P_t}
 % =========================================================
 
 \subsection{基準模型：GATRegressor}
-\label{subsec:lstm_baseline}
+\label{subsec:gat_baseline}
 
 基準模型採用 \textbf{GATRegressor} 作為對照：以兩層 Graph Attention Network（GAT）於產業圖上進行訊息傳遞，並以線性層輸出預測值。相較於 DMFM，GATRegressor 不包含「產業中性化＋全市場中性化」之階層式結構，亦不含因子注意力模組，因此可作為較簡化之圖模型基準。超參數設定盡量與 DMFM 對齊（例如 hidden dimension、heads、dropout），以提升可比性。
-
-%（若後續補上 LSTM baseline，可在此節加一小段描述，或另設小節。）
 
 \subsection{DMFM 模型架構（Wei et al. 2022）}
 \label{subsec:dmfm_model}
@@ -276,7 +380,7 @@ L = \lambda_{attn} \cdot \lVert f - \hat{f} \rVert + \lambda_{IC} \cdot (1 - IC)
 \end{equation}
 其中 $\lVert f - \hat{f} \rVert$ 為注意力估計誤差，$IC$ 為資訊係數（Information Coefficient, IC），$b$ 為截面回歸得到的因子收益項。實作中 $\lambda_b$ 固定為 0.01，以降低因子收益項之不穩定性。
 
-\textbf{IC（Information Coefficient）：}以 Pearson correlation 計算，基於每個交易日之截面預測與真實 forward-$k$ 日報酬，衡量預測排序有效性。
+\textbf{IC（Information Coefficient）：}本文主文以 Pearson correlation 計算，基於每個交易日之截面預測與真實 forward-$k$ 日報酬衡量訊號有效性。採用 Pearson 的理由是需與式 \ref{eq:loss} 中以 IC 為目標的連續可微優化口徑一致，並保留對預測強弱幅度的敏感性。
 
 \textbf{優化器（Optimizer）：}使用 AdamW，並加入 weight decay 以抑制過度擬合。
 
@@ -286,7 +390,7 @@ L = \lambda_{attn} \cdot \lVert f - \hat{f} \rVert + \lambda_{IC} \cdot (1 - IC)
 % =========================================================
 
 \subsection{預測品質指標}
-\textbf{IC / Daily IC / ICIR：}IC 為整體樣本之 Pearson correlation；Daily IC 為逐交易日 IC 之平均；ICIR（Information Coefficient Information Ratio, ICIR）定義為 Daily IC 平均除以其標準差，用以衡量穩健性。
+\textbf{IC / Daily IC / ICIR：}IC 為整體樣本之 Pearson correlation；Daily IC 為逐交易日 IC 之平均；ICIR（Information Coefficient Information Ratio, ICIR）定義為 Daily IC 平均除以其標準差，用以衡量穩健性。為避免與文獻常見之 rank IC 口徑混淆，本文主文結果均以 Pearson IC 為準。
 
 \textbf{產業中性 IC（Industry-neutral IC）：}為排除產業共同波動之影響，先在每交易日、每產業內分別對預測與真實報酬去均值（industry de-meaning），再對殘差計算 Pearson correlation。令 $\hat{y}_{i,t}$ 與 $y_{i,t}$ 分別為股票 $i$ 在日 $t$ 的預測與真實報酬，$g(i)$ 表示產業別，則
 \begin{align}
