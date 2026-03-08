@@ -54,13 +54,13 @@
     研究方法與研究貢獻\\
     論文架構};
 
-    \node[component, below=10mm of ch1, xshift=-3.7cm] (b1) {線性迴歸在股票報酬預測中的角色與限制};
-    \node[component, right=10mm of b1] (b2) {非線性機器學習模型\\與特徵工程導向方法};
-    \node[component, below=7mm of b1] (b3) {技術指標之特徵表示};
-    \node[component, below=7mm of b2] (b4) {時間序列模型在金融預測中的應用};
-    \node[component, below=7mm of b3] (b5) {圖神經網路的基本概念與代表性架構};
-    \node[component, below=7mm of b4] (b6) {GAT 在股票預測與排序任務上\\的應用與限制};
-    \node[componentwide, below=7mm of b5, xshift=3.7cm] (b7) {IC 與 ICIR 的理論意涵與實務角色};
+    \node[component, below=10mm of ch1, xshift=-3.7cm] (b1) {線性迴歸在報酬預測中的\\典型定位與限制};
+    \node[component, right=10mm of b1] (b2) {樹狀結構模型在非線性預測與\\特徵工程中的典型定位與限制};
+    \node[component, below=7mm of b1] (b3) {技術指標如何轉化為深度學習\\可用之特徵表示};
+    \node[component, below=7mm of b2] (b4) {LSTM 等時間序列模型在\\金融預測中的典型做法與限制};
+    \node[component, below=7mm of b3] (b5) {圖神經網路如何建模\\股票之間的結構性關係};
+    \node[component, below=7mm of b4] (b6) {GAT 及其變形在股票預測／排序\\任務上的應用與限制};
+    \node[componentwide, below=7mm of b5, xshift=3.7cm] (b7) {因子投資情境下常用的訊號評估指標\\IC ／ ICIR};
     \node[groupbox, fit=(b1)(b7)] (groupb) {};
     \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupb.north west) {第二章 文獻回顧};
 

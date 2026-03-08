@@ -11,7 +11,7 @@
 
 本章旨在說明本文之整體實驗設計與實作流程，內容涵蓋資料來源與預處理、特徵工程與圖結構建構、模型架構與訓練設定、損失函數設計，以及評估指標與策略驗證方法。本文以台灣股票市場日頻資料為研究對象，重點檢驗 Deep Multi-Factor Model（DMFM）在超額報酬率預測任務上的表現，並與基準模型 GATRegressor 進行系統性比較。為使讀者能快速掌握各小節之方法銜接與處理順序，圖 \ref{fig:exp-flow-data} 與圖 \ref{fig:exp-flow-model} 分別呈現資料特徵流程與模型評估流程，後續將依據該流程逐步展開說明。
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
   \centering
   \begin{tikzpicture}[
     flowbox/.style={
@@ -61,7 +61,7 @@
   \label{fig:exp-flow-data}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
   \centering
   \begin{tikzpicture}[
     flowboxwide/.style={
@@ -124,7 +124,6 @@
 \end{figure}
 
 \FloatBarrier
-
 
 % =========================================================
 \section{資料來源與預處理}
@@ -390,7 +389,7 @@ L = \lambda_{attn} \cdot \lVert f - \hat{f} \rVert + \lambda_{IC} \cdot (1 - IC)
 % =========================================================
 
 \subsection{預測品質指標}
-\textbf{IC / Daily IC / ICIR：}IC 為整體樣本之 Pearson correlation；Daily IC 為逐交易日 IC 之平均；ICIR（Information Coefficient Information Ratio, ICIR）定義為 Daily IC 平均除以其標準差，用以衡量穩健性。為避免與文獻常見之 rank IC 口徑混淆，本文主文結果均以 Pearson IC 為準。
+\textbf{IC / Daily IC / ICIR：}IC 為整體樣本之 Pearson correlation；Daily IC 為逐交易日 IC 之平均；ICIR（Information Coefficient Information Ratio, ICIR）定義為 Daily IC 平均除以其標準差，用以衡量穩健性。
 
 \textbf{產業中性 IC（Industry-neutral IC）：}為排除產業共同波動之影響，先在每交易日、每產業內分別對預測與真實報酬去均值（industry de-meaning），再對殘差計算 Pearson correlation。令 $\hat{y}_{i,t}$ 與 $y_{i,t}$ 分別為股票 $i$ 在日 $t$ 的預測與真實報酬，$g(i)$ 表示產業別，則
 \begin{align}
