@@ -28,14 +28,9 @@
 
 \normalsize
 
-This study examines the effectiveness of graph attention networks for stock selection and return prediction, and compares the proposed approach with common benchmark models (Linear, XGBoost, LSTM, and GAT). We integrate technical-indicator features and graph-structured signals within a reproducible pipeline for data processing, model training, and evaluation.
+This study examines whether graph attention networks improve stock selection and return prediction in the Taiwan stock market. Using daily TEJ data, we build 54 technical features, an industry graph, and a market-wide graph, and compare five models: Linear Regression, XGBoost, LSTM, GAT, and DMFM within a reproducible pipeline for data processing, training, and evaluation. Performance is evaluated by RMSE, MAE, IC, ICIR, and directional accuracy, while portfolio validation ranks stocks at each rebalancing date, takes equal-weight long positions in the top names, and compares the results with the 0050 benchmark.
 
-Using daily TEJ data, we construct 54 input features and two graph structures (industry graph and market-wide graph), and compare five models: Linear Regression, XGBoost, LSTM, GAT, and DMFM. Predictive performance is evaluated by RMSE, MAE, IC, ICIR, and directional accuracy. For portfolio validation, stocks are ranked by model scores at each rebalancing date, top-ranked names are equally weighted on the long side, and results are compared with the 0050 benchmark.
-
-Empirical results show that, in the Long window, the DMFM portfolio clearly outperforms the 0050 benchmark: annualized return improves from -3.35\% to 31.31\% (up by 34.66 percentage points), Sharpe ratio increases from -0.113 to 1.369 (up by 1.482), and win rate rises from 48.6\% to 62.9\% (up by 14.3 percentage points). Feature-weight analysis further indicates stable contributions from price-range, volume-price, and liquidity signals. Overall, graph attention modeling improves the usability of stock-selection signals and provides interpretable empirical evidence for practical quantitative investing.
-
-
-\vspace{1cm}
+Results show that DMFM provides the strongest overall signal quality and portfolio performance. In the Long window, ICIR improves from 0.3865 under Linear Regression to 0.7854 under DMFM. Relative to 0050, annualized return increases from -3.35\% to 31.31\%, Sharpe ratio rises from -0.113 to 1.369, and win rate improves from 48.6\% to 62.9\%. Overall, graph attention modeling improves the usability and interpretability of stock-selection signals for practical quantitative investing.
 
 % 5-7 Keywords (English)
 \textbf{Keywords: Graph Attention Network, Stock Selection, Return Prediction, Dynamic Multi-Factor Model, Quantitative Investing.} 
