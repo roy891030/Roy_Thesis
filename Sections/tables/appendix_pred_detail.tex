@@ -7,24 +7,30 @@
 \toprule
 時間窗 & 模型 & 樣本數（筆） & MSE & Daily IC \\
 \midrule
-Short & Linear & 49280 & 0.003 & 0.024 \\
- & XGBoost & 49280 & 0.003 & 0.086 \\
- & LSTM & 49280 & 0.003 & 0.045 \\
- & GATRegressor & 49280 & 0.013 & -0.021 \\
- & DMFM & 49280 & 0.003 & 0.058 \\
+Short & Linear & 49280 & \textbf{0.0031} & 0.0243 \\
+ & XGBoost & 49280 & 0.0031 & \textbf{0.0857} \\
+ & LSTM & 49280 & 0.0031 & 0.0454 \\
+ & GATRegressor & 49280 & 0.0128 & -0.0205 \\
+ & DMFM & 49280 & 0.0032 & 0.0578 \\
 \midrule
-Medium & Linear & 121734 & 0.003 & 0.014 \\
- & XGBoost & 121734 & 0.003 & 0.062 \\
- & LSTM & 121734 & 0.003 & 0.066 \\
- & GATRegressor & 121734 & 0.008 & -0.011 \\
- & DMFM & 121734 & 0.004 & 0.078 \\
+Medium & Linear & 121734 & \textbf{0.0025} & 0.0140 \\
+ & XGBoost & 121734 & 0.0025 & 0.0618 \\
+ & LSTM & 121734 & 0.0025 & 0.0661 \\
+ & GATRegressor & 121734 & 0.0078 & -0.0110 \\
+ & DMFM & 121734 & 0.0037 & \textbf{0.0777} \\
 \midrule
-Long & Linear & 221277 & 0.003 & 0.031 \\
- & XGBoost & 221277 & 0.003 & 0.087 \\
- & LSTM & 221277 & 0.003 & 0.056 \\
- & GATRegressor & 221277 & 0.010 & 0.004 \\
- & DMFM & 221277 & 0.018 & 0.085 \\
+Long & Linear & 221277 & 0.0031 & 0.0309 \\
+ & XGBoost & 221277 & \textbf{0.0031} & \textbf{0.0873} \\
+ & LSTM & 221277 & 0.0031 & 0.0561 \\
+ & GATRegressor & 221277 & 0.0103 & 0.0043 \\
+ & DMFM & 221277 & 0.0177 & 0.0850 \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
+\vspace{0.2em}
+
+\begin{minipage}{0.96\textwidth}
+\footnotesize
+註：表內數值四捨五入至小數第四位；粗體依未四捨五入之原始值判定。
+\end{minipage}
 \end{table}
