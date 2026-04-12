@@ -134,7 +134,7 @@
 \label{subsec:data_source}
 \FloatBarrier
 
-資料取自 \textbf{TEJ 台灣經濟新報（Taiwan Economic Journal, TEJ）}之台灣股票市場日頻資料，並以 CSV 形式匯出以供後續處理與模型訓練使用。資料以「交易日\(\times\)股票」為觀測單位，至少包含日期（Date）、股票代碼（Stock ID）與收盤價（Close）等必要欄位；同時保留開高低收（OHLC）、成交量／成交值、市值、流通股數、估值指標（如 PB、PS）與產業分類等資訊，以支援特徵建置與圖結構構建。樣本期間由參數 \texttt{start\_date} 與 \texttt{end\_date} 控制，並以台股交易日序列作為時間索引基準。
+資料取自 \textbf{TEJ 台灣經濟新報（Taiwan Economic Journal, TEJ）}之台灣股票市場日頻資料，並以 CSV 形式匯出以供後續處理與模型訓練使用。本文整體實驗資料之最長樣本期間為 2019-09-16 \(\sim\) 2025-09-12，共 1460 個交易日，作為後續短期、中期與長期三種樣本視窗的母體資料範圍。資料以「交易日\(\times\)股票」為觀測單位，至少包含日期（Date）、股票代碼（Stock ID）與收盤價（Close）等必要欄位；同時保留開高低收（OHLC）、成交量／成交值、市值、流通股數、估值指標（如 PB、PS）與產業分類等資訊，以支援特徵建置與圖結構構建。樣本期間由參數 \texttt{start\_date} 與 \texttt{end\_date} 控制，並以台股交易日序列作為時間索引基準。
 
 除 TEJ 可直接取得之原始欄位外，模型輸入之技術特徵由價格與成交量等基礎序列計算而得；其中 RSI、MACD、KD 等指標主要透過 \texttt{TA-Lib} 套件生成，再彙整為固定的特徵集合供模型輸入。為避免於文字中重複列舉欄位與變數定義，TEJ 原始欄位彙整於表 \ref{tab:tej_raw_fields}，最終模型輸入之 54 個特徵摘要見表 \ref{tab:feature_cols_54}（完整清單見附錄表 \ref{tab:feature_cols_54_full}）。
 
@@ -389,7 +389,21 @@ L = \lambda_{attn} \cdot \lVert f - \hat{f} \rVert + \lambda_{IC} \cdot (1 - IC)
 % =========================================================
 
 \subsection{預測品質指標}
-\textbf{IC / Daily IC / ICIR：}IC 為整體樣本之 Pearson correlation；Daily IC 為逐交易日 IC 之平均；ICIR（Information Coefficient Information Ratio, ICIR）定義為 Daily IC 平均除以其標準差，用以衡量穩健性。
+\textbf{誤差指標（Error metrics）：}本文先以 MSE、RMSE 與 MAE 衡量模型對未來報酬數值的貼近程度。其中，MSE 反映誤差平方後的平均值，對較大偏差更敏感；RMSE 為 MSE 開根號後的結果，與原始報酬尺度一致；MAE 則以絕對誤差平均衡量整體偏離程度，較不受極端值放大影響。
+
+\textbf{IC / Daily IC / ICIR：}令 \(\hat{y}_{i,t}\) 與 \(y_{i,t}\) 分別表示股票 \(i\) 在交易日 \(t\) 的預測值與實際 forward-$k$ 日報酬，則單日截面資訊係數定義為
+\begin{equation}
+IC_t = \mathrm{Corr}\!\left(\hat{y}_{1:N_t,t}, y_{1:N_t,t}\right).
+\end{equation}
+若將所有交易日的 \(IC_t\) 進一步彙整，則
+\begin{equation}
+Daily\ IC = \frac{1}{T}\sum_{t=1}^{T} IC_t,
+\qquad
+ICIR = \frac{\frac{1}{T}\sum_{t=1}^{T} IC_t}{\mathrm{Std}(IC_t)}.
+\end{equation}
+其中 \(T\) 為測試期間交易日數，\(\mathrm{Std}(IC_t)\) 為逐日 IC 的樣本標準差。本文並另行回報整體樣本之 Pearson correlation，作為跨全測試集彙總後的 IC。
+
+\textbf{方向判斷正確率（Directional Accuracy, DirAcc）：}DirAcc 用以衡量模型對報酬方向的判斷能力，即預測值與實際報酬在符號上是否一致。相較於 IC 與 ICIR 側重排序品質，DirAcc 提供另一個較直觀的方向性判準。
 
 \textbf{產業中性 IC（Industry-neutral IC）：}為排除產業共同波動之影響，先在每交易日、每產業內分別對預測與真實報酬去均值（industry de-meaning），再對殘差計算 Pearson correlation。令 $\hat{y}_{i,t}$ 與 $y_{i,t}$ 分別為股票 $i$ 在日 $t$ 的預測與真實報酬，$g(i)$ 表示產業別，則
 \begin{align}
@@ -401,14 +415,16 @@ L = \lambda_{attn} \cdot \lVert f - \hat{f} \rVert + \lambda_{IC} \cdot (1 - IC)
 IC^{\text{ind-neutral}}_t = \text{Corr}\left(\tilde{\hat{y}}_{\cdot,t}, \tilde{y}_{\cdot,t}\right).
 \end{equation}
 
-\textbf{誤差指標（Error metrics）：}以 MSE、RMSE 與 MAE 衡量預測誤差。
-
 \subsection{投資組合績效指標}
 \textbf{年化報酬率（Annualized return）：}以每次再平衡選取預測分數最高之 \texttt{top\_pct} 股票等權做多，計算截面平均報酬作為策略報酬，並依再平衡頻率年化。
 
 \textbf{Sharpe Ratio：}以平均報酬除以波動後再乘年化因子，衡量風險調整後報酬。
 
-\textbf{勝率（Hit ratio）：}正報酬期間比例，用以衡量策略穩定性。
+\textbf{勝率（Hit ratio）：}正報酬期間比例，用以衡量策略穩定性。若策略在第 \(t\) 次再平衡後之單期報酬為 \(r^{p}_t\)，則勝率定義為
+\begin{equation}
+Hit\ Ratio = \frac{1}{T}\sum_{t=1}^{T} \mathbf{1}(r^{p}_t > 0),
+\end{equation}
+其中 \(\mathbf{1}(\cdot)\) 為指示函數，當單期報酬為正時取值 1，否則為 0。
 
 \subsection{基準比較與流程摘要}
 \textbf{天真基準（Naive baseline）：}令所有股票預測值為 0，計算 MSE/RMSE/MAE 作為誤差下界參考。

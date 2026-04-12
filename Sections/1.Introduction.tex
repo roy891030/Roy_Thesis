@@ -10,7 +10,7 @@
 
 另一方面，金融市場並非由彼此獨立的資產所構成。台灣股票之間普遍存在產業層級與市場層級的共同因子影響，使個股報酬在截面上呈現結構性相依。傳統時間序列模型（如 LSTM）多以單一資產的歷史序列為主要訊號來源，較難直接刻畫股票之間的關係拓撲；因此近年研究開始引入圖神經網路（Graph Neural Networks, GNNs），以「節點（股票）—邊（關係）」的方式建模產業或市場連結，並透過訊息傳遞與注意力機制（attention mechanism）聚合鄰居資訊，以提升截面預測與排序任務的表現與可解釋性。
 
-在上述脈絡下，結合多因子表示與圖關注的模型架構，特別是能分離產業與全市場共同影響的設計，提供了一條兼顧「特徵可學習性」與「關係結構建模」的路徑。本文後續將採用深度多因子模型結合圖關注之框架，並以台灣日頻資料進行實證檢驗。
+在上述脈絡下，結合多因子表示與圖注意力的模型架構，特別是能分離產業與全市場共同影響的設計，提供了一條兼顧「特徵可學習性」與「關係結構建模」的路徑。本文後續將採用深度多因子模型結合圖注意力之框架，並以台灣日頻資料進行實證檢驗。
 
 \section{研究問題}
 \label{sec:problem}
@@ -32,7 +32,7 @@
 
 在關係建模方面，本文依第三章之設計建構兩類圖結構：（1）產業圖（Industry Graph），以同產業股票完全連結並加入自環；（2）全市場圖（Universe Graph），以完全圖表示整體市場共同因子影響。圖結構以 PyTorch Geometric（PyG）的 \texttt{edge\_index} 形式保存，並與特徵張量共同形成可重複使用的訓練產物（artifacts）。
 
-模型設計以 Deep Multi-Factor Model（DMFM）為主體，透過「特徵編碼 \(\rightarrow\) 產業中性化 \(\rightarrow\) 全市場中性化 \(\rightarrow\) 階層式拼接 \(\rightarrow\) 深度因子學習 \(\rightarrow\) 因子注意力」的流程，在每個交易日的截面上輸出各股票之預測訊號；同時以較簡化的圖模型（GATRegressor）作為基準模型，進行可比性的對照實驗。評估上以 IC、Daily IC、ICIR 與產業中性 IC 作為核心預測指標，並以投資組合回測指標（年化報酬率、Sharpe ratio、勝率等）檢驗策略層級的有效性；資料切分採時間序列切分以避免資訊洩漏，並設計不同樣本長度（短期／中期／長期）檢驗穩健性。
+模型設計以 Deep Multi-Factor Model（DMFM）為主體，透過「特徵編碼 \(\rightarrow\) 產業中性化 \(\rightarrow\) 全市場中性化 \(\rightarrow\) 階層式拼接 \(\rightarrow\) 深度因子學習 \(\rightarrow\) 因子注意力」的流程，在每個交易日的截面上輸出各股票之預測訊號；同時以較簡化的圖模型（本文基準模型名稱為 GATRegressor）作為對照實驗。評估上以 IC、Daily IC、ICIR 與產業中性 IC 作為核心預測指標，並以投資組合回測指標（年化報酬率、Sharpe ratio、勝率等）檢驗策略層級的有效性；資料切分採時間序列切分以避免資訊洩漏，並設計不同樣本長度（短期／中期／長期）檢驗穩健性。
 
 基於上述方法設計，本文的主要貢獻歸納如下：
 \begin{itemize}
@@ -115,7 +115,7 @@
         \node[groupbox, fit=(c1)(c6)] (groupc) {};
         \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupc.north west) {第三章 實驗設計};
 
-        \node[component, below=10mm of groupc, xshift=-3.7cm] (d1) {模型評估指標對比\\（Linear／XGBoost／LSTM／GAT）};
+        \node[component, below=10mm of groupc, xshift=-3.7cm] (d1) {模型評估指標對比\\（Linear／XGBoost／LSTM／GATRegressor）};
         \node[component, right=10mm of d1] (d2) {投資組合績效驗證\\（與 0050 比較）};
         \node[componentwide, below=7mm of d1, xshift=3.7cm] (d3) {特徵重要性分析};
         \node[groupbox, fit=(d1)(d3)] (groupd) {};
