@@ -1,23 +1,32 @@
 \begin{table}[H]
 \centering
-\caption{GATRegressor、DMFM 與 0050 於回測區間之績效比較}
+\caption{各模型與 0050 於回測區間之投組績效比較}
 \label{tab:results_portfolio_metrics}
-\begin{adjustbox}{max width=0.92\textwidth}
-\begin{tabular}{llrrrr}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{llrrrrrr}
 \toprule
-時間窗 & 組合 & 對齊的天數 & 年化報酬 & Sharpe & 勝率 \\
+時間窗 & 組合 & 對齊期數 & 年化報酬 & Sharpe & 勝率 & 累積報酬 & 最大回撤 \\
 \midrule
-Short & 0050 & 64 & 0.758 & 4.201 & 0.615 \\
- & GATRegressor & 64 & 0.436 & 7.160 & 0.769 \\
- & DMFM & 64 & \textbf{0.930} & \textbf{8.002} & \textbf{0.846} \\
+Short & 0050 & 13 & 0.758 & 4.201 & 0.615 & 0.210 & -0.034 \\
+ & Linear & 13 & 0.650 & 5.243 & 0.692 & 0.179 & -0.017 \\
+ & XGBoost & 13 & \textbf{1.002} & 6.153 & \textbf{0.846} & \textbf{0.288} & -0.021 \\
+ & LSTM & 13 & 0.735 & 5.350 & \textbf{0.846} & 0.204 & -0.019 \\
+ & GATRegressor & 13 & 0.355 & 5.977 & 0.769 & 0.095 & \textbf{-0.007} \\
+ & DMFM & 13 & 0.973 & \textbf{6.537} & \textbf{0.846} & 0.279 & -0.013 \\
 \midrule
-Medium & 0050 & 162 & -0.089 & -0.341 & 0.424 \\
- & GATRegressor & 162 & 0.116 & 0.570 & 0.636 \\
- & DMFM & 162 & \textbf{0.373} & \textbf{1.274} & \textbf{0.667} \\
+Medium & 0050 & 33 & -0.086 & -0.329 & 0.455 & -0.075 & -0.219 \\
+ & Linear & 33 & 0.034 & 0.123 & 0.606 & -0.003 & -0.161 \\
+ & XGBoost & 33 & 0.301 & 1.008 & \textbf{0.636} & 0.183 & -0.157 \\
+ & LSTM & 33 & 0.375 & \textbf{1.320} & \textbf{0.636} & 0.245 & \textbf{-0.140} \\
+ & GATRegressor & 33 & -0.156 & -0.576 & 0.515 & -0.119 & -0.229 \\
+ & DMFM & 33 & \textbf{0.390} & 1.229 & \textbf{0.636} & \textbf{0.249} & -0.164 \\
 \midrule
-Long & 0050 & 292 & -0.034 & -0.113 & 0.486 \\
- & GATRegressor & 292 & -0.061 & -0.404 & 0.571 \\
- & DMFM & 292 & \textbf{0.313} & \textbf{1.369} & \textbf{0.629} \\
+Long & 0050 & 58 & 0.194 & 0.625 & 0.586 & 0.182 & -0.240 \\
+ & Linear & 58 & 0.198 & 0.661 & 0.569 & 0.192 & -0.219 \\
+ & XGBoost & 58 & 0.419 & 1.325 & 0.621 & 0.526 & -0.222 \\
+ & LSTM & 58 & 0.338 & 1.069 & 0.621 & 0.392 & -0.213 \\
+ & GATRegressor & 58 & 0.011 & 0.044 & 0.569 & -0.023 & \textbf{-0.202} \\
+ & DMFM & 58 & \textbf{0.444} & \textbf{1.526} & \textbf{0.707} & \textbf{0.584} & -0.224 \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}

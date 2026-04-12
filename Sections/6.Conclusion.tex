@@ -1,10 +1,11 @@
 \chapter{未來工作}
 \label{ch:conclusion}
 
-未來研究將聚焦於下列三項工作：
+未來研究將聚焦於下列四項工作：
 
 \begin{itemize}
-  \item \textbf{補齊 benchmark model 的投組績效比較：}除既有預測指標外，將 Linear、XGBoost、LSTM 也納入投組回測，與 GATRegressor、DMFM 以同一口徑輸出年化報酬、Sharpe、勝率與累積報酬，提供完整數值比較結果。
+  \item \textbf{納入交易成本、滑價與換手控制：}本文目前之回測仍屬無摩擦市場設定；後續可將手續費、滑價與換手率懲罰納入，並進一步評估 turnover-adjusted Sharpe / IR，以確認超額報酬在實務落地後的可持續性。
+  \item \textbf{補強統計穩健性檢定：}除現有 IC、ICIR 與投組績效比較外，後續可加入 bootstrap / block bootstrap、rolling window 穩健性檢定與不同市場狀態分組分析，以更嚴謹地評估模型優勢是否具跨樣本穩定性。
   \item \textbf{增加資料筆數：}擴充訓練與測試樣本區間，提升模型估計穩健性，並降低單一期間市場狀態對結論的影響。
   \item \textbf{加入更多特徵：}在既有特徵基礎上增加更多不同型態訊號（如基本面、技術面、流動性與風險特徵），並透過特徵篩選與消融分析評估其對預測與投組績效的增益。
 \end{itemize}

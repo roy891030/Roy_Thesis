@@ -7,23 +7,23 @@
 \toprule
 時間窗 & 模型 & RMSE & MAE & IC & ICIR & DirAcc \\
 \midrule
-Short & Linear & \textbf{0.056} & 0.034 & 0.027 & 0.431 & 0.522 \\
- & XGBoost & 0.056 & 0.034 & 0.064 & \textbf{0.955} & 0.527 \\
- & LSTM & 0.066 & 0.039 & 0.018 & 0.327 & 0.556 \\
- & GATRegressor & 0.121 & 0.106 & -0.022 & -0.262 & 0.417 \\
- & DMFM & 0.056 & \textbf{0.034} & \textbf{0.072} & 0.823 & \textbf{0.582} \\
+Short & Linear & \textbf{0.056} & \textbf{0.034} & 0.024 & 0.378 & 0.523 \\
+ & XGBoost & \textbf{0.056} & 0.035 & \textbf{0.086} & \textbf{1.347} & 0.524 \\
+ & LSTM & \textbf{0.056} & 0.035 & 0.049 & 0.590 & 0.502 \\
+ & GATRegressor & 0.113 & 0.094 & -0.025 & -0.341 & \textbf{0.553} \\
+ & DMFM & \textbf{0.056} & 0.035 & 0.059 & 0.714 & 0.500 \\
 \midrule
-Medium & Linear & \textbf{0.050} & \textbf{0.033} & 0.025 & 0.219 & 0.509 \\
- & XGBoost & 0.050 & 0.034 & 0.069 & 0.597 & 0.523 \\
- & LSTM & 0.056 & 0.037 & 0.052 & 0.453 & 0.524 \\
- & GATRegressor & 0.129 & 0.117 & -0.001 & -0.011 & 0.450 \\
- & DMFM & 0.063 & 0.046 & \textbf{0.082} & \textbf{0.676} & \textbf{0.556} \\
+Medium & Linear & \textbf{0.050} & \textbf{0.033} & 0.018 & 0.115 & 0.506 \\
+ & XGBoost & \textbf{0.050} & 0.034 & 0.062 & 0.487 & 0.520 \\
+ & LSTM & \textbf{0.050} & \textbf{0.033} & 0.070 & 0.551 & \textbf{0.538} \\
+ & GATRegressor & 0.088 & 0.070 & -0.011 & -0.117 & 0.521 \\
+ & DMFM & 0.061 & 0.042 & \textbf{0.078} & \textbf{0.610} & 0.503 \\
 \midrule
-Long & Linear & 0.056 & 0.036 & 0.041 & 0.387 & 0.510 \\
- & XGBoost & \textbf{0.056} & \textbf{0.036} & \textbf{0.084} & 0.709 & 0.527 \\
- & LSTM & 0.060 & 0.038 & 0.034 & 0.387 & 0.535 \\
- & GATRegressor & 0.081 & 0.060 & -0.010 & -0.103 & 0.527 \\
- & DMFM & 0.121 & 0.091 & 0.083 & \textbf{0.785} & \textbf{0.566} \\
+Long & Linear & \textbf{0.056} & \textbf{0.036} & 0.035 & 0.332 & 0.508 \\
+ & XGBoost & \textbf{0.056} & \textbf{0.036} & \textbf{0.089} & 0.840 & \textbf{0.535} \\
+ & LSTM & \textbf{0.056} & \textbf{0.036} & 0.066 & 0.559 & 0.526 \\
+ & GATRegressor & 0.101 & 0.085 & 0.003 & 0.042 & 0.470 \\
+ & DMFM & 0.133 & 0.084 & 0.086 & \textbf{0.891} & 0.511 \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}

@@ -1,0 +1,50 @@
+{
+  "model_type": "xgboost",
+  "artifact_dir": "artifacts/short",
+  "weights": "artifacts/short/baseline_xgboost.json",
+  "scaler": "artifacts/short/baseline_xgboost_scaler.pkl",
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 230,
+    "val_days": 25,
+    "test_days": 64
+  },
+  "train": {
+    "MSE": 0.0027802542317658663,
+    "RMSE": 0.0527281161408775,
+    "MAE": 0.03390977904200554,
+    "IC": 0.5861794021823866,
+    "ICIR": 4.506732576498235,
+    "DirAcc": 0.6240793745969613,
+    "DailyIC": 0.5507040701336304
+  },
+  "val": {
+    "MSE": 0.004437681287527084,
+    "RMSE": 0.06661592367840503,
+    "MAE": 0.03877689316868782,
+    "IC": 0.08417956263457416,
+    "ICIR": 0.5474060661598357,
+    "DirAcc": 0.5336103896103896,
+    "DailyIC": 0.08325019618011786
+  },
+  "test": {
+    "MSE": 0.0031303493306040764,
+    "RMSE": 0.05594952484699112,
+    "MAE": 0.034628286957740784,
+    "IC": 0.0863066809358802,
+    "ICIR": 1.346929931575448,
+    "DirAcc": 0.5235795454545454,
+    "DailyIC": 0.08568074875614194
+  },
+  "naive_test": {
+    "MSE": 0.0030592603143304586,
+    "RMSE": 0.05531058049171477,
+    "MAE": 0.033861059695482254,
+    "n": 49280
+  },
+  "mse_improvement_vs_naive_pct": -2.3237321760628316,
+  "has_industry_labels": false,
+  "lookback": null,
+  "model": "xgboost"
+}

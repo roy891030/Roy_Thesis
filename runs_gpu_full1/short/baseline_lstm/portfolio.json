@@ -1,0 +1,73 @@
+{
+  "model_type": "lstm",
+  "artifact_dir": "artifacts/short",
+  "weights": "artifacts/short/baseline_lstm.pt",
+  "scaler": null,
+  "plots_dir": "runs_gpu_full/short/baseline_lstm/plots",
+  "plots": {
+    "daily_ic": "runs_gpu_full/short/baseline_lstm/plots/daily_ic.png",
+    "pred_dispersion": "runs_gpu_full/short/baseline_lstm/plots/pred_dispersion.png",
+    "hitrate_by_month": "runs_gpu_full/short/baseline_lstm/plots/hitrate_by_month.png",
+    "ic_distribution": "runs_gpu_full/short/baseline_lstm/plots/ic_distribution.png",
+    "cum_returns": "runs_gpu_full/short/baseline_lstm/plots/cum_returns.png",
+    "attention_weights": null
+  },
+  "benchmark_path": "GAT0050.csv",
+  "top_pct": 0.1,
+  "rebalance_days": 5,
+  "horizon": 5,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "val_days": 25,
+    "test_days": 64
+  },
+  "strategy": {
+    "n": 13,
+    "mean_return": 0.014574694697960066,
+    "std_return": 0.019341470695505573,
+    "annual_return": 0.7345646127771873,
+    "annual_volatility": 0.13731082050851304,
+    "sharpe": 5.3496484112236855,
+    "hit_rate": 0.8461538461538461,
+    "total_return": 0.20433907776752025,
+    "cagr": 1.0561595073646486,
+    "max_drawdown": -0.018677495419979095
+  },
+  "strategy_aligned": {
+    "n": 13,
+    "mean_return": 0.014574694697960066,
+    "std_return": 0.019341470695505573,
+    "annual_return": 0.7345646127771873,
+    "annual_volatility": 0.13731082050851304,
+    "sharpe": 5.3496484112236855,
+    "hit_rate": 0.8461538461538461,
+    "total_return": 0.20433907776752025,
+    "cagr": 1.0561595073646486,
+    "max_drawdown": -0.018677495419979095
+  },
+  "benchmark": {
+    "n": 13,
+    "mean_return": 0.015046796750794079,
+    "std_return": 0.025427249178505154,
+    "annual_return": 0.7583585562400216,
+    "annual_volatility": 0.1805155617657488,
+    "sharpe": 4.201070250243175,
+    "hit_rate": 0.6153846153846154,
+    "total_return": 0.20970717512258252,
+    "cagr": 1.0919196276091934,
+    "max_drawdown": -0.034095094121023184
+  },
+  "alignment": {
+    "start": "2020-09-30",
+    "end": "2020-12-28",
+    "n_periods": 13
+  },
+  "top_attention_features": [],
+  "lstm_lookback": 10,
+  "excess": {
+    "annual_return": -0.023793943462834255,
+    "total_return": -0.0053680973550622735,
+    "sharpe": 1.1485781609805104
+  }
+}

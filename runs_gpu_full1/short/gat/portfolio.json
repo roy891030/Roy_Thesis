@@ -1,0 +1,71 @@
+{
+  "model_type": "gat",
+  "artifact_dir": "artifacts/short",
+  "weights": "artifacts/short/gat_regressor.pt",
+  "plots_dir": "runs_gpu_full/short/gat/plots",
+  "plots": {
+    "daily_ic": "runs_gpu_full/short/gat/plots/daily_ic.png",
+    "pred_dispersion": "runs_gpu_full/short/gat/plots/pred_dispersion.png",
+    "hitrate_by_month": "runs_gpu_full/short/gat/plots/hitrate_by_month.png",
+    "ic_distribution": "runs_gpu_full/short/gat/plots/ic_distribution.png",
+    "cum_returns": "runs_gpu_full/short/gat/plots/cum_returns.png",
+    "attention_weights": null
+  },
+  "benchmark_path": "GAT0050.csv",
+  "top_pct": 0.1,
+  "rebalance_days": 5,
+  "horizon": 5,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "val_days": 25,
+    "test_days": 64
+  },
+  "strategy": {
+    "n": 13,
+    "mean_return": 0.0070373829848204665,
+    "std_return": 0.008358758508099844,
+    "annual_return": 0.3546841024349515,
+    "annual_volatility": 0.05934129866589768,
+    "sharpe": 5.977019553142704,
+    "hit_rate": 0.7692307692307693,
+    "total_return": 0.0949981028558542,
+    "cagr": 0.4216824131848065,
+    "max_drawdown": -0.006660300414886633
+  },
+  "strategy_aligned": {
+    "n": 13,
+    "mean_return": 0.0070373829848204665,
+    "std_return": 0.008358758508099844,
+    "annual_return": 0.3546841024349515,
+    "annual_volatility": 0.05934129866589768,
+    "sharpe": 5.977019553142704,
+    "hit_rate": 0.7692307692307693,
+    "total_return": 0.0949981028558542,
+    "cagr": 0.4216824131848065,
+    "max_drawdown": -0.006660300414886633
+  },
+  "benchmark": {
+    "n": 13,
+    "mean_return": 0.015046796750794079,
+    "std_return": 0.025427249178505154,
+    "annual_return": 0.7583585562400216,
+    "annual_volatility": 0.1805155617657488,
+    "sharpe": 4.201070250243175,
+    "hit_rate": 0.6153846153846154,
+    "total_return": 0.20970717512258252,
+    "cagr": 1.0919196276091934,
+    "max_drawdown": -0.034095094121023184
+  },
+  "alignment": {
+    "start": "2020-09-30",
+    "end": "2020-12-28",
+    "n_periods": 13
+  },
+  "top_attention_features": [],
+  "excess": {
+    "annual_return": -0.40367445380507005,
+    "total_return": -0.11470907226672833,
+    "sharpe": 1.7759493028995292
+  }
+}

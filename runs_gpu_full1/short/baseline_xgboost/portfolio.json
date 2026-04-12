@@ -1,0 +1,73 @@
+{
+  "model_type": "xgboost",
+  "artifact_dir": "artifacts/short",
+  "weights": "artifacts/short/baseline_xgboost.json",
+  "scaler": "artifacts/short/baseline_xgboost_scaler.pkl",
+  "plots_dir": "runs_gpu_full/short/baseline_xgboost/plots",
+  "plots": {
+    "daily_ic": "runs_gpu_full/short/baseline_xgboost/plots/daily_ic.png",
+    "pred_dispersion": "runs_gpu_full/short/baseline_xgboost/plots/pred_dispersion.png",
+    "hitrate_by_month": "runs_gpu_full/short/baseline_xgboost/plots/hitrate_by_month.png",
+    "ic_distribution": "runs_gpu_full/short/baseline_xgboost/plots/ic_distribution.png",
+    "cum_returns": "runs_gpu_full/short/baseline_xgboost/plots/cum_returns.png",
+    "attention_weights": null
+  },
+  "benchmark_path": "GAT0050.csv",
+  "top_pct": 0.1,
+  "rebalance_days": 5,
+  "horizon": 5,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "val_days": 25,
+    "test_days": 64
+  },
+  "strategy": {
+    "n": 13,
+    "mean_return": 0.019885528187912244,
+    "std_return": 0.022943793721004174,
+    "annual_return": 1.0022306206707772,
+    "annual_volatility": 0.16288477701652884,
+    "sharpe": 6.15300360799877,
+    "hit_rate": 0.8461538461538461,
+    "total_return": 0.28781493733471875,
+    "cagr": 1.6662041925549462,
+    "max_drawdown": -0.021251151307622784
+  },
+  "strategy_aligned": {
+    "n": 13,
+    "mean_return": 0.019885528187912244,
+    "std_return": 0.022943793721004174,
+    "annual_return": 1.0022306206707772,
+    "annual_volatility": 0.16288477701652884,
+    "sharpe": 6.15300360799877,
+    "hit_rate": 0.8461538461538461,
+    "total_return": 0.28781493733471875,
+    "cagr": 1.6662041925549462,
+    "max_drawdown": -0.021251151307622784
+  },
+  "benchmark": {
+    "n": 13,
+    "mean_return": 0.015046796750794079,
+    "std_return": 0.025427249178505154,
+    "annual_return": 0.7583585562400216,
+    "annual_volatility": 0.1805155617657488,
+    "sharpe": 4.201070250243175,
+    "hit_rate": 0.6153846153846154,
+    "total_return": 0.20970717512258252,
+    "cagr": 1.0919196276091934,
+    "max_drawdown": -0.034095094121023184
+  },
+  "alignment": {
+    "start": "2020-09-30",
+    "end": "2020-12-28",
+    "n_periods": 13
+  },
+  "top_attention_features": [],
+  "lstm_lookback": null,
+  "excess": {
+    "annual_return": 0.2438720644307556,
+    "total_return": 0.07810776221213622,
+    "sharpe": 1.9519333577555953
+  }
+}

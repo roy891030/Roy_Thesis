@@ -9,7 +9,7 @@
 
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{p{3.1cm} p{2.6cm} p{7.4cm} p{1.6cm}}
-\caption{本研究實際使用之模型輸入特徵（\texttt{feature\_cols}，共 54 項；全部由 TEJ 原始欄位衍生）}
+\caption{本研究實際使用之模型輸入特徵（\texttt{feature\_cols}，共 56 項；全部由 TEJ 原始欄位衍生）}
 \label{tab:feature_cols_54_full}\\
 \toprule
 \textbf{特徵名稱} & \textbf{類別} & \textbf{定義（由 TEJ 欄位計算）} & \textbf{視窗} \\
@@ -65,6 +65,9 @@ down\_vol\_20 & 量能 & 20 日內下跌日平均量：$\frac{\sum V\,\mathbb{I}
 amihud\_5  & 流動性 & Amihud illiquidity：$\frac{1}{5}\sum \frac{|r|}{\text{Amt}+\varepsilon}$，Amt 為 TEJ 成交值(千元) & 5 \\
 amihud\_20 & 流動性 & 同上（TEJ 成交值、TEJ 收盤價計算 $r$） & 20 \\
 
+pb & 估值 & Price-to-Book ratio（TEJ 股價淨值比） & -- \\
+ps & 估值 & Price-to-Sales ratio（TEJ 股價營收比） & -- \\
+
 rsi\_14 & 技術指標 & RSI（TA-Lib 預設參數；由 TEJ 收盤價計算） & 14 \\
 stoch\_k\_14 & 技術指標 & Stochastic \%K（TA-Lib 預設；由 TEJ 最高/最低/收盤價計算） & 14 \\
 stoch\_d\_3  & 技術指標 & Stochastic \%D（\%K 的平滑；TA-Lib 預設） & 3 \\
@@ -117,31 +120,31 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \centering
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_linear/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_linear/plots/cum_returns.png}
     \caption{Linear}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_xgboost/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_xgboost/plots/cum_returns.png}
     \caption{XGBoost}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_lstm/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_lstm/plots/cum_returns.png}
     \caption{LSTM}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/gat/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/gat/plots/cum_returns.png}
     \caption{GATRegressor}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/dmfm/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/dmfm/plots/cum_returns.png}
     \caption{DMFM}
   \end{subfigure}
   \caption{short 時間窗各模型累積報酬曲線。}
@@ -153,31 +156,31 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \centering
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_linear/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_linear/plots/cum_returns.png}
     \caption{Linear}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_xgboost/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_xgboost/plots/cum_returns.png}
     \caption{XGBoost}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_lstm/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_lstm/plots/cum_returns.png}
     \caption{LSTM}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/gat/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/gat/plots/cum_returns.png}
     \caption{GATRegressor}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/dmfm/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/dmfm/plots/cum_returns.png}
     \caption{DMFM}
   \end{subfigure}
   \caption{medium 時間窗各模型累積報酬曲線。}
@@ -189,31 +192,31 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \centering
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_linear/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_linear/plots/cum_returns.png}
     \caption{Linear}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_xgboost/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_xgboost/plots/cum_returns.png}
     \caption{XGBoost}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_lstm/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_lstm/plots/cum_returns.png}
     \caption{LSTM}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/gat/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/gat/plots/cum_returns.png}
     \caption{GATRegressor}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/dmfm/plots/cum_returns.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/dmfm/plots/cum_returns.png}
     \caption{DMFM}
   \end{subfigure}
   \caption{long 時間窗各模型累積報酬曲線。}
@@ -227,31 +230,31 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \centering
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_linear/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_linear/plots/daily_ic.png}
     \caption{Linear}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_xgboost/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_xgboost/plots/daily_ic.png}
     \caption{XGBoost}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_lstm/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_lstm/plots/daily_ic.png}
     \caption{LSTM}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/gat/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/gat/plots/daily_ic.png}
     \caption{GATRegressor}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/dmfm/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/dmfm/plots/daily_ic.png}
     \caption{DMFM}
   \end{subfigure}
   \caption{short 時間窗各模型 Daily IC。}
@@ -263,31 +266,31 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \centering
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_linear/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_linear/plots/daily_ic.png}
     \caption{Linear}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_xgboost/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_xgboost/plots/daily_ic.png}
     \caption{XGBoost}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_lstm/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_lstm/plots/daily_ic.png}
     \caption{LSTM}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/gat/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/gat/plots/daily_ic.png}
     \caption{GATRegressor}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/dmfm/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/dmfm/plots/daily_ic.png}
     \caption{DMFM}
   \end{subfigure}
   \caption{medium 時間窗各模型 Daily IC。}
@@ -299,31 +302,31 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \centering
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_linear/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_linear/plots/daily_ic.png}
     \caption{Linear}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_xgboost/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_xgboost/plots/daily_ic.png}
     \caption{XGBoost}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_lstm/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_lstm/plots/daily_ic.png}
     \caption{LSTM}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/gat/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/gat/plots/daily_ic.png}
     \caption{GATRegressor}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/dmfm/plots/daily_ic.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/dmfm/plots/daily_ic.png}
     \caption{DMFM}
   \end{subfigure}
   \caption{long 時間窗各模型 Daily IC。}
@@ -337,31 +340,31 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \centering
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_linear/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_linear/plots/ic_distribution.png}
     \caption{Linear}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_xgboost/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_xgboost/plots/ic_distribution.png}
     \caption{XGBoost}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/baseline_lstm/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_lstm/plots/ic_distribution.png}
     \caption{LSTM}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/gat/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/gat/plots/ic_distribution.png}
     \caption{GATRegressor}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/short/dmfm/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/dmfm/plots/ic_distribution.png}
     \caption{DMFM}
   \end{subfigure}
   \caption{short 時間窗各模型 IC 分佈。}
@@ -373,31 +376,31 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \centering
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_linear/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_linear/plots/ic_distribution.png}
     \caption{Linear}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_xgboost/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_xgboost/plots/ic_distribution.png}
     \caption{XGBoost}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/baseline_lstm/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_lstm/plots/ic_distribution.png}
     \caption{LSTM}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/gat/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/gat/plots/ic_distribution.png}
     \caption{GATRegressor}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/medium/dmfm/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/dmfm/plots/ic_distribution.png}
     \caption{DMFM}
   \end{subfigure}
   \caption{medium 時間窗各模型 IC 分佈。}
@@ -409,31 +412,31 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \centering
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_linear/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_linear/plots/ic_distribution.png}
     \caption{Linear}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_xgboost/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_xgboost/plots/ic_distribution.png}
     \caption{XGBoost}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/baseline_lstm/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_lstm/plots/ic_distribution.png}
     \caption{LSTM}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/gat/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/gat/plots/ic_distribution.png}
     \caption{GATRegressor}
   \end{subfigure}
   \vspace{0.15em}
   \begin{subfigure}[t]{0.98\textwidth}
     \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_full/long/dmfm/plots/ic_distribution.png}
+    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/dmfm/plots/ic_distribution.png}
     \caption{DMFM}
   \end{subfigure}
   \caption{long 時間窗各模型 IC 分佈。}
