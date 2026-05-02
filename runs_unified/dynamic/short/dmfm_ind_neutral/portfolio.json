@@ -1,0 +1,125 @@
+{
+  "model_type": "factor_variant",
+  "artifact_dir": "artifacts_unified/dynamic/short",
+  "weights": "artifacts_unified/dynamic/short/dmfm_ind_neutral_best.pt",
+  "model_config": {
+    "in_dim": 56,
+    "num_features": 56,
+    "hidden_dim": 64,
+    "heads": 2,
+    "dropout": 0.1,
+    "edge_dim": 2,
+    "variant": "dmfm_ind_neutral",
+    "use_factor_attention": true
+  },
+  "dynamic_graphs": {
+    "enabled": true,
+    "edge_dim": 2,
+    "edge_attr": [
+      "abs_corr",
+      "signed_corr"
+    ],
+    "lookback": 60,
+    "min_obs": 20,
+    "industry_top_k": 20,
+    "universe_top_k": 40,
+    "avg_industry_edges": 12063.025078369907,
+    "avg_universe_edges": 29609.871473354233,
+    "max_industry_edges": 12849,
+    "max_universe_edges": 31611
+  },
+  "checkpoint_format_version": 1,
+  "checkpoint_is_legacy": false,
+  "plots_dir": "runs_unified/dynamic/short/dmfm_ind_neutral/plots",
+  "plots": {
+    "daily_ic": "runs_unified/dynamic/short/dmfm_ind_neutral/plots/daily_ic.png",
+    "pred_dispersion": "runs_unified/dynamic/short/dmfm_ind_neutral/plots/pred_dispersion.png",
+    "hitrate_by_month": "runs_unified/dynamic/short/dmfm_ind_neutral/plots/hitrate_by_month.png",
+    "ic_distribution": "runs_unified/dynamic/short/dmfm_ind_neutral/plots/ic_distribution.png",
+    "cum_returns": "runs_unified/dynamic/short/dmfm_ind_neutral/plots/cum_returns.png",
+    "attention_weights": "runs_unified/dynamic/short/dmfm_ind_neutral/plots/attention_weights.png"
+  },
+  "benchmark_path": "GAT0050.csv",
+  "top_pct": 0.1,
+  "rebalance_days": 5,
+  "horizon": 5,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "val_days": 25,
+    "test_days": 64
+  },
+  "strategy": {
+    "n": 13,
+    "mean_return": 0.017148259816727098,
+    "std_return": 0.0219581260820868,
+    "annual_return": 0.8642722947630457,
+    "annual_volatility": 0.15588723094678333,
+    "sharpe": 5.5442148116550385,
+    "hit_rate": 0.7692307692307693,
+    "total_return": 0.2439193221616056,
+    "cagr": 1.330784501313273,
+    "max_drawdown": -0.015176450488585846
+  },
+  "strategy_aligned": {
+    "n": 13,
+    "mean_return": 0.017148259816727098,
+    "std_return": 0.0219581260820868,
+    "annual_return": 0.8642722947630457,
+    "annual_volatility": 0.15588723094678333,
+    "sharpe": 5.5442148116550385,
+    "hit_rate": 0.7692307692307693,
+    "total_return": 0.2439193221616056,
+    "cagr": 1.330784501313273,
+    "max_drawdown": -0.015176450488585846
+  },
+  "benchmark": {
+    "n": 13,
+    "mean_return": 0.015046796750794079,
+    "std_return": 0.025427249178505154,
+    "annual_return": 0.7583585562400216,
+    "annual_volatility": 0.1805155617657488,
+    "sharpe": 4.201070250243175,
+    "hit_rate": 0.6153846153846154,
+    "total_return": 0.20970717512258252,
+    "cagr": 1.0919196276091934,
+    "max_drawdown": -0.034095094121023184
+  },
+  "alignment": {
+    "start": "2020-09-30",
+    "end": "2020-12-28",
+    "n_periods": 13
+  },
+  "top_attention_features": [
+    {
+      "rank": 1,
+      "feature": "pct_pos_20",
+      "attention_weight": 0.027883682399988174
+    },
+    {
+      "rank": 2,
+      "feature": "ret_10",
+      "attention_weight": 0.027407703921198845
+    },
+    {
+      "rank": 3,
+      "feature": "macd",
+      "attention_weight": 0.022617513313889503
+    },
+    {
+      "rank": 4,
+      "feature": "ret_1",
+      "attention_weight": 0.022061670199036598
+    },
+    {
+      "rank": 5,
+      "feature": "vol_over_ma_20",
+      "attention_weight": 0.021478036418557167
+    }
+  ],
+  "excess": {
+    "annual_return": 0.1059137385230241,
+    "total_return": 0.03421214703902309,
+    "sharpe": 1.3431445614118633
+  }
+}

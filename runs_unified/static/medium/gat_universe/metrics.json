@@ -1,0 +1,67 @@
+{
+  "model_type": "factor_variant",
+  "artifact_dir": "artifacts_unified/static/medium",
+  "weights": "artifacts_unified/static/medium/gat_universe_best.pt",
+  "model_config": {
+    "in_dim": 56,
+    "num_features": 56,
+    "hidden_dim": 64,
+    "heads": 2,
+    "dropout": 0.1,
+    "edge_dim": null,
+    "variant": "gat_universe",
+    "use_factor_attention": true
+  },
+  "dynamic_graphs": {
+    "enabled": false
+  },
+  "checkpoint_format_version": 1,
+  "checkpoint_is_legacy": false,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 583,
+    "val_days": 64,
+    "test_days": 162
+  },
+  "train": {
+    "MSE": 0.0041394405998289585,
+    "RMSE": 0.06433848459381802,
+    "MAE": 0.04016673192381859,
+    "IC": 0.15722554204432596,
+    "DailyIC": 0.16139072487277012,
+    "ICIR": 1.676925288400177,
+    "DirAcc": 0.59215571919266,
+    "IC_ind": 0.15813036406571984,
+    "DailyIC_ind": 0.1605885053153182,
+    "ICIR_ind": 1.7820894597401198,
+    "n": 448856
+  },
+  "val": {
+    "MSE": 0.0031894876156002283,
+    "RMSE": 0.05647554882956188,
+    "MAE": 0.03740132227540016,
+    "IC": 0.09612344805636931,
+    "DailyIC": 0.10815365066292021,
+    "ICIR": 1.3737953728167316,
+    "DirAcc": 0.536918000567044,
+    "IC_ind": 0.09083104751412488,
+    "DailyIC_ind": 0.09961273618641436,
+    "ICIR_ind": 1.3024084867614758,
+    "n": 46645
+  },
+  "test": {
+    "MSE": 0.003208542475476861,
+    "RMSE": 0.05664399770034651,
+    "MAE": 0.03875823691487312,
+    "IC": 0.08482985285816401,
+    "DailyIC": 0.08385408859930236,
+    "ICIR": 0.9044696983621003,
+    "DirAcc": 0.5549405311542026,
+    "IC_ind": 0.08765264279442388,
+    "DailyIC_ind": 0.0865524419261732,
+    "ICIR_ind": 0.9843703306936762,
+    "n": 121734
+  },
+  "has_industry_labels": true
+}

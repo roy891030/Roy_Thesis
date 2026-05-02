@@ -25,11 +25,11 @@
 
 \normalsize 
 
-本研究探討圖注意力機制在股票選取與報酬預測的有效性，並將所提模型與常見 benchmark 模型（Linear、XGBoost、LSTM、GATRegressor）進行比較。本文結合技術指標特徵與圖結構訊號，建立可重現的資料處理、模型訓練與評估流程。
+本研究探討圖注意力機制與多因子表示在股票選取與報酬預測中的有效性，並以統一實驗流程比較傳統基準模型與六種圖／因子消融模型。本文結合技術指標特徵、產業關係與全市場關係，建立可重現的資料處理、模型訓練、預測評估與投資組合回測流程。
 
-實證資料採用 TEJ 日頻資料，建構 56 維輸入特徵，並建立產業圖與全市場圖。模型比較包含 Linear、XGBoost、LSTM、GATRegressor 與 DMFM。預測層面以 RMSE、MAE、IC、ICIR 與 DirAcc 評估；策略層面則於每次再平衡日依預測分數排序，選取前段股票等權做多，並與 0050 基準比較。
+實證資料採用 TEJ 日頻資料，建構 56 維輸入特徵，標籤為未來 5 日報酬之每日截面去均值。實驗同時建立 static graph 與 dynamic weighted graph：前者使用同產業完全連結與全市場完全圖，後者依 rolling return correlation 建立每日加權邊，edge attributes 為絕對相關與帶符號相關。模型比較包含 Linear、XGBoost、LSTM，以及 MLP、GAT-Industry、GAT-Universe、GAT-TwoGraph、DMFM-IndNeutral 與 DMFM-Full 六種因子消融模型。預測層面以 MSE、RMSE、MAE、IC、Daily IC、ICIR 與 DirAcc 評估；策略層面則於每 5 個交易日依預測分數排序，選取前 10\% 股票等權做多，並與 0050 基準比較。
 
-研究結果顯示，模型優勢具有時間窗異質性。Short 視窗下，XGBoost 取得最高 IC（0.0863）與最高年化報酬（100.2231\%）；Medium 視窗下，DMFM 取得最高 IC（0.0780）與最高年化報酬（39.0107\%）；Long 視窗下，DMFM 的 ICIR 由 Linear Regression 的 0.3322 提升至 0.8905，且年化報酬、Sharpe 與勝率分別達 44.4274\%、1.5261 與 70.6897\%，均為各模型最佳。相較 0050，DMFM 在 Long 視窗下的年化報酬由 19.3974\% 提升至 44.4274\%，Sharpe 由 0.6253 提升至 1.5261，勝率由 58.6207\% 提升至 70.6897\%。整體而言，結合圖注意力與多因子表示的模型，特別在中長期視窗下，可提升台股選股訊號之穩定性與投資可用性，並提供具解釋性的實證依據。
+研究結果顯示，模型優勢具有時間窗與圖模式異質性。Short/static 組合由 GAT-Universe 取得最高 Test IC（0.0843）、總報酬（32.13\%）與 Sharpe（7.832）；Medium/dynamic 組合由 GAT-Universe 取得最高總報酬（38.31\%）與 Sharpe（1.866）；Long/static 組合則由 DMFM-Full 取得最高總報酬（54.32\%）與 Sharpe（1.490）。整體 18 組 dynamic-static 可配對比較中，dynamic graph 使 Sharpe 改善 10 組、總報酬改善 11 組，但平均 Test IC 略降 0.0022，顯示 dynamic graph 並非單向優勢，而是依期間與模型結構而定。跨實驗平均而言，GAT-Industry 具有最高平均 Sharpe（3.438），DMFM-Full 具有最高平均總報酬（36.40\%），GAT-Universe 具有最高平均 Test IC（0.0858）。注意力分析則顯示，模型最常關注 rolling min/max、波動與量能相關特徵。整體而言，圖注意力與多因子表示能提升台股截面排序與投資組合表現，但其效益需透過模型消融、圖模式與投組層級指標共同判讀。
 
 \vspace{1cm}
 

@@ -1,0 +1,50 @@
+{
+  "model_type": "linear",
+  "artifact_dir": "artifacts/short",
+  "weights": "artifacts/short/baseline_linear.pkl",
+  "scaler": "artifacts/short/baseline_linear_scaler.pkl",
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 230,
+    "val_days": 25,
+    "test_days": 64
+  },
+  "train": {
+    "MSE": 0.0038043437525629997,
+    "RMSE": 0.06167936245263078,
+    "MAE": 0.037873174995183945,
+    "IC": 0.10225709730347307,
+    "ICIR": 0.6486157424190558,
+    "DirAcc": 0.5294034460521999,
+    "DailyIC": 0.0818876983007435
+  },
+  "val": {
+    "MSE": 0.004356661811470985,
+    "RMSE": 0.06600501353284449,
+    "MAE": 0.037992820143699646,
+    "IC": 0.051410076149833395,
+    "ICIR": 0.5685336085647982,
+    "DirAcc": 0.5242077922077922,
+    "DailyIC": 0.048735308232625715
+  },
+  "test": {
+    "MSE": 0.0030821014661341906,
+    "RMSE": 0.05551667736936524,
+    "MAE": 0.033975716680288315,
+    "IC": 0.02378779677080496,
+    "ICIR": 0.3778013068249423,
+    "DirAcc": 0.5225040584415584,
+    "DailyIC": 0.024284771866887277
+  },
+  "naive_test": {
+    "MSE": 0.0030592603143304586,
+    "RMSE": 0.05531058049171477,
+    "MAE": 0.033861059695482254,
+    "n": 49280
+  },
+  "mse_improvement_vs_naive_pct": -0.7466233486812968,
+  "has_industry_labels": false,
+  "lookback": null,
+  "model": "linear"
+}

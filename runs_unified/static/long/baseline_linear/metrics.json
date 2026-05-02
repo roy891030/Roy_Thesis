@@ -1,0 +1,43 @@
+{
+  "model_type": "linear",
+  "artifact_dir": "artifacts_unified/static/long",
+  "weights": "artifacts_unified/static/long/baseline_linear.pkl",
+  "scaler": "artifacts_unified/static/long/baseline_linear_scaler.pkl",
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 1052,
+    "val_days": 116,
+    "test_days": 292
+  },
+  "train": {
+    "MSE": 0.0032169814221560955,
+    "RMSE": 0.0567184398776632,
+    "MAE": 0.03528834879398346,
+    "IC": 0.06216138865748781,
+    "ICIR": 0.6415444054196924,
+    "DirAcc": 0.5221318239894207,
+    "DailyIC": 0.0585208818250553
+  },
+  "val": {
+    "MSE": 0.003688332624733448,
+    "RMSE": 0.060731644344060434,
+    "MAE": 0.03783245384693146,
+    "IC": 0.0549988023126789,
+    "ICIR": 0.8879660476190431,
+    "DirAcc": 0.5226307079923074,
+    "DailyIC": 0.05335921289605146
+  },
+  "test": {
+    "MSE": 0.0031013169791549444,
+    "RMSE": 0.05568946919440824,
+    "MAE": 0.03585320711135864,
+    "IC": 0.03957250503623795,
+    "ICIR": 0.36600409396564,
+    "DirAcc": 0.5092169543151797,
+    "DailyIC": 0.03464051317545244
+  },
+  "has_industry_labels": false,
+  "lookback": null,
+  "model": "linear"
+}

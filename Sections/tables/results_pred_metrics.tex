@@ -1,36 +1,19 @@
 \begin{table}[H]
 \centering
-\caption{各模型於不同時間窗之預測指標比較（測試集）}
+\caption{各時間窗與圖模式下之勝出模型摘要}
 \label{tab:results_pred_metrics}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{llrrrrr}
+\begin{tabular}{llrllll}
 \toprule
-時間窗 & 模型 & RMSE & MAE & IC & ICIR & DirAcc \\
+時間窗 & 圖模式 & 模型數 & Test IC 最佳 & 總報酬最佳 & Sharpe 最佳 & 超額報酬最佳 \\
 \midrule
-Short & Linear & \textbf{0.0555} & \textbf{0.0340} & 0.0238 & 0.3778 & 0.5225 \\
- & XGBoost & 0.0559 & 0.0346 & \textbf{0.0863} & \textbf{1.3469} & 0.5236 \\
- & LSTM & 0.0561 & 0.0352 & 0.0487 & 0.5901 & 0.5025 \\
- & GATRegressor & 0.1130 & 0.0939 & -0.0246 & -0.3406 & \textbf{0.5533} \\
- & DMFM & 0.0562 & 0.0348 & 0.0593 & 0.7141 & 0.4999 \\
-\midrule
-Medium & Linear & \textbf{0.0503} & \textbf{0.0335} & 0.0181 & 0.1154 & 0.5064 \\
- & XGBoost & 0.0505 & 0.0337 & 0.0617 & 0.4872 & 0.5205 \\
- & LSTM & 0.0504 & 0.0335 & 0.0696 & 0.5509 & \textbf{0.5380} \\
- & GATRegressor & 0.0882 & 0.0695 & -0.0110 & -0.1167 & 0.5214 \\
- & DMFM & 0.0606 & 0.0421 & \textbf{0.0780} & \textbf{0.6095} & 0.5029 \\
-\midrule
-Long & Linear & 0.0557 & 0.0359 & 0.0354 & 0.3322 & 0.5077 \\
- & XGBoost & \textbf{0.0556} & \textbf{0.0358} & \textbf{0.0885} & 0.8398 & \textbf{0.5347} \\
- & LSTM & 0.0559 & 0.0361 & 0.0662 & 0.5594 & 0.5261 \\
- & GATRegressor & 0.1014 & 0.0847 & 0.0030 & 0.0423 & 0.4699 \\
- & DMFM & 0.1330 & 0.0838 & 0.0860 & \textbf{0.8905} & 0.5107 \\
+Short & static & 9 & GAT-Universe (0.0843) & GAT-Universe (32.13\%) & GAT-Universe (7.832) & GAT-Universe (11.16\%) \\
+Short & dynamic & 6 & GAT-Universe (0.0812) & DMFM-Full (27.66\%) & GAT-TwoGraph (7.318) & DMFM-Full (6.69\%) \\
+Medium & static & 9 & GAT-Industry (0.0933) & GAT-TwoGraph (36.12\%) & GAT-Industry (1.832) & GAT-TwoGraph (43.61\%) \\
+Medium & dynamic & 6 & GAT-TwoGraph (0.0893) & GAT-Universe (38.31\%) & GAT-Universe (1.866) & GAT-Universe (45.79\%) \\
+Long & static & 9 & GAT-TwoGraph (0.0894) & DMFM-Full (54.32\%) & DMFM-Full (1.490) & DMFM-Full (36.09\%) \\
+Long & dynamic & 6 & GAT-Universe (0.0955) & GAT-TwoGraph (51.59\%) & GAT-TwoGraph (1.378) & GAT-TwoGraph (33.36\%) \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
-\vspace{0.2em}
-
-\begin{minipage}{0.96\textwidth}
-\footnotesize
-註：表內數值四捨五入至小數第四位；粗體依未四捨五入之原始值判定。
-\end{minipage}
 \end{table}

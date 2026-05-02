@@ -1,0 +1,31 @@
+\begin{table}[H]
+\centering
+\caption{Dynamic graph 相對 Static graph 之成效差異（dynamic $-$ static）}
+\label{tab:results_dynamic_static_deltas}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{llrrrr}
+\toprule
+時間窗 & 模型 & $\Delta$ Test IC & $\Delta$ 總報酬 & $\Delta$ Sharpe & $\Delta$ MaxDD \\
+\midrule
+Short & MLP & -0.0105 & +0.07pp & +0.954 & +0.36pp \\
+Short & GAT-Universe & -0.0031 & -5.15pp & -1.317 & -0.59pp \\
+Short & GAT-Industry & -0.0112 & +0.45pp & +0.008 & -0.07pp \\
+Short & GAT-TwoGraph & +0.0041 & +3.21pp & +1.047 & -0.65pp \\
+Short & DMFM-IndNeutral & -0.0159 & -1.98pp & -1.512 & -0.25pp \\
+Short & DMFM-Full & -0.0118 & +5.28pp & +1.367 & +1.79pp \\
+Medium & MLP & +0.0049 & +3.21pp & +0.222 & +0.58pp \\
+Medium & GAT-Universe & +0.0017 & +10.92pp & +0.407 & +0.94pp \\
+Medium & GAT-Industry & -0.0134 & -3.03pp & -0.190 & -1.35pp \\
+Medium & GAT-TwoGraph & -0.0004 & -2.59pp & -0.044 & +1.21pp \\
+Medium & DMFM-IndNeutral & +0.0036 & +0.16pp & -0.001 & -0.39pp \\
+Medium & DMFM-Full & +0.0093 & +2.62pp & +0.099 & -0.74pp \\
+Long & MLP & -0.0104 & -3.63pp & -0.040 & +0.52pp \\
+Long & GAT-Universe & +0.0135 & +3.58pp & +0.032 & -0.98pp \\
+Long & GAT-Industry & -0.0016 & -3.26pp & -0.065 & +0.72pp \\
+Long & GAT-TwoGraph & -0.0125 & +7.18pp & +0.236 & +1.56pp \\
+Long & DMFM-IndNeutral & +0.0025 & +4.47pp & +0.169 & +1.67pp \\
+Long & DMFM-Full & +0.0122 & -6.07pp & -0.288 & -2.68pp \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}

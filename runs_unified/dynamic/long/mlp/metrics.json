@@ -1,0 +1,80 @@
+{
+  "model_type": "factor_variant",
+  "artifact_dir": "artifacts_unified/dynamic/long",
+  "weights": "artifacts_unified/dynamic/long/mlp_best.pt",
+  "model_config": {
+    "in_dim": 56,
+    "num_features": 56,
+    "hidden_dim": 64,
+    "heads": 2,
+    "dropout": 0.1,
+    "edge_dim": 2,
+    "variant": "mlp",
+    "use_factor_attention": true
+  },
+  "dynamic_graphs": {
+    "enabled": true,
+    "edge_dim": 2,
+    "edge_attr": [
+      "abs_corr",
+      "signed_corr"
+    ],
+    "lookback": 60,
+    "min_obs": 20,
+    "industry_top_k": 20,
+    "universe_top_k": 40,
+    "avg_industry_edges": 12631.867123287671,
+    "avg_universe_edges": 31057.41095890411,
+    "max_industry_edges": 12849,
+    "max_universe_edges": 31611
+  },
+  "checkpoint_format_version": 1,
+  "checkpoint_is_legacy": false,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 1052,
+    "val_days": 116,
+    "test_days": 292
+  },
+  "train": {
+    "MSE": 0.01036804635077715,
+    "RMSE": 0.10182360409441982,
+    "MAE": 0.06844409555196762,
+    "IC": 0.09620864175313226,
+    "DailyIC": 0.09801656428094785,
+    "ICIR": 1.074955683425896,
+    "DirAcc": 0.5092331291345837,
+    "IC_ind": 0.09472106912105967,
+    "DailyIC_ind": 0.0952474156990015,
+    "ICIR_ind": 1.0828788384413,
+    "n": 804588
+  },
+  "val": {
+    "MSE": 0.009859761223196983,
+    "RMSE": 0.09929633036118195,
+    "MAE": 0.06678100675344467,
+    "IC": 0.09873216311200676,
+    "DailyIC": 0.09955817219602989,
+    "ICIR": 1.3597131990860505,
+    "DirAcc": 0.5002907106757906,
+    "IC_ind": 0.09173580075844323,
+    "DailyIC_ind": 0.09258776665468509,
+    "ICIR_ind": 1.2596543599639354,
+    "n": 89436
+  },
+  "test": {
+    "MSE": 0.010151959955692291,
+    "RMSE": 0.10075693502529884,
+    "MAE": 0.06840205937623978,
+    "IC": 0.07501838170429455,
+    "DailyIC": 0.07409301843240482,
+    "ICIR": 0.8715436864380804,
+    "DirAcc": 0.5035950415090588,
+    "IC_ind": 0.07379367229472196,
+    "DailyIC_ind": 0.07298288377404828,
+    "ICIR_ind": 0.9110052205800653,
+    "n": 221277
+  },
+  "has_industry_labels": true
+}

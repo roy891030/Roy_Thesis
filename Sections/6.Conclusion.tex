@@ -1,11 +1,17 @@
-\chapter{未來工作}
+\chapter{結論與未來工作}
 \label{ch:conclusion}
 
-未來研究將聚焦於下列四項工作：
+本文以 TEJ 台股日頻資料建立 56 維技術與估值特徵，並在統一 pipeline 下比較 baseline models、六種 factor ablation models，以及 static / dynamic graph 兩種圖建構口徑。實證結果顯示，圖注意力與多因子表示確實能在多數情境下提供較線性模型更有效的截面排序訊號，但其效果並非單向或固定。Short/static 下 GAT-Universe 同時取得最高 Test IC、總報酬與 Sharpe；Medium/dynamic 下 GAT-Universe 在投組層級表現最佳；Long/static 下則由 DMFM-Full 取得最高總報酬與 Sharpe。換言之，本文不支持「單一 DMFM 模型在所有視窗皆最佳」的結論，而是支持「不同圖結構與中性化設計在不同市場期間具有不同優勢」的結論。
+
+Dynamic graph 的實證結果亦呈現條件性。相較 static graph，dynamic graph 在 18 個可配對實驗中改善 10 組 Sharpe 與 11 組總報酬，但平均 Test IC 略降。這表示 rolling correlation graph 能在部分期間強化可交易訊號，尤其在 Medium window 較明顯；但其 rolling window 估計亦可能引入噪音，使預測層與投組層的改善不同步。因此，dynamic graph 應被視為一種需搭配期間與模型結構檢驗的設計，而非必然優於 static graph 的假設。
+
+注意力分析顯示，模型最常關注 rolling min/max、波動與量能相關特徵，代表台股截面排序訊號在本實驗中主要來自近期價格區間、風險狀態與交易活躍度，而非單一估值或單一動能因子。此結果提供了模型解釋上的輔助依據，也說明多因子模型的價值在於動態重組多類特徵，而非僅放大某一固定訊號。
+
+未來研究將聚焦於下列工作：
 
 \begin{itemize}
   \item \textbf{納入交易成本、滑價與換手控制：}本文目前之回測仍屬無摩擦市場設定；後續可將手續費、滑價與換手率懲罰納入，並進一步評估 turnover-adjusted Sharpe / IR，以確認超額報酬在實務落地後的可持續性。
   \item \textbf{補強統計穩健性檢定：}除現有 IC、ICIR 與投組績效比較外，後續可加入 bootstrap / block bootstrap、rolling window 穩健性檢定與不同市場狀態分組分析，以更嚴謹地評估模型優勢是否具跨樣本穩定性。
-  \item \textbf{增加資料筆數：}擴充訓練與測試樣本區間，提升模型估計穩健性，並降低單一期間市場狀態對結論的影響。
-  \item \textbf{加入更多特徵：}在既有特徵基礎上增加更多不同型態訊號（如基本面、技術面、流動性與風險特徵），並透過特徵篩選與消融分析評估其對預測與投組績效的增益。
+  \item \textbf{擴充 dynamic graph 設計：}目前 dynamic graph 使用 rolling return correlation 與 top-k 邊，後續可比較不同 lookback、不同 edge attribute、產業內外異質連結，以及交易量、基本面或供應鏈資料所形成的關係圖。
+  \item \textbf{強化消融與模型選擇規則：}後續可進一步檢驗 encoder / decoder 深度、attention loss 權重、neutralization 順序與 graph sparsity 對結果的影響，並建立依市場狀態切換模型或圖模式的選擇規則。
 \end{itemize}

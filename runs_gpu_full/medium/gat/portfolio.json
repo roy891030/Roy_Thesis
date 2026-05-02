@@ -1,0 +1,71 @@
+{
+  "model_type": "gat",
+  "artifact_dir": "artifacts/medium",
+  "weights": "artifacts/medium/gat_regressor.pt",
+  "plots_dir": "runs_gpu_full/medium/gat/plots",
+  "plots": {
+    "daily_ic": "runs_gpu_full/medium/gat/plots/daily_ic.png",
+    "pred_dispersion": "runs_gpu_full/medium/gat/plots/pred_dispersion.png",
+    "hitrate_by_month": "runs_gpu_full/medium/gat/plots/hitrate_by_month.png",
+    "ic_distribution": "runs_gpu_full/medium/gat/plots/ic_distribution.png",
+    "cum_returns": "runs_gpu_full/medium/gat/plots/cum_returns.png",
+    "attention_weights": null
+  },
+  "benchmark_path": "GAT0050.csv",
+  "top_pct": 0.1,
+  "rebalance_days": 5,
+  "horizon": 5,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "val_days": 64,
+    "test_days": 162
+  },
+  "strategy": {
+    "n": 33,
+    "mean_return": 0.0016604589199590864,
+    "std_return": 0.02240259339354994,
+    "annual_return": 0.08368712956593795,
+    "annual_volatility": 0.1590426358374982,
+    "sharpe": 0.5261930495885725,
+    "hit_rate": 0.6666666666666666,
+    "total_return": 0.04772510197754887,
+    "cagr": 0.07379956596769643,
+    "max_drawdown": -0.12022564682219483
+  },
+  "strategy_aligned": {
+    "n": 33,
+    "mean_return": 0.0016604589199590864,
+    "std_return": 0.02240259339354994,
+    "annual_return": 0.08368712956593795,
+    "annual_volatility": 0.1590426358374982,
+    "sharpe": 0.5261930495885725,
+    "hit_rate": 0.6666666666666666,
+    "total_return": 0.04772510197754887,
+    "cagr": 0.07379956596769643,
+    "max_drawdown": -0.12022564682219483
+  },
+  "benchmark": {
+    "n": 33,
+    "mean_return": -0.0017040335322381665,
+    "std_return": 0.03673227235473606,
+    "annual_return": -0.08588329002480359,
+    "annual_volatility": 0.26077326463819556,
+    "sharpe": -0.32934085533638036,
+    "hit_rate": 0.45454545454545453,
+    "total_return": -0.07485151518507793,
+    "cagr": -0.11203539109515959,
+    "max_drawdown": -0.2185174320527129
+  },
+  "alignment": {
+    "start": "2022-05-16",
+    "end": "2022-12-29",
+    "n_periods": 33
+  },
+  "top_attention_features": [],
+  "excess": {
+    "annual_return": 0.16957041959074154,
+    "total_return": 0.1225766171626268,
+    "sharpe": 0.8555339049249528
+  }
+}

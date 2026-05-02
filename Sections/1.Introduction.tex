@@ -10,7 +10,7 @@
 
 另一方面，金融市場並非由彼此獨立的資產所構成。台灣股票之間普遍存在產業層級與市場層級的共同因子影響，使個股報酬在截面上呈現結構性相依。傳統時間序列模型（如 LSTM）多以單一資產的歷史序列為主要訊號來源，較難直接刻畫股票之間的關係拓撲；因此近年研究開始引入圖神經網路（Graph Neural Networks, GNNs），以「節點（股票）—邊（關係）」的方式建模產業或市場連結，並透過訊息傳遞與注意力機制（attention mechanism）聚合鄰居資訊，以提升截面預測與排序任務的表現與可解釋性。
 
-在上述脈絡下，結合多因子表示與圖注意力的模型架構，特別是能分離產業與全市場共同影響的設計，提供了一條兼顧「特徵可學習性」與「關係結構建模」的路徑。本文後續將採用深度多因子模型結合圖注意力之框架，並以台灣日頻資料進行實證檢驗。
+在上述脈絡下，結合多因子表示與圖注意力的模型架構，特別是能分離產業與全市場共同影響的設計，提供了一條兼顧「特徵可學習性」與「關係結構建模」的路徑。不過，圖模型的有效性不只取決於是否使用 GAT，也取決於圖結構是固定關係或隨市場共動變化而更新，以及模型是否真的透過中性化機制取得增益。本文因此採用統一實驗流程，同時比較傳統基準模型、六種圖／因子消融模型，以及 static graph 與 dynamic weighted graph 兩種圖建構口徑，並以台灣日頻資料進行實證檢驗。
 
 \section{研究問題}
 \label{sec:problem}
@@ -21,7 +21,7 @@
 
 第二，股票之間存在產業共通訊號與市場共同波動，僅依賴單一股票的時間序列特徵，可能無法充分利用截面關係資訊；因此需要能顯式建模股票關係的學習架構，使模型同時吸收「個股特徵」與「關係拓撲」兩類訊號。
 
-第三，即便引入圖結構，模型表現仍高度仰賴圖的構建方式與關係品質；若未能有效分離產業與全市場層級的共同影響，模型可能將「產業押注」或「市場曝險」誤判為選股能力。因而本文特別關注：是否能透過分層中性化的方式，將產業與市場影響自特徵表示中拆解，進而提升預測訊號的穩健性。
+第三，即便引入圖結構，模型表現仍高度仰賴圖的構建方式與關係品質；若未能有效分離產業與全市場層級的共同影響，模型可能將「產業押注」或「市場曝險」誤判為選股能力。因而本文特別關注兩個層面：其一，static graph 與 dynamic weighted graph 是否在不同期間呈現不同效益；其二，產業中性化與全市場中性化是否能在相同 encoder 與 decoder 口徑下帶來增量效果。
 
 第四，在金融預測情境下，模型品質不宜僅以單一誤差指標衡量；更關鍵的是模型在截面排序上的有效性與穩定性。因此本文採用資訊係數（Information Coefficient, IC）與其穩健性指標 ICIR（Information Coefficient Information Ratio, ICIR）作為主要評估基礎，並輔以投資組合績效指標進行整體驗證。
 
@@ -32,13 +32,14 @@
 
 在關係建模方面，本文依第三章之設計建構兩類圖結構：（1）產業圖（Industry Graph），以同產業股票完全連結並加入自環；（2）全市場圖（Universe Graph），以完全圖表示整體市場共同因子影響。圖結構以 PyTorch Geometric（PyG）的 \texttt{edge\_index} 形式保存，並與特徵張量共同形成可重複使用的訓練產物（artifacts）。
 
-模型設計以 Deep Multi-Factor Model（DMFM）為主體，透過「特徵編碼 \(\rightarrow\) 產業中性化 \(\rightarrow\) 全市場中性化 \(\rightarrow\) 階層式拼接 \(\rightarrow\) 深度因子學習 \(\rightarrow\) 因子注意力」的流程，在每個交易日的截面上輸出各股票之預測訊號；同時以較簡化的圖模型（本文基準模型名稱為 GATRegressor）作為對照實驗。評估上以 IC、Daily IC、ICIR 與產業中性 IC 作為核心預測指標，並以投資組合回測指標（年化報酬率、Sharpe ratio、勝率等）檢驗策略層級的有效性；資料切分採時間序列切分以避免資訊洩漏，並設計不同樣本長度（短期／中期／長期）檢驗穩健性。
+模型設計採統一的 factor ablation family。除 Linear、XGBoost 與 LSTM 三個非圖基準外，本文以共同的 BatchNorm + MLP encoder 產生個股語境表示，並比較 MLP、GAT-Industry、GAT-Universe、GAT-TwoGraph、DMFM-IndNeutral 與 DMFM-Full 六種模型。此設計可在相同輸入、切分與訓練口徑下，逐步檢驗單純特徵編碼、單圖聚合、雙圖聚合、產業中性化，以及完整「產業中性化 \(\rightarrow\) 全市場中性化」流程的差異。評估上以 IC、Daily IC 與 ICIR 作為核心預測指標，並對具產業圖與產業標籤之圖／因子模型額外回報產業中性 IC；策略層級則再以投資組合回測指標（總報酬、年化報酬率、Sharpe ratio、勝率與最大回撤等）檢驗其投資可用性。資料切分採時間序列切分以避免資訊洩漏，並設計短期、中期與長期三種樣本視窗檢驗穩健性。
 
 基於上述方法設計，本文的主要貢獻歸納如下：
 \begin{itemize}
     \item \textbf{資料與特徵流程的可重現性：}以 TEJ 日頻資料為基礎，建立從原始欄位到 56 維技術特徵（含 TA-Lib 指標與估值欄位）的完整特徵建置與張量化流程，並以 artifacts 形式保存，便於重複訓練與評估。
-    \item \textbf{關係結構的分層建模：}同時建構產業圖與全市場圖，並在模型中引入分層中性化機制，以拆解產業與市場共同影響，提升截面預測訊號的穩健性與可解釋性。
-    \item \textbf{以排序導向指標為核心的實證驗證：}以 IC/ICIR 與產業中性 IC 作為主要評估基礎，並搭配投資組合績效指標，提供模型在台灣市場情境下的多面向驗證結果。
+    \item \textbf{關係結構的分層建模與圖模式比較：}同時建構產業圖與全市場圖，並進一步比較 static graph 與 dynamic weighted graph。dynamic graph 以 rolling return correlation 建立每日加權邊，可檢驗市場關係隨時間變動時對模型表現的影響。
+    \item \textbf{以消融實驗辨識模型增益來源：}以六種 factor ablation models 區分單純 MLP、單一圖聚合、雙圖聚合、產業中性化與完整 DMFM 中性化流程，避免僅以單一 DMFM 結果推論所有圖注意力設計皆有效。
+    \item \textbf{以排序導向指標為核心的實證驗證：}以 IC / Daily IC / ICIR 作為主要評估基礎，並對圖／因子模型補充檢視產業中性 IC，再搭配投資組合績效指標，提供模型在台灣市場情境下的多面向驗證結果。
 \end{itemize}
 
 \section{論文架構}
@@ -115,13 +116,13 @@
         \node[groupbox, fit=(c1)(c6)] (groupc) {};
         \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupc.north west) {第三章 實驗設計};
 
-        \node[component, below=10mm of groupc, xshift=-3.7cm] (d1) {模型評估指標對比\\（Linear／XGBoost／LSTM／GATRegressor）};
+        \node[component, below=10mm of groupc, xshift=-3.7cm] (d1) {統一實驗比較\\（baseline／factor variants／static-dynamic graph）};
         \node[component, right=10mm of d1] (d2) {投資組合績效驗證\\（與 0050 比較）};
-        \node[componentwide, below=7mm of d1, xshift=3.7cm] (d3) {特徵重要性分析};
+        \node[componentwide, below=7mm of d1, xshift=3.7cm] (d3) {Dynamic-static 差異與注意力特徵分析};
         \node[groupbox, fit=(d1)(d3)] (groupd) {};
         \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupd.north west) {第四章 實驗結果};
 
-        \node[chapterbox, below=10mm of groupd] (ch5) {\textbf{第五章 未來工作}};
+        \node[chapterbox, below=10mm of groupd] (ch5) {\textbf{第五章 結論與未來工作}};
 
         \coordinate (b2c) at ($(groupb.south |- groupc.north)$);
         \draw[flowarrow] (ch1.south) -- (groupb.north);

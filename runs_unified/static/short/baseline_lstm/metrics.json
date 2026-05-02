@@ -1,0 +1,43 @@
+{
+  "model_type": "lstm",
+  "artifact_dir": "artifacts_unified/static/short",
+  "weights": "artifacts_unified/static/short/baseline_lstm.pt",
+  "scaler": null,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 230,
+    "val_days": 25,
+    "test_days": 64
+  },
+  "train": {
+    "MSE": 0.003761204864000811,
+    "RMSE": 0.061328662662745316,
+    "MAE": 0.03882782585332392,
+    "IC": 0.2153400159103895,
+    "ICIR": 1.7052468202271704,
+    "DirAcc": 0.5123385222022776,
+    "DailyIC": 0.19147996340134646
+  },
+  "val": {
+    "MSE": 0.004416846255570367,
+    "RMSE": 0.06645935792324785,
+    "MAE": 0.038864541179609746,
+    "IC": 0.05714266381067203,
+    "ICIR": 0.7407984402508431,
+    "DirAcc": 0.5162077922077922,
+    "DailyIC": 0.05384191578599997
+  },
+  "test": {
+    "MSE": 0.0031458667443161727,
+    "RMSE": 0.05608802674650065,
+    "MAE": 0.035208516461123475,
+    "IC": 0.04909624422644278,
+    "ICIR": 0.5846397697568512,
+    "DirAcc": 0.5016233766233766,
+    "DailyIC": 0.045961157046063225
+  },
+  "has_industry_labels": false,
+  "lookback": 10,
+  "model": "lstm"
+}

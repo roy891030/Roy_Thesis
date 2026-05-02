@@ -7,12 +7,12 @@
 \section{線性迴歸在報酬預測中的典型定位與限制}
 \label{sec:lr_baseline}
 
-線性迴歸模型在股票報酬預測中長期扮演基準方法角色，核心優勢是結構簡潔、可解釋性高，且便於對照不同模型的增量效果。其方法論基礎可追溯至經典因子定價文獻：Fama 與 French（1993）指出，市場、規模、帳面市值比等共同因子可解釋股票與債券報酬的平均差異，奠定了以線性因子暴露衡量風險溢酬的實證框架。
+線性迴歸模型在股票報酬預測中長期扮演基準方法角色，核心優勢是結構簡潔、可解釋性高，且便於對照不同模型的增量效果。其方法論基礎可追溯至經典因子定價文獻：Fama 與 French \cite{FAMA19933} 指出，市場、規模、帳面市值比等共同因子可解釋股票與債券報酬的平均差異，奠定了以線性因子暴露衡量風險溢酬的實證框架。
 
-在線性框架下，動能亦成為重要延伸。Jegadeesh 與 Titman（1993）發現，買進過去贏家、放空過去輸家的策略在 3--12 個月持有期具有顯著正報酬，且並非完全由傳統系統性風險所解釋；此結果支持在線性多因子模型中納入動能相關訊號，以提升截面報酬解釋能力。
+在線性框架下，動能亦成為重要延伸。Jegadeesh 與 Titman \cite{jegadeesh1993returns} 發現，買進過去贏家、放空過去輸家的策略在 3--12 個月持有期具有顯著正報酬，且並非完全由傳統系統性風險所解釋；此結果支持在線性多因子模型中納入動能相關訊號，以提升截面報酬解釋能力。
 
-然而，近年研究顯示僅依賴線性假設仍有侷限。Gu、Kelly 與 Xiu（2020）在大規模資產定價比較中指出，樹模型與神經網路可透過非線性與特徵交互作用捕捉額外可預測性，並在經濟績效上顯著優於傳統回歸策略；同時，其辨識出的關鍵訊號仍與動能、流動性、波動度等經典因子高度一致。
-Fieberg 等人（2023）的截面研究亦顯示，機器學習相對 OLS 可帶來額外預測增益，反映線性模型在高維與非線性情境下的擬合能力限制。
+然而，近年研究顯示僅依賴線性假設仍有侷限。Gu、Kelly 與 Xiu \cite{gu2020empirical} 在大規模資產定價比較中指出，樹模型與神經網路可透過非線性與特徵交互作用捕捉額外可預測性，並在經濟績效上顯著優於傳統回歸策略；同時，其辨識出的關鍵訊號仍與動能、流動性、波動度等經典因子高度一致。
+Fieberg 等人 \cite{fieberg2022ml_cross_section} 的截面研究亦顯示，機器學習相對 OLS 可帶來額外預測增益，反映線性模型在高維與非線性情境下的擬合能力限制。
 
 綜合而言，線性迴歸的主要限制包含：（1）加總線性假設難以刻畫非線性反應與高階交互作用，（2）高維特徵下易受共線性與參數不穩定影響，（3）對時間變動關係與市場狀態轉換（regime shift）的適應能力有限。此亦是後續文獻轉向樹狀結構模型與深度學習模型的重要動機，並與本節「線性迴歸在報酬預測中的典型定位與限制」之討論相互對應。
 
@@ -20,11 +20,11 @@ Fieberg 等人（2023）的截面研究亦顯示，機器學習相對 OLS 可帶
 \section{樹狀結構模型在非線性預測與特徵工程中的典型定位與限制}
 \label{sec:tree_based}
 
-為克服線性模型的表達能力限制，樹狀結構模型（tree-based models，如 Decision Tree、Random Forest、Gradient Boosting、XGBoost 等）在金融預測文獻中逐漸成為主流方法之一。Basak 等人（2019）、Ampomah 等人（2020）與 Nti 等人（2020）皆指出，相較於單一決策樹，集成式（ensemble）模型在股票方向預測、波動度預測與企業風險辨識任務上更穩健且一致，因此常作為非線性預測與特徵工程的重要基準。
+為克服線性模型的表達能力限制，樹狀結構模型（tree-based models，如 Decision Tree、Random Forest、Gradient Boosting、XGBoost 等）在金融預測文獻中逐漸成為主流方法之一。Ampomah 等人 \cite{ampomah2020tree_direction,ampomah2020tree_ensemble_stock} 與 Nti 等人 \cite{nti2020ensemble_comprehensive} 皆指出，相較於單一決策樹，集成式（ensemble）模型在股票方向預測、波動度預測與企業風險辨識任務上更穩健且一致，因此常作為非線性預測與特徵工程的重要基準。
 
-tree-based 方法的核心優勢在於能自動捕捉特徵的非線性關係與高階交互作用，並且可透過特徵重要性或 SHAP 類方法提供一定程度的解釋性。Saifan 等人（2020）指出，tree-based ensembles 在技術指標輸入下可支持交易規則設計，並在模擬環境中呈現相對於基準的超額報酬；Vidmanát 等人（2018）則指出，樹模型在波動度與風險管理任務上亦具備一定效率優勢。
+tree-based 方法的核心優勢在於能自動捕捉特徵的非線性關係與高階交互作用，並且可透過特徵重要性或 SHAP 類方法提供一定程度的解釋性。Saifan 等人 \cite{saifan2020ensemble_trading} 指出，tree-based ensembles 在技術指標輸入下可支持交易規則設計，並在模擬環境中呈現相對於基準的超額報酬；Vidman{\'a}t 等人 \cite{vidmant2019tree_volatility} 則指出，樹模型在波動度與風險管理任務上亦具備一定效率優勢。
 
-在 gradient boosting 家族中，Chen 與 Guestrin（2016）指出，XGBoost 透過二階梯度近似、顯式正則化、欄位抽樣與對稀疏特徵友善的分裂策略，顯著提升了樹集成模型在大規模結構化資料上的訓練效率與泛化能力；因此在金融 tabular 預測任務中，常被視為兼具效能與可解釋性的強基準模型。
+在 gradient boosting 家族中，Chen 與 Guestrin \cite{Chen2016XGBoost} 指出，XGBoost 透過二階梯度近似、顯式正則化、欄位抽樣與對稀疏特徵友善的分裂策略，顯著提升了樹集成模型在大規模結構化資料上的訓練效率與泛化能力；因此在金融 tabular 預測任務中，常被視為兼具效能與可解釋性的強基準模型。
 依圖 \ref{fig:xgboost_concept} 的流程，XGBoost 先由同一批訓練資料建立多輪 CART 樹（$f(L_1), f(L_2), \ldots, f(L_n)$），每一輪透過 \textit{weighting increase} 強化前一輪較難擬合樣本的權重，再產生對應的分輪預測 $\hat{y}^{(1)}_L,\hat{y}^{(2)}_L,\ldots,\hat{y}^{(N)}_L$；最後將各輪預測做聚合得到最終輸出。此機制的重點在於「逐輪修正誤差 + 集成輸出」，因此通常較單一決策樹更穩健。
 
 \begin{figure}[htbp]
@@ -34,25 +34,25 @@ tree-based 方法的核心優勢在於能自動捕捉特徵的非線性關係與
   \label{fig:xgboost_concept}
 \end{figure}
 
-另一方面，Wu、Lin 與 Lin（2006）的決策樹交易研究顯示，若將技術分析的候選交易點交由 C4.5 演算法進行篩選與分類，可在台灣與 NASDAQ 市場取得優於單純 filter rule 的績效，說明 decision tree 不僅可用於純預測，也可作為規則型交易策略的決策器。
+另一方面，Wu、Lin 與 Lin \cite{WU2006270} 的決策樹交易研究顯示，若將技術分析的候選交易點交由 C4.5 演算法進行篩選與分類，可在台灣與 NASDAQ 市場取得優於單純 filter rule 的績效，說明 decision tree 不僅可用於純預測，也可作為規則型交易策略的決策器。
 
-然而，樹狀結構模型多將每個樣本視為相對獨立的觀測點，對時間相依結構的刻畫通常依賴人工設計的 lagged features 或 rolling statistics。Tang（2022）指出，當市場進入快速結構轉換時，僅靠靜態特徵映射可能不足以穩健追蹤動態行為；此一限制也促使後續研究引入以序列建模為核心的深度學習架構（如 LSTM），並進一步發展 hybrid 模型，以結合樹模型的非線性擬合優勢與深度模型的時間依賴建模能力。
+然而，樹狀結構模型多將每個樣本視為相對獨立的觀測點，對時間相依結構的刻畫通常依賴人工設計的 lagged features 或 rolling statistics。相關綜述指出，當市場進入快速結構轉換時，僅靠靜態特徵映射往往不足以穩健追蹤動態行為；此一限制也促使後續研究引入以序列建模為核心的深度學習架構（如 LSTM），並進一步發展 hybrid 模型，以結合樹模型的非線性擬合優勢與深度模型的時間依賴建模能力 \cite{sezer2019dl_fin_survey,sonkavde2023review_ml_dl}。
 
 % ============================================================
 \section{技術指標如何轉化為深度學習可用之特徵表示}
 \label{sec:technical_representation}
 
-技術指標以歷史價格與成交量為基礎，將市場的趨勢、動能與波動等訊號轉換為可計算的量化特徵，長期被用於股票預測任務的特徵工程。Brock、Lakonishok 與 LeBaron（1992）、Lin（2018）與 Li 與 Bastos（2020）皆指出，當指標種類擴張時，特徵集合往往伴隨高度相關、冗餘與尺度不一致，進而提高訓練成本並影響泛化穩健性。
+技術指標以歷史價格與成交量為基礎，將市場的趨勢、動能與波動等訊號轉換為可計算的量化特徵，長期被用於股票預測任務的特徵工程。Brock、Lakonishok 與 LeBaron \cite{Brock1992SimpleTT}、Lin \cite{LIN2018103} 與 Li 與 Bastos \cite{li2020stock} 皆指出，當指標種類擴張時，特徵集合往往伴隨高度相關、冗餘與尺度不一致，進而提高訓練成本並影響泛化穩健性。
 
-從文獻脈絡來看，技術指標的價值並非僅止於「交易規則」，而是可視為一種可重用的訊號轉換層。Brock、Lakonishok 與 LeBaron（1992）顯示，移動平均與區間突破等簡單規則在長期樣本下具有統計上的可辨識性，代表價格序列中可能存在可被轉換後捕捉的結構訊號。
-Lin（2018）進一步指出，若先對多個技術指標進行對齊與降噪，可提升報酬預測的樣本內與樣本外表現，說明「指標表示品質」本身就是預測力來源之一。
-Cervelló-Royo 等人（2015）則指出，在更高頻與型態辨識情境下，結合技術分析與模式辨識的交易規則可形成風險調整後可解釋的訊號，反映技術特徵在不同時間尺度下都可能提供增量資訊。
+從文獻脈絡來看，技術指標的價值並非僅止於「交易規則」，而是可視為一種可重用的訊號轉換層。Brock、Lakonishok 與 LeBaron \cite{Brock1992SimpleTT} 顯示，移動平均與區間突破等簡單規則在長期樣本下具有統計上的可辨識性，代表價格序列中可能存在可被轉換後捕捉的結構訊號。
+Lin \cite{LIN2018103} 進一步指出，若先對多個技術指標進行對齊與降噪，可提升報酬預測的樣本內與樣本外表現，說明「指標表示品質」本身就是預測力來源之一。
+Cervell{\'o}-Royo 等人 \cite{CERVELLOROYO20155963} 則指出，在更高頻與型態辨識情境下，結合技術分析與模式辨識的交易規則可形成風險調整後可解釋的訊號，反映技術特徵在不同時間尺度下都可能提供增量資訊。
 
-因此，研究焦點逐步由「是否使用技術指標」轉向「如何將技術指標組織為深度學習可有效吸收的特徵表示」。Lin（2018）、Agrawal 等人（2019；2022）、Li 與 Bastos（2020）、Sezer 等人（2019）與 Tang（2022）的整理皆支持此方向。實務上常見流程可分為四步。第一，\textbf{多視窗指標化}：由 OHLCV 建立趨勢（MA/EMA）、動能（RSI/MACD/KD）、波動（ATR/std）、量能與流動性等指標族，並在不同視窗長度上展開，以保留短中長期訊號。第二，\textbf{尺度與分佈對齊}：對各指標進行 rolling z-score、rank normalization、winsorization 或中性化處理，降低厚尾分佈與異常值對梯度學習的干擾。第三，\textbf{時序化表示}：將單期指標向量堆疊為時間窗張量（例如 $X_t\in\mathbb{R}^{L\times F}$），並加入一階/二階差分、斜率或 regime proxy，以提升模型對轉折與狀態切換的敏感度。第四，\textbf{冗餘抑制與語義壓縮}：透過相關性過濾、PLS/PCA、可學習 gating 或自編碼器，將高度共線的原始指標壓縮為較穩定的潛在因子表示。
+因此，研究焦點逐步由「是否使用技術指標」轉向「如何將技術指標組織為深度學習可有效吸收的特徵表示」。Lin \cite{LIN2018103}、Agrawal 等人 \cite{agrawal2019stock,agrawal2022stock}、Li 與 Bastos \cite{li2020stock}、Sezer 等人 \cite{sezer2019dl_fin_survey} 與 Sonkavde 等人 \cite{sonkavde2023review_ml_dl} 的整理皆支持此方向。實務上常見流程可分為四步。第一，\textbf{多視窗指標化}：由 OHLCV 建立趨勢（MA/EMA）、動能（RSI/MACD/KD）、波動（ATR/std）、量能與流動性等指標族，並在不同視窗長度上展開，以保留短中長期訊號。第二，\textbf{尺度與分佈對齊}：對各指標進行 rolling z-score、rank normalization、winsorization 或中性化處理，降低厚尾分佈與異常值對梯度學習的干擾。第三，\textbf{時序化表示}：將單期指標向量堆疊為時間窗張量（例如 $X_t\in\mathbb{R}^{L\times F}$），並加入一階/二階差分、斜率或 regime proxy，以提升模型對轉折與狀態切換的敏感度。第四，\textbf{冗餘抑制與語義壓縮}：透過相關性過濾、PLS/PCA、可學習 gating 或自編碼器，將高度共線的原始指標壓縮為較穩定的潛在因子表示。
 
-在此基礎上，技術指標不再只是「手工規則」，而是作為深度模型的\textbf{結構化輸入介面}。Agrawal 等人（2019；2022）與 Li 與 Bastos（2020）指出，對序列模型（LSTM/Transformer）而言，指標張量提供可被注意力或記憶機制吸收的時間上下文；對圖模型（GNN/GAT）而言，指標向量可作為節點屬性，與資產關係邊共同學習截面與網路效應。
+在此基礎上，技術指標不再只是「手工規則」，而是作為深度模型的\textbf{結構化輸入介面}。Agrawal 等人 \cite{agrawal2019stock,agrawal2022stock} 與 Li 與 Bastos \cite{li2020stock} 指出，對序列模型（LSTM/Transformer）而言，指標張量提供可被注意力或記憶機制吸收的時間上下文；對圖模型（GNN/GAT）而言，指標向量可作為節點屬性，與資產關係邊共同學習截面與網路效應。
 
-總結而言，技術指標在深度學習框架中的關鍵角色是「將高噪音價格路徑轉換為可學習表示」。Tang（2022）與 Sezer 等人（2019）皆強調，有效方法不是無限制增加指標數量，而是透過對齊、時序化與壓縮，提升訊號密度、抑制冗餘，並使表示能與模型結構共同最佳化，以提高跨期間的穩健性與可轉移性。
+總結而言，技術指標在深度學習框架中的關鍵角色是「將高噪音價格路徑轉換為可學習表示」。Sezer 等人 \cite{sezer2019dl_fin_survey} 與 Sonkavde 等人 \cite{sonkavde2023review_ml_dl} 皆強調，有效方法不是無限制增加指標數量，而是透過對齊、時序化與壓縮，提升訊號密度、抑制冗餘，並使表示能與模型結構共同最佳化，以提高跨期間的穩健性與可轉移性。
 
 % ============================================================
 \section{LSTM 等時間序列模型在金融預測中的典型做法與限制}
@@ -85,12 +85,12 @@ h_t &= o_t \odot \tanh(c_t),
 \end{equation}
 其中 $\sigma(\cdot)$ 為 sigmoid 函數、$\tanh(\cdot)$ 為雙曲正切函數，$\odot$ 表示逐元素相乘。圖中的方形節點可視為逐元素乘法與加總的運算節點，對應到 $f_t \odot c_{t-1}$ 與 $i_t \odot g_t$ 兩條路徑匯入 $c_t$ 的更新。
 
-在實務與研究中，LSTM 的典型做法包含多目標預測、結合注意力機制（attention mechanism）與去噪／重加權策略，以及高頻資料下的深層序列建模。Zaheer 等人（2023）設計多參數預測架構以同時預測不同價格維度，並比較不同深度模型配置在特定資料規模下的表現差異。
-Qiu 等人（2020）將注意力機制引入 LSTM 架構，以在時間維度上動態調整特徵權重，強化模型在金融資料高雜訊情境下的預測能力。
-在高頻（例如 5 分 K）資料情境下，鄭邦廷（2023）以疊層式 LSTM 捕捉更複雜的非線性時間依賴，用於買賣點預測。
-此外，廖俊翔（2022）透過自相關分析與特徵篩選納入跨市場外部特徵，並展示外部訊號在一定程度上能降低預測誤差。
+在實務與研究中，LSTM 的典型做法包含多目標預測、結合注意力機制（attention mechanism）與去噪／重加權策略，以及高頻資料下的深層序列建模。Zaheer 等人 \cite{zaheer2023multi} 設計多參數預測架構以同時預測不同價格維度，並比較不同深度模型配置在特定資料規模下的表現差異。
+Qiu 等人 \cite{qiu2020forecasting} 將注意力機制引入 LSTM 架構，以在時間維度上動態調整特徵權重，強化模型在金融資料高雜訊情境下的預測能力。
+在高頻（例如 5 分 K）資料情境下，鄭邦廷 \cite{cheng2023stock} 以疊層式 LSTM 捕捉更複雜的非線性時間依賴，用於買賣點預測。
+此外，相關綜述亦指出，將外部訊號、特徵篩選與去噪流程納入序列模型，通常有助於降低金融資料高雜訊對預測的干擾 \cite{sezer2019dl_fin_survey,sonkavde2023review_ml_dl}。
 
-綜合金融時間序列預測的系統性綜述研究，Tang（2022）與 Sonkavde 等人（2023）指出，深度序列模型（LSTM/CNN/Hybrid）在預測誤差指標上多能優於傳統統計模型與部分經典機器學習方法；然而在金融市場高雜訊環境下，單純改善 error metrics 並不必然等價於可穩健轉化為可交易的超額績效，顯示實證評估必須結合更貼近投資目標的指標與測試框架。
+綜合金融時間序列預測的系統性綜述研究，Sezer 等人 \cite{sezer2019dl_fin_survey} 與 Sonkavde 等人 \cite{sonkavde2023review_ml_dl} 指出，深度序列模型（LSTM/CNN/Hybrid）在預測誤差指標上多能優於傳統統計模型與部分經典機器學習方法；然而在金融市場高雜訊環境下，單純改善 error metrics 並不必然等價於可穩健轉化為可交易的超額績效，顯示實證評估必須結合更貼近投資目標的指標與測試框架。
 
 整體而言，時間序列方法能有效吸收單一資產（或單一特徵集合）的歷史資訊，但其主要限制在於多數設計仍以「序列本身」為核心訊號來源，較難直接刻畫股票之間的結構性關係與共通影響；因此後續研究開始引入圖結構以建模市場關係。
 
@@ -98,8 +98,8 @@ Qiu 等人（2020）將注意力機制引入 LSTM 架構，以在時間維度上
 \section{圖神經網路如何建模股票之間的結構性關係}
 \label{sec:gnn_basics}
 
-圖神經網路（Graph Neural Networks, GNNs）以圖作為基本資料結構，透過節點（node）與邊（edge）描述實體及其關係，並以訊息傳遞（message passing）機制聚合鄰居資訊，學得具備拓撲語意的節點表示。Scarselli 等人（2009）最初提出 GNN 的基本概念，並以遞迴神經網路框架處理圖結構資料，透過疊層訊息傳遞與節點狀態更新學習圖表示。
-後來，Wu 等人（2020）對 GNN 架構進行系統性整理，並區分頻域（spectral-based）與空域（spatial-based）圖卷積之主要差異，同時歸納多類代表性 GNN 架構族群。
+圖神經網路（Graph Neural Networks, GNNs）以圖作為基本資料結構，透過節點（node）與邊（edge）描述實體及其關係，並以訊息傳遞（message passing）機制聚合鄰居資訊，學得具備拓撲語意的節點表示。Scarselli 等人 \cite{scarselli2009gnn} 最初提出 GNN 的基本概念，並以遞迴神經網路框架處理圖結構資料，透過疊層訊息傳遞與節點狀態更新學習圖表示。
+後來，Wu 等人 \cite{wu2020comprehensive} 對 GNN 架構進行系統性整理，並區分頻域（spectral-based）與空域（spatial-based）圖卷積之主要差異，同時歸納多類代表性 GNN 架構族群。
 
 \begin{figure}[htbp]
   \centering
@@ -111,7 +111,7 @@ Qiu 等人（2020）將注意力機制引入 LSTM 架構，以在時間維度上
 如圖 \ref{fig:gnn_architecture} 所示，GNN 先以輸入層 $X$ 表示節點初始特徵，接著在隱藏層透過鄰接矩陣 $A$ 與權重矩陣 $W$ 做鄰居聚合與線性轉換，例如
 $H^1=\delta(AXW^0)$、$H^2=\delta(AH^1W^1)$。其中 $\delta(\cdot)$ 為非線性函數。經過多層更新後，模型在輸出層得到節點表示 $Z$，可用於節點分類、排序或報酬預測等任務。
 
-在金融市場中，股票並非獨立個體，而是受到產業鏈、供應鏈、風格因子與市場共同訊號等多來源關係影響。Feng 等人（2025）、Wei 等人（2025）與 Li 等人（2025）指出，將股票視為「互動節點」並以圖結構建模其關係（例如產業關係、價格相關性、供應鏈或知識圖譜），可使模型在預測報酬、方向與風險指標時，相較於僅使用序列模型呈現更佳表現，特別在市場波動或危機期間更具優勢。
+在金融市場中，股票並非獨立個體，而是受到產業鏈、供應鏈、風格因子與市場共同訊號等多來源關係影響。近期金融圖模型研究指出，將股票視為「互動節點」並以圖結構建模其關係（例如產業關係、價格相關性、供應鏈或知識圖譜），可使模型在預測報酬、方向與風險指標時，相較於僅使用序列模型呈現更佳表現 \cite{song2023stock,xiang2022dynamic_gat,su2024hetero_gat,huang2022mlgat,wei2025fstgat}。
 
 因此，圖結構方法為金融預測提供了「同時利用個股特徵與關係拓撲」的建模途徑，也為後續在多因子框架中處理共通影響、關係層級分離與中性化（neutralization）奠定方法論基礎。
 
@@ -192,23 +192,23 @@ h'_i = \frac{1}{K}\sum_{k=1}^{K} h^{\prime(k)}_i.
 
 \vspace{0.2cm}
 \noindent\textbf{GAT 在股票預測／排序任務中的應用。}
-在股票預測任務中，GAT 類方法的效能高度依賴圖結構建構方式與關係訊號品質。Song 等人（2023）、Xiang（2022）與 Liu 等人（2024）指出，節點特徵常結合 OHLCV、技術指標、基本面或文字／情緒訊號，並以產業連結、價格相似性、供應鏈關係或動態學習圖等方式建立邊；在此框架下，GAT 能透過注意力機制學習「誰在影響誰」以及影響強度，進而提升截面預測或排序任務的表現。
+在股票預測任務中，GAT 類方法的效能高度依賴圖結構建構方式與關係訊號品質。相關研究指出，節點特徵常結合 OHLCV、技術指標、基本面或文字／情緒訊號，並以產業連結、價格相似性、供應鏈關係或動態學習圖等方式建立邊；在此框架下，GAT 能透過注意力機制學習「誰在影響誰」以及影響強度，進而提升截面預測或排序任務的表現 \cite{song2023stock,xiang2022dynamic_gat,su2024hetero_gat,huang2022mlgat}。
 
-此外，金融領域亦出現大量 spatio-temporal GAT 變形（如 STGAT、FSTGAT 等），透過結合時間編碼器（例如 LSTM/TCN/Transformer）與圖注意力聚合，同時刻畫時間依賴與資產關係結構。Feng 等人（2025）與 Wei 等人（2025）報告指出，這類模型在部分情境下可帶來預測誤差改善，並在以投資績效衡量的實證框架中展現更高的應用潛力。
+此外，金融領域亦出現 spatio-temporal GAT 變形（如 FSTGAT），透過結合時間編碼器（例如 LSTM/TCN/Transformer）與圖注意力聚合，同時刻畫時間依賴與資產關係結構。Wei 等人 \cite{wei2025fstgat} 指出，這類模型在部分情境下可帶來預測誤差改善，並在以投資績效衡量的實證框架中展現更高的應用潛力。
 
 \vspace{0.2cm}
 \noindent\textbf{限制與挑戰。}
 儘管 GAT 類方法在金融預測中提供更具彈性的關係建模能力，但仍可能面臨下列限制。
 第一，當圖中存在大量噪音邊或關係訊號品質不足時，注意力權重可能無法穩定聚焦於有效鄰居，導致模型對邊的品質高度敏感並增加過擬合風險。
 第二，圖建構規則、關係來源與連邊密度會直接影響訊息傳遞範圍與聚合分佈，使模型在跨市場或跨期間的可轉移性與穩健性下降。
-第三，若採用靜態圖，模型可能難以充分反映市場結構與股票關係隨時間演化的特性，進而降低對結構變動的敏感度。
-因此，在金融預測中使用 GAT 類方法時，除模型設計外，更需搭配嚴謹的資料切分方式、跨期間檢驗、與穩健性測試，以確保其績效增益並非僅來自特定樣本區間或特定關係建構假設。
+第三，若採用靜態圖，模型可能難以充分反映市場結構與股票關係隨時間演化的特性；但若改用動態圖，邊權重估計又可能受到 rolling window、樣本長度與噪音相關性的影響。
+因此，在金融預測中使用 GAT 類方法時，除模型設計外，更需搭配嚴謹的資料切分方式、跨期間檢驗、圖建構口徑比較與消融實驗，以確保其績效增益並非僅來自特定樣本區間或特定關係建構假設。本文後續的 static/dynamic graph 比較與 factor ablation 設計，即對應此一方法論需求。
 
 % ============================================================
 \section{因子投資情境下常用的訊號評估指標 IC ／ ICIR}
 \label{sec:ic_icir}
 
-在因子投資（factor investing）與截面預測（cross-sectional prediction）情境中，單純以 MSE/MAE 等誤差衡量模型表現，未必能完整反映訊號在「排序」與「可投資性」上的價值。因此，資訊係數（Information Coefficient, IC）與資訊係數資訊比率（Information Coefficient Information Ratio, ICIR）成為衡量因子訊號品質的重要指標。Ding、Martin 與 Yang（2011；2022）指出，IC 通常被定義為因子分數與下一期報酬之截面相關，ICIR 則進一步將訊號的平均效果與波動性整合，用以刻畫訊號的穩健性。若以交易日 \(t\) 的截面股票集合為 \(i=1,\dots,N_t\)，則單日 IC 可寫為
+在因子投資（factor investing）與截面預測（cross-sectional prediction）情境中，單純以 MSE/MAE 等誤差衡量模型表現，未必能完整反映訊號在「排序」與「可投資性」上的價值。因此，資訊係數（Information Coefficient, IC）與資訊係數資訊比率（Information Coefficient Information Ratio, ICIR）成為衡量因子訊號品質的重要指標。Ding 與 Sun \cite{ding2022timevarying_ic} 指出，IC 通常被定義為因子分數與下一期報酬之截面相關，ICIR 則進一步將訊號的平均效果與波動性整合，用以刻畫訊號的穩健性。若以交易日 \(t\) 的截面股票集合為 \(i=1,\dots,N_t\)，則單日 IC 可寫為
 \begin{equation}
 IC_t = \mathrm{Corr}\!\left(\hat{y}_{1:N_t,t}, y_{1:N_t,t}\right),
 \end{equation}
@@ -219,8 +219,6 @@ IC_t = \mathrm{Corr}\!\left(\hat{y}_{1:N_t,t}, y_{1:N_t,t}\right),
 ICIR = \frac{\overline{IC}}{\mathrm{Std}(IC_t)}.
 \end{equation}
 
-Qian 與 Hua（2004）指出，策略層級的資訊比率（Information Ratio, IR）可近似表示為 \(IR \approx IC \times \sqrt{breadth}\)，意即在訊號品質（IC）固定下，獨立下注機會越多，策略的風險調整績效越高。Ye（2008）與 Zhang（2021）則強調，真實市場中 IC 往往具有時間變動性，且換手率（turnover）與交易成本會顯著壓低可實現績效，因此在實務上必須將 turnover-adjusted IR 納入考量。換言之，ICIR 用於描述訊號本身在時間上的穩健性，而 IR 則更偏向策略落地後的風險調整績效，兩者不宜混用。
+Qian 與 Hua \cite{qian2004active_risk} 指出，策略層級的資訊比率（Information Ratio, IR）可近似表示為 \(IR \approx IC \times \sqrt{breadth}\)，意即在訊號品質（IC）固定下，獨立下注機會越多，策略的風險調整績效越高。Ye \cite{ye2008signal_quality} 與 Zhang 等人 \cite{zhang2021turnover_ir} 則強調，真實市場中 IC 往往具有時間變動性，且換手率（turnover）與交易成本會顯著壓低可實現績效，因此在實務上必須將 turnover-adjusted IR 納入考量。換言之，ICIR 用於描述訊號本身在時間上的穩健性，而 IR 則更偏向策略落地後的風險調整績效，兩者不宜混用。
 
-因此，IC ／ ICIR 除了作為單一因子有效性的檢驗工具外，也常被用於多因子組合與機器學習選因流程。Bermejo 等人（2021）與 Yuan（2024）指出，研究通常保留具備穩定正 IC 與較高 ICIR 的訊號，以提升多因子架構在跨期間的穩健性與可投資性。
-
-\nocite{FAMA19933,jegadeesh1993returns,gu2020empirical,fieberg2022ml_cross_section,basak2019tree_stock_direction,ampomah2020tree_ensemble_stock,nti2020ensemble_comprehensive,saifan2020ensemble_trading,vidmant2019tree_volatility,Chen2016XGBoost,WU2006270,tang2022survey_fin_ts,Brock1992SimpleTT,LIN2018103,li2020stock,CERVELLOROYO20155963,agrawal2019stock,agrawal2022stock,sezer2019dl_fin_survey,zaheer2023multi,qiu2020forecasting,cheng2023stock,liao2022applying,sonkavde2023review_ml_dl,scarselli2009gnn,wu2020comprehensive,feng2025stgat,wei2025fstgat,lee2025gnn_crisis,song2023stock,xiang2022dynamic_gat,su2024hetero_gat,ding2011ic_stats,ding2022timevarying_ic,qian2004active_risk,ye2008signal_quality,zhang2021turnover_ir,bermejo2021factor_investing,yuan2024ml_factor}
+因此，IC ／ ICIR 除了作為單一因子有效性的檢驗工具外，也常被用於多因子組合與機器學習選因流程。Bermejo 等人 \cite{bermejo2021factor_investing} 與 Yuan \cite{yuan2024ml_factor} 指出，研究通常保留具備穩定正 IC 與較高 ICIR 的訊號，以提升多因子架構在跨期間的穩健性與可投資性。

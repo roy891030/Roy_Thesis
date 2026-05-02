@@ -1,0 +1,43 @@
+{
+  "model_type": "xgboost",
+  "artifact_dir": "artifacts_unified/static/short",
+  "weights": "artifacts_unified/static/short/baseline_xgboost.json",
+  "scaler": "artifacts_unified/static/short/baseline_xgboost_scaler.pkl",
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 230,
+    "val_days": 25,
+    "test_days": 64
+  },
+  "train": {
+    "MSE": 0.0027809180319309235,
+    "RMSE": 0.05273441032125915,
+    "MAE": 0.033915918320417404,
+    "IC": 0.5856956094395355,
+    "ICIR": 4.618543959387915,
+    "DirAcc": 0.6261666911789662,
+    "DailyIC": 0.551293129184907
+  },
+  "val": {
+    "MSE": 0.00444378238171339,
+    "RMSE": 0.06666170101125075,
+    "MAE": 0.03882240131497383,
+    "IC": 0.08525958310253916,
+    "ICIR": 0.5196303087178552,
+    "DirAcc": 0.5344415584415585,
+    "DailyIC": 0.08543779599682479
+  },
+  "test": {
+    "MSE": 0.003149486845359206,
+    "RMSE": 0.05612028907052427,
+    "MAE": 0.03459702059626579,
+    "IC": 0.07038893233954072,
+    "ICIR": 1.04386262349672,
+    "DirAcc": 0.5269886363636364,
+    "DailyIC": 0.06945284029854246
+  },
+  "has_industry_labels": false,
+  "lookback": null,
+  "model": "xgboost"
+}

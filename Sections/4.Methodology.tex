@@ -1,65 +1,72 @@
 \chapter{實驗結果}
 \label{ch:results}
 
-本章回到本文的核心研究問題：在台股日頻資料下，結合多因子表示與圖注意力機制的 DMFM，是否能較傳統基準模型與單純圖模型提供更可用的選股訊號。為回答此問題，以下依序從三個層次展開：首先檢驗模型在報酬排序任務上的預測表現，其次確認該訊號能否轉化為投資組合績效，最後再透過注意力權重觀察模型在不同時間窗下偏好的訊號來源。
+本章根據 \texttt{runs\_unified/analysis\_report} 的統一彙整結果，回答本文的核心研究問題：在相同 TEJ 日頻資料、相同時間切分與相同回測設定下，圖注意力、多因子表示、分層中性化與 dynamic graph 是否能提升台股截面選股訊號。完整實驗共 45 組，包含 static / dynamic 兩種圖模式、Short / Medium / Long 三種樣本視窗、三個非圖 baseline，以及六個 factor ablation models。需特別說明，baseline 不使用圖結構，因此預設僅列於 static graph 口徑；dynamic graph 的比較主要適用於六個 factor variants。
 
-\section{模型對比}
+\section{統一實驗比較}
 \label{sec:model_comparison}
 
 \input{Sections/tables/results_pred_metrics.tex}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.86\textwidth]{img/results_model_comparison_metrics.png}
-  \caption{各模型在不同時間窗之關鍵預測指標比較（ICIR、IC、RMSE、DirAcc）。}
+  \includegraphics[width=\textwidth]{runs_unified/analysis_report/charts/portfolio_sharpe_all_experiments.png}
+  \caption{統一實驗中各模型於不同時間窗與圖模式下之 Sharpe ratio。}
   \label{fig:results_model_comparison_metrics}
 \end{figure}
 
-整體而言，本次結果顯示不存在單一模型在所有時間窗與所有指標上全面領先；若聚焦於論文最關心的排序品質與投資可用性，DMFM 的優勢主要出現在 Medium 與 Long 視窗，而 Short 視窗則由 XGBoost 呈現較強訊號。表 \ref{tab:results_pred_metrics} 比較五個模型在 Short、Medium 與 Long 三種時間窗下的預測表現，其中 RMSE 與 MAE 衡量預測值與實際報酬的距離，IC、ICIR 與 DirAcc 則分別對應截面排序能力、排序穩定性與方向判斷能力；圖 \ref{fig:results_model_comparison_metrics} 則將同一組結果視覺化，協助讀者觀察跨模型與跨期間的相對排序。
+表 \ref{tab:results_pred_metrics} 彙整每個 window \(\times\) graph mode 下的勝出模型。結果顯示，不存在單一模型在所有評估層面全面占優。Short/static 組合中，GAT-Universe 同時取得最高 Test IC（0.0843）、總報酬（32.13\%）與 Sharpe（7.832）；但 Short/dynamic 組合中，最高 Test IC 仍為 GAT-Universe（0.0812），最高總報酬轉為 DMFM-Full（27.66\%），最高 Sharpe 則為 GAT-TwoGraph（7.318）。Medium/static 組合由 GAT-Industry 取得最高 Test IC（0.0933）與 Sharpe（1.832），但最高總報酬為 GAT-TwoGraph（36.12\%）；Medium/dynamic 組合則由 GAT-Universe 取得最高總報酬（38.31\%）與 Sharpe（1.866）。Long/static 組合中，DMFM-Full 取得最高總報酬（54.32\%）與 Sharpe（1.490），而 Long/dynamic 組合則由 GAT-TwoGraph 取得最高總報酬（51.59\%）與 Sharpe（1.378），GAT-Universe 則有最高 Test IC（0.0955）。
 
-若以「怎麼讀表」的角度來看，除時間窗外，表 \ref{tab:results_pred_metrics} 的六個欄位可分成兩類：模型名稱、RMSE、MAE 對應的是\textbf{點預測誤差}，回答的是「模型猜的報酬數值離真實值有多近」；IC、ICIR 與 DirAcc 對應的是\textbf{排序與方向訊號品質}，回答的是「模型能否把未來表現較好的股票排到前面，而且這種排序是否穩定」。以白話來說，RMSE/MAE 看的是「數值猜得像不像」，IC/ICIR/DirAcc 看的是「選股排序有沒有用」。
-
-橫向比較三個時間窗可發現，模型優勢具有明顯的期間異質性。Short 視窗下，XGBoost 的 IC 與 ICIR 分別為 0.0863 與 1.3469，皆為該窗最高，顯示樹模型對短期非線性訊號與局部交互作用的擬合較強；但 GATRegressor 的 DirAcc 為 0.5533，雖高於其他模型，其 IC 卻為 -0.0246，說明「方向判斷較常猜對」不等於「能把股票相對強弱排對」。Medium 視窗中，DMFM 取得最高 IC 與 ICIR（0.0780、0.6095），顯示其截面排序能力與跨期穩定性最強；Long 視窗下，XGBoost 的 IC 為 0.0885，略高於 DMFM 的 0.0860，但 DMFM 的 ICIR 進一步提升至 0.8905，為全部模型最高，代表其訊號雖非每一日都最強，卻在時間上更穩定。
-
-若再與誤差指標交叉觀察，便可看出「點預測準確」與「選股排序有效」並非同一件事。Linear、XGBoost 與 LSTM 在多數時間窗下都維持較低 RMSE，但 Long 視窗下 DMFM 的 RMSE 雖高達 0.1330，卻同時擁有最高 ICIR 0.8905。這代表在截面選股任務中，模型未必要把每檔股票的絕對報酬猜得最準，關鍵更在於能否穩定辨識相對強弱。從經濟意義來看，IC 與 ICIR 較直接對應「能否形成多空或高低分位報酬差」，因此相較於純誤差最小化，DMFM 在 Medium 與 Long 視窗展現的優勢更接近論文所關注的可投資訊號品質。相對地，GATRegressor 在 Short 視窗出現「DirAcc 高、IC 低」的組合，也反映單純圖鄰居聚合較可能捕捉共同漲跌方向，而未能有效拉開股票橫斷面的排序差異。其餘預測輸出（含 MSE、Daily IC 與完整模型彙整）見附錄 \ref{sec:appendix_extra_outputs}。
+上述結果說明，預測層與投組層的最優模型並不必然一致。Test IC 代表截面排序與去均值標籤的相關性；Sharpe 與總報酬則取決於 top 10\% 選股、5 日再平衡與原始 forward return 的實際轉化效果。因此，本文不以單一 regression loss 或單一 IC 判斷模型優劣，而是將預測層與投組層分開解讀。
 \FloatBarrier
 
-\section{投組績效驗證}
+\section{Dynamic graph 與 Static graph 比較}
+\label{sec:dynamic_static_results}
+
+\input{Sections/tables/results_dynamic_static_deltas.tex}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{runs_unified/analysis_report/charts/dynamic_minus_static_deltas.png}
+  \caption{Dynamic graph 相對 static graph 之 Test IC、總報酬與 Sharpe 差異。}
+  \label{fig:results_dynamic_static_deltas}
+\end{figure}
+
+由表 \ref{tab:results_dynamic_static_deltas} 可知，dynamic graph 並非單向優勢。18 個可配對比較中，dynamic graph 使 Sharpe 改善 10 組、總報酬改善 11 組，但 Test IC 平均下降 0.0022。分時間窗觀察，Short window 的 dynamic graph 平均 Test IC 下降較明顯，但部分模型仍改善投組表現，例如 DMFM-Full 的總報酬增加 5.28 個百分點、Sharpe 增加 1.367。Medium window 是 dynamic graph 最有利的區間，GAT-Universe 的總報酬增加 10.92 個百分點、Sharpe 增加 0.407，DMFM-Full 的 Test IC 亦增加 0.0093。Long window 則呈現模型分化：GAT-Universe 與 DMFM-Full 的 Test IC 分別增加 0.0135 與 0.0122，但 DMFM-Full 的總報酬與 Sharpe 反而下降，顯示排序相關性的改善不必然等同於 top portfolio 的風險調整績效改善。
+
+這個結果支持本文將 dynamic graph 視為待檢驗設計，而非預設更佳的假設。rolling correlation edge 能提供即時關係強度，但也會引入窗口估計噪音與期間敏感性；因此，dynamic graph 的價值應依 window、模型結構與投組目標共同判讀。
+\FloatBarrier
+
+\section{模型穩定性與投組績效}
 \label{sec:portfolio_performance}
 
 \input{Sections/tables/results_portfolio_metrics.tex}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{img/results_cum_returns_grid.png}
-  \caption{GATRegressor 與 DMFM 相對 0050 在 Short/Medium/Long 三種時間窗之累積報酬曲線比較。}
-  \label{fig:results_cum_returns_grid}
+  \includegraphics[width=0.92\textwidth]{runs_unified/analysis_report/charts/risk_return_scatter.png}
+  \caption{統一實驗之風險報酬散點圖。}
+  \label{fig:results_risk_return_scatter}
 \end{figure}
 
-若將預測分數實際轉化為投資決策，表 \ref{tab:results_portfolio_metrics} 則提供另一層更接近實務的檢驗。除時間窗與組合名稱外，表中的「對齊期數」表示可與 benchmark 同步比較的再平衡次數；年化報酬回答的是「平均一年可換算成多少報酬」；Sharpe 衡量每承擔一單位波動所能換得的報酬；勝率表示單期報酬為正的比例；累積報酬對應整段回測結束後真正累積下來的成果；最大回撤則描述從高點回落時最深的跌幅。特別是 Short 視窗僅有 13 個再平衡期，年化數值容易被放大，因此必須與累積報酬與最大回撤一起解讀。圖 \ref{fig:results_cum_returns_grid} 進一步聚焦於兩個圖模型（GATRegressor、DMFM）與 0050 的累積路徑比較，其餘 baseline 的完整曲線則整理於附錄。
+表 \ref{tab:results_portfolio_metrics} 從跨實驗穩定性角度比較模型。GAT-Industry 具有最高平均 Sharpe（3.438），代表其在不同 window 與 graph mode 下的風險調整後表現相對穩定；DMFM-Full 則具有最高平均總報酬（36.40\%），顯示完整中性化架構在報酬水準上具競爭力；GAT-Universe 具有最高平均 Test IC（0.0858），說明全市場圖在截面排序相關性上最突出。相較之下，Linear 的平均 Test IC（0.0284）與平均總報酬（14.12\%）皆落後，顯示單純線性映射難以充分吸收高維技術特徵與市場關係資訊。
 
-由表 \ref{tab:results_portfolio_metrics} 可見，投組績效的最佳模型同樣隨時間窗改變。Short 視窗下，XGBoost 的年化報酬與累積報酬最高（1.0022、0.2878），DMFM 的 Sharpe 最高（6.5371），且最大回撤 -0.0134 小於 XGBoost 的 -0.0213，表示其風險調整後表現更穩健；此時 0050 的年化報酬亦達 0.7584，說明短期樣本本身就處在相對有利的市場環境。值得注意的是，XGBoost、LSTM 與 DMFM 的勝率同為 0.8462，因此表內僅以累積報酬較高的 XGBoost 作為該欄代表粗體。Medium 視窗中，0050 年化報酬降為 -0.0859，但 XGBoost、LSTM 與 DMFM 皆維持正報酬，其中 DMFM 的年化報酬與累積報酬最高（0.3901、0.2487），LSTM 的 Sharpe 最高（1.3201）且最大回撤最小（-0.1399）；同時，XGBoost、LSTM 與 DMFM 的勝率亦同為 0.6364，因此表內僅以累積報酬較高的 DMFM 作為代表粗體。Long 視窗下，DMFM 的優勢最為完整：年化報酬 0.4443、Sharpe 1.5261、勝率 0.7069、累積報酬 0.5840，均為所有模型之首；XGBoost 居次，而 GATRegressor 的累積報酬轉為 -0.0231，顯示其長期投組可用性最弱。
-
-將本表與前述預測表合併觀察，可得到三點更具財務意涵的結論。第一，Short 視窗因樣本期數僅 13 期，年化報酬與 Sharpe 容易受少數高報酬期影響，因此在這一窗下應更重視累積報酬與回撤的搭配解讀；由此來看，XGBoost 提供較高原始報酬，而 DMFM 提供較佳風險調整後品質。第二，Medium 視窗中 benchmark 為負、而多數模型仍為正，代表績效來源不只是承接大盤方向，而是截面選股確實創造了 alpha。第三，Long 視窗的 benchmark 本身為正（0.1940），DMFM 仍能把年化報酬提升到 0.4443、Sharpe 提升到 1.5261、勝率提升到 0.7069，表示其優勢並非只在空頭或弱市中防守，而是在較長持有期下仍能從市場內部的相對強弱中提取可持續的超額報酬。就本文研究命題而言，這比單純「贏過下跌的 benchmark」更有說服力，因為它直接支持了「圖注意力結合多因子表示」能在正向市場中仍提供額外選股價值。
-
-相較之下，GATRegressor 在三個時間窗中都未展現穩定優勢：Short 視窗雖有不錯的 Sharpe 與最小回撤，但年化與累積報酬皆落後於 XGBoost 與 DMFM；Medium 視窗已明顯落後 benchmark；Long 視窗更出現累積報酬為負的結果。這與前一節的排序指標結論相互呼應：若模型無法穩定產出正向且波動較低的 IC，投組績效通常也難在跨期維持。就此而言，本節可視為前述排序結果的外部驗證，即真正能夠持續改善 IC/ICIR 的模型，才較有機會把訊號轉化為可實現的超額報酬。完整累積報酬圖（含各時間窗、各模型）見附錄 \ref{sec:appendix_extra_outputs}；其餘回測輸出（Daily IC、IC 分佈、月度命中率等）亦整理於附錄。
+Baseline 並非完全被深度或圖模型取代。XGBoost 在 static baseline 中仍具競爭力，平均 Sharpe 為 3.225，且在 Short/static 的 Sharpe 達 7.608，接近該組最佳 GAT-Universe 的 7.832。此結果提醒，結構化 tabular 特徵在短樣本中仍可能由 tree-based 模型有效利用；圖模型的價值較適合從跨期間穩定性、關係建模與投組層級轉化共同評估。
 \FloatBarrier
 
-\section{特徵權重分析}
+\section{注意力特徵分析}
 \label{sec:feature_importance}
-
-若進一步追問 DMFM 的訊號來源，可以發現模型並非依賴單一固定因子，而是在不同時間窗下對價格區間、量價變化、流動性與動能訊號賦予不同權重。表 \ref{tab:results_dmfm_attention} 彙整 DMFM 在 Short、Medium 與 Long 三種時間窗下的前五大注意力權重特徵；圖 \ref{fig:results_dmfm_attention_top5} 則將相同結果視覺化，以利辨識哪些特徵族群在不同期間重複出現，以及模型關注焦點如何隨時間窗轉換。此處的注意力權重反映模型在預測時的相對關注程度，宜解讀為訊號偏好，而非因果性的經濟效果估計。
 
 \input{Sections/tables/results_dmfm_attention.tex}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{img/results_dmfm_attention_top5.png}
-  \caption{DMFM 在不同時間窗的注意力前五特徵權重。}
+  \includegraphics[width=0.9\textwidth]{runs_unified/analysis_report/charts/attention_feature_frequency.png}
+  \caption{注意力前五特徵之跨實驗出現頻率。}
   \label{fig:results_dmfm_attention_top5}
 \end{figure}
 
-從表 \ref{tab:results_dmfm_attention} 可觀察到，DMFM 在不同時間窗下確實重新配置了訊號權重。Short 視窗中，\texttt{roll\_min\_20}、\texttt{vol\_over\_ma\_5}、\texttt{roll\_min\_60}、\texttt{std\_ret\_5} 與 \texttt{down\_vol\_20} 位居前列，代表模型較重視價格相對區間低點的位置、短期量能變化與波動壓力，偏向「區間位置 + 量價微結構」的訊號組合；Medium 視窗則轉向 \texttt{roll\_max\_5}、\texttt{amihud\_20}、\texttt{skew\_20}、\texttt{roll\_min\_20} 與 \texttt{ps}，顯示中期排序除了價格區間與流動性外，也開始吸收報酬分配形狀與估值面資訊；Long 視窗中，\texttt{roll\_min\_10}、\texttt{roll\_max\_60}、\texttt{px\_over\_sma\_20}、\texttt{macd} 與 \texttt{roll\_min\_20} 居於前列，則更接近「趨勢延續 + 區間位置」的長週期判斷。圖 \ref{fig:results_dmfm_attention_top5} 所呈現的排序亦支持此一差異化配置。
+表 \ref{tab:results_dmfm_attention} 與圖 \ref{fig:results_dmfm_attention_top5} 顯示，注意力前五特徵最常落在 rolling min/max、波動與量能相關欄位。出現次數最高的是 \texttt{roll\_min\_5} 與 \texttt{roll\_min\_20}（皆為 12 次），其次為 \texttt{roll\_min\_60}（11 次），並包含 \texttt{std\_ret\_10}、\texttt{roll\_max\_5}、\texttt{roll\_max\_10}、\texttt{up\_vol\_20} 與 \texttt{vol\_over\_ma\_20} 等特徵。這表示 factor variants 多半透過近期價格區間、低點位置、波動狀態與量能變化進行截面排序，而非依賴單一估值或單一動能訊號。
 
-若從經濟意義解讀，這些特徵切換反映的是不同持有期下，市場可被利用的訊號來源並不相同。短期更像是在捕捉價格壓力區、量能失衡與波動壓縮後的橫斷面反應；中期則開始同時考慮流動性、報酬偏態與估值高低，較接近「基本估值訊號與交易摩擦共同影響排序」的情境；長期則回到趨勢與價格位置的持續性，說明模型在較長持有期下更看重訊號是否能跨多個再平衡期延續。這些結果支持本文對 DMFM 的模型定位：其優勢並非來自單一固定因子的押注，而是來自在不同視窗下動態重組多類型訊號的能力。更多注意力與輔助輸出亦整理於附錄 \ref{sec:appendix_extra_outputs}。
+注意力結果應解讀為模型偏好的訊號配置，而非因果效果估計。結合前述投組表現可知，模型優勢並非來自某一固定特徵，而是由 encoder、圖聚合、中性化與 decoder 將多類特徵重新組合後形成排序分數。完整全模型關鍵指標與分析圖表整理於附錄 \ref{sec:appendix_extra_outputs}。
 \FloatBarrier
