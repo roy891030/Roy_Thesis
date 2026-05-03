@@ -27,9 +27,9 @@
 
 本研究探討圖注意力機制與多因子表示在股票選取與報酬預測中的有效性，並以統一實驗流程比較傳統基準模型與六種圖／因子消融模型。本文結合技術指標特徵、產業關係與全市場關係，建立可重現的資料處理、模型訓練、預測評估與投資組合回測流程。
 
-實證資料採用 TEJ 日頻資料，建構 56 維輸入特徵，標籤為未來 5 日報酬之每日截面去均值。實驗同時建立 static graph 與 dynamic weighted graph：前者使用同產業完全連結與全市場完全圖，後者依 rolling return correlation 建立每日加權邊，edge attributes 為絕對相關與帶符號相關。模型比較包含 Linear、XGBoost、LSTM，以及 MLP、GAT-Industry、GAT-Universe、GAT-TwoGraph、DMFM-IndNeutral 與 DMFM-Full 六種因子消融模型。預測層面以 MSE、RMSE、MAE、IC、Daily IC、ICIR 與 DirAcc 評估；策略層面則於每 5 個交易日依預測分數排序，選取前 10\% 股票等權做多，並與 0050 基準比較。
+實證資料採用 TEJ 日頻資料，建構 56 維輸入特徵，標籤為未來 5 日報酬之每日截面去均值。實驗同時建立 static graph 與 dynamic weighted graph：前者使用同產業完全連結與全市場完全圖，後者依 rolling return correlation 建立每日加權邊，edge attributes 為絕對相關與帶符號相關。模型比較包含 Linear、XGBoost、LSTM，以及 MLP、GAT-Factor-Ind、GAT-Factor-Mkt、GAT-Factor-Dual、GAT-Factor-IndNeu 與 GAT-Factor-Full 六種因子消融模型。預測層面以 MSE、RMSE、MAE、IC、Daily IC、ICIR 與 DirAcc 評估；策略層面則於每 5 個交易日依預測分數排序，選取前 10\% 股票等權做多，並與 0050 基準比較。
 
-研究結果顯示，模型優勢具有時間窗與圖模式異質性。Short/static 組合由 GAT-Universe 取得最高 Test IC（0.0843）、總報酬（32.13\%）與 Sharpe（7.832）；Medium/dynamic 組合由 GAT-Universe 取得最高總報酬（38.31\%）與 Sharpe（1.866）；Long/static 組合則由 DMFM-Full 取得最高總報酬（54.32\%）與 Sharpe（1.490）。整體 18 組 dynamic-static 可配對比較中，dynamic graph 使 Sharpe 改善 10 組、總報酬改善 11 組，但平均 Test IC 略降 0.0022，顯示 dynamic graph 並非單向優勢，而是依期間與模型結構而定。跨實驗平均而言，GAT-Industry 具有最高平均 Sharpe（3.438），DMFM-Full 具有最高平均總報酬（36.40\%），GAT-Universe 具有最高平均 Test IC（0.0858）。注意力分析則顯示，模型最常關注 rolling min/max、波動與量能相關特徵。整體而言，圖注意力與多因子表示能提升台股截面排序與投資組合表現，但其效益需透過模型消融、圖模式與投組層級指標共同判讀。
+研究結果顯示，模型優勢具有時間窗與圖模式異質性。Short/static 組合由 GAT-Factor-Mkt 取得最高 Test IC（0.0843）、總報酬（32.13\%）與 Sharpe（7.832）；Medium/dynamic 組合由 GAT-Factor-Mkt 取得最高總報酬（38.31\%）與 Sharpe（1.866）；Long/static 組合則由 GAT-Factor-Full 取得最高總報酬（54.32\%）與 Sharpe（1.490）。整體 18 組 dynamic-static 可配對比較中，dynamic graph 使 Sharpe 改善 10 組、總報酬改善 11 組，但平均 Test IC 略降 0.0022，顯示 dynamic graph 並非單向優勢，而是依期間與模型結構而定。跨實驗平均而言，GAT-Factor-Ind 具有最高平均 Sharpe（3.438），GAT-Factor-Full 具有最高平均總報酬（36.40\%），GAT-Factor-Mkt 具有最高平均 Test IC（0.0858）。注意力分析則顯示，模型最常關注 rolling min/max、波動與量能相關特徵。整體而言，圖注意力與多因子表示能提升台股截面排序與投資組合表現，但其效益需透過模型消融、圖模式與投組層級指標共同判讀。
 
 \vspace{1cm}
 

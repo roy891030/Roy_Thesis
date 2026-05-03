@@ -37,7 +37,7 @@
 - `long` 測試窗 benchmark Sharpe 0.625、Total Return 18.24%；該窗最佳模型 `static/long/dmfm_full` Sharpe 1.490、Total Return 54.32%。
 - 跨可用實驗的模型穩定性：平均 Sharpe 最高為 `gat_industry` (3.438)；平均 Total Return 最高為 `dmfm_full` (36.40%)；平均 Test IC 最高為 `gat_universe` (0.0858)。這顯示沒有單一模型同時壟斷所有維度。
 - Baseline 並非全被深度/圖模型碾壓；static 組內最佳 baseline 分別為 short: baseline_xgboost rank 2, Sharpe 7.608；medium: baseline_lstm rank 7, Sharpe 1.252；long: baseline_xgboost rank 4, Sharpe 1.218。但 `baseline_linear` 在三個 static window 都落在後段，主要是排序 IC 與投組報酬都偏弱。
-- DMFM full 相對 industry-neutral 版本：平均 Total Return 差 +0.96pct，平均 Sharpe 差 -0.130，平均 Test IC 差 +0.0028；6 個配對中 full 的 IC 較高 4 次、Sharpe 較高 2 次。也就是 neutralization 對風險調整後報酬未必是劣勢，需按 window 判斷。
+- GAT-Factor-Full 相對 industry-neutral 版本：平均 Total Return 差 +0.96pct，平均 Sharpe 差 -0.130，平均 Test IC 差 +0.0028；6 個配對中 full 的 IC 較高 4 次、Sharpe 較高 2 次。也就是 neutralization 對風險調整後報酬未必是劣勢，需按 window 判斷。
 - Attention top features 最常出現的是 `roll_min_5`、`roll_min_20`、`roll_min_60`、`roll_max_5`、`std_ret_10`；訊號集中在 rolling min/max 與波動/成交量相關特徵，代表模型多半透過近期價格區間與風險狀態做排序。
 
 ## 3. Benchmark 與測試期間

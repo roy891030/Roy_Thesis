@@ -30,15 +30,15 @@
 
 本文採用台灣股票日頻資料進行實證。資料主要來源為 TEJ 台灣經濟新報，並匯出為 CSV 作為後續處理之輸入。以「交易日\(\times\)股票」為觀測單位，保留日期、股票代碼、OHLC、成交量／成交值、市值與產業分類等欄位；技術特徵則由價格與量能序列計算而得，其中 RSI、MACD、KD 等指標透過 \texttt{TA-Lib} 套件產生，並納入 PB、PS 等估值欄位，最終形成固定的 56 維特徵集合供模型輸入（詳見第三章的變數表格與附錄清單）。
 
-在關係建模方面，本文依第三章之設計建構兩類圖結構：（1）產業圖（Industry Graph），以同產業股票完全連結並加入自環；（2）全市場圖（Universe Graph），以完全圖表示整體市場共同因子影響。圖結構以 PyTorch Geometric（PyG）的 \texttt{edge\_index} 形式保存，並與特徵張量共同形成可重複使用的訓練產物（artifacts）。
+在關係建模方面，本文依第三章之設計建構兩類圖結構：（1）產業圖（Industry Graph），以同產業股票完全連結並加入自環；（2）全市場圖（Market Graph），以完全圖表示整體市場共同因子影響。圖結構以 PyTorch Geometric（PyG）的 \texttt{edge\_index} 形式保存，並與特徵張量共同形成可重複使用的訓練產物（artifacts）。
 
-模型設計採統一的 factor ablation family。除 Linear、XGBoost 與 LSTM 三個非圖基準外，本文以共同的 BatchNorm + MLP encoder 產生個股語境表示，並比較 MLP、GAT-Industry、GAT-Universe、GAT-TwoGraph、DMFM-IndNeutral 與 DMFM-Full 六種模型。此設計可在相同輸入、切分與訓練口徑下，逐步檢驗單純特徵編碼、單圖聚合、雙圖聚合、產業中性化，以及完整「產業中性化 \(\rightarrow\) 全市場中性化」流程的差異。評估上以 IC、Daily IC 與 ICIR 作為核心預測指標，並對具產業圖與產業標籤之圖／因子模型額外回報產業中性 IC；策略層級則再以投資組合回測指標（總報酬、年化報酬率、Sharpe ratio、勝率與最大回撤等）檢驗其投資可用性。資料切分採時間序列切分以避免資訊洩漏，並設計短期、中期與長期三種樣本視窗檢驗穩健性。
+模型設計採統一的 factor ablation family。除 Linear、XGBoost 與 LSTM 三個非圖基準外，本文以共同的 BatchNorm + MLP encoder 產生個股語境表示，並比較 MLP、GAT-Factor-Ind、GAT-Factor-Mkt、GAT-Factor-Dual、GAT-Factor-IndNeu 與 GAT-Factor-Full 六種模型。此設計可在相同輸入、切分與訓練口徑下，逐步檢驗單純特徵編碼、單圖聚合、雙圖聚合、產業中性化，以及完整「產業中性化 \(\rightarrow\) 全市場中性化」流程的差異。評估上以 IC、Daily IC 與 ICIR 作為核心預測指標，並對具產業圖與產業標籤之圖／因子模型額外回報產業中性 IC；策略層級則再以投資組合回測指標（總報酬、年化報酬率、Sharpe ratio、勝率與最大回撤等）檢驗其投資可用性。資料切分採時間序列切分以避免資訊洩漏，並設計短期、中期與長期三種樣本視窗檢驗穩健性。
 
 基於上述方法設計，本文的主要貢獻歸納如下：
 \begin{itemize}
     \item \textbf{資料與特徵流程的可重現性：}以 TEJ 日頻資料為基礎，建立從原始欄位到 56 維技術特徵（含 TA-Lib 指標與估值欄位）的完整特徵建置與張量化流程，並以 artifacts 形式保存，便於重複訓練與評估。
     \item \textbf{關係結構的分層建模與圖模式比較：}同時建構產業圖與全市場圖，並進一步比較 static graph 與 dynamic weighted graph。dynamic graph 以 rolling return correlation 建立每日加權邊，可檢驗市場關係隨時間變動時對模型表現的影響。
-    \item \textbf{以消融實驗辨識模型增益來源：}以六種 factor ablation models 區分單純 MLP、單一圖聚合、雙圖聚合、產業中性化與完整 DMFM 中性化流程，避免僅以單一 DMFM 結果推論所有圖注意力設計皆有效。
+    \item \textbf{以消融實驗辨識模型增益來源：}以六種 factor ablation models 區分單純 MLP、單一圖聚合、雙圖聚合、產業中性化與完整 GAT-Factor 中性化流程，避免僅以單一中性化模型結果推論所有圖注意力設計皆有效。
     \item \textbf{以排序導向指標為核心的實證驗證：}以 IC / Daily IC / ICIR 作為主要評估基礎，並對圖／因子模型補充檢視產業中性 IC，再搭配投資組合績效指標，提供模型在台灣市場情境下的多面向驗證結果。
 \end{itemize}
 

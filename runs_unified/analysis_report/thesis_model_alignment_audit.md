@@ -4,14 +4,14 @@
 
 ## 摘要
 
-- 舊口徑：模型比較寫成 Linear、XGBoost、LSTM、GATRegressor 與 DMFM 五模型。
+- 舊口徑：模型比較寫成 Linear、XGBoost、LSTM、單圖 GAT 與完整中性化模型五模型。
 - 目前設計：統一實驗為三個 baseline 加六個 factor ablation models；圖模型比較 static / dynamic graph。
-- 修正方向：摘要改為 baseline + MLP / GAT-Industry / GAT-Universe / GAT-TwoGraph / DMFM-IndNeutral / DMFM-Full，並更新 45 組實驗的關鍵結果。
+- 修正方向：摘要改為 baseline + MLP / GAT-Factor-Ind / GAT-Factor-Mkt / GAT-Factor-Dual / GAT-Factor-IndNeu / GAT-Factor-Full，並更新 45 組實驗的關鍵結果。
 
 ## 第一章 緒論
 
-- 舊口徑：研究問題與貢獻集中於 DMFM 是否優於 GATRegressor。
-- 目前設計：核心問題是圖建構口徑與中性化設計的消融比較，不是單一 GATRegressor 對 DMFM。
+- 舊口徑：研究問題與貢獻集中於完整中性化模型是否優於單圖 GAT。
+- 目前設計：核心問題是圖建構口徑與中性化設計的消融比較，不是單一圖模型對完整中性化模型。
 - 修正方向：緒論改為「baseline + factor variants + static/dynamic graph」的統一實驗敘述，研究貢獻新增 dynamic graph 比較與消融實驗。
 
 ## 第二章 文獻回顧
@@ -22,8 +22,8 @@
 
 ## 第三章 實驗設計
 
-- 舊口徑：3.3 寫成「基準模型 GATRegressor」與「DMFM 模型架構」。
-- 目前設計：正式 pipeline 不再用舊版 GATRegressor 作主文比較，而是用 `FactorGraphAblation` 六模型。
+- 舊口徑：3.3 寫成單圖 GAT 與完整中性化模型兩段。
+- 目前設計：正式 pipeline 不再用舊版單圖 GAT 作主文比較，而是用 `FactorGraphAblation` 六模型。
 - 修正方向：模型設計改寫為非圖 baseline、factor ablation models、factor attention 三部分。
 
 - 舊口徑：圖結構只描述 static 產業完全圖與全市場完全圖。
@@ -36,7 +36,7 @@
 
 ## 第四章 實驗結果
 
-- 舊口徑：結果仍引用舊的五模型數值，例如 XGBoost Short IC 0.0863、DMFM Long ICIR 0.8905。
+- 舊口徑：結果仍引用舊的五模型數值，例如 XGBoost Short IC 0.0863、完整中性化模型 Long ICIR 0.8905。
 - 目前設計：主結果來自 `runs_unified/analysis_report`，共 45 組實驗。
 - 修正方向：第四章改為統一實驗 winner、dynamic-static delta、模型穩定性與注意力特徵頻率四段，並引用 `runs_unified/analysis_report/charts` 圖表。
 
@@ -48,6 +48,6 @@
 
 ## 附錄
 
-- 舊口徑：附錄圖表仍指向 `runs_gpu_full1`，並列舊版 GATRegressor / DMFM 圖。
+- 舊口徑：附錄圖表仍指向 `runs_gpu_full1`，並列舊版單圖 GAT / 完整中性化模型圖。
 - 目前設計：正式輸出位於 `runs_unified`，完整分析位於 `runs_unified/analysis_report`。
 - 修正方向：附錄完整輸出改為 `runs_unified` 的全模型關鍵指標與 analysis_report 圖表。
