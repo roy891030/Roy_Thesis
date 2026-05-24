@@ -1,0 +1,43 @@
+{
+  "model_type": "linear",
+  "artifact_dir": "artifacts_gpu_static_to_20250601/static/short",
+  "weights": "artifacts_gpu_static_to_20250601/static/short/baseline_linear.pkl",
+  "scaler": "artifacts_gpu_static_to_20250601/static/short/baseline_linear_scaler.pkl",
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 414,
+    "val_days": 46,
+    "test_days": 116
+  },
+  "train": {
+    "MSE": 0.0023415328469127417,
+    "RMSE": 0.048389387750959835,
+    "MAE": 0.030324582010507584,
+    "IC": 0.06330824409627298,
+    "ICIR": 0.6098956273850773,
+    "DirAcc": 0.5296928985885613,
+    "DailyIC": 0.059824150435021005
+  },
+  "val": {
+    "MSE": 0.0022946603130549192,
+    "RMSE": 0.04790261279987679,
+    "MAE": 0.03054361790418625,
+    "IC": -3.932385540020867e-05,
+    "ICIR": -0.01291991966108272,
+    "DirAcc": 0.49446847446348363,
+    "DailyIC": -0.0011887860684161042
+  },
+  "test": {
+    "MSE": 0.0022660233080387115,
+    "RMSE": 0.04760276576039161,
+    "MAE": 0.03198682516813278,
+    "IC": 0.0050376217002405625,
+    "ICIR": 0.03683104791892998,
+    "DirAcc": 0.5112991123874168,
+    "DailyIC": 0.003638356488901008
+  },
+  "has_industry_labels": false,
+  "lookback": null,
+  "model": "linear"
+}

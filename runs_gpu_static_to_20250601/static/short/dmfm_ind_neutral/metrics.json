@@ -1,0 +1,67 @@
+{
+  "model_type": "factor_variant",
+  "artifact_dir": "artifacts_gpu_static_to_20250601/static/short",
+  "weights": "artifacts_gpu_static_to_20250601/static/short/dmfm_ind_neutral_best.pt",
+  "model_config": {
+    "in_dim": 56,
+    "num_features": 56,
+    "hidden_dim": 64,
+    "heads": 2,
+    "dropout": 0.1,
+    "edge_dim": null,
+    "variant": "dmfm_ind_neutral",
+    "use_factor_attention": true
+  },
+  "dynamic_graphs": {
+    "enabled": false
+  },
+  "checkpoint_format_version": 1,
+  "checkpoint_is_legacy": false,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 414,
+    "val_days": 46,
+    "test_days": 116
+  },
+  "train": {
+    "MSE": 0.012143818661570549,
+    "RMSE": 0.11019899573757716,
+    "MAE": 0.10029606521129608,
+    "IC": 0.17701979514598865,
+    "DailyIC": 0.1771787892777824,
+    "ICIR": 2.150076744027862,
+    "DirAcc": 0.4159552259400747,
+    "IC_ind": 0.15819581654268083,
+    "DailyIC_ind": 0.15701187230854402,
+    "ICIR_ind": 2.108907209807199,
+    "n": 425169
+  },
+  "val": {
+    "MSE": 0.012255407869815826,
+    "RMSE": 0.11070414567583198,
+    "MAE": 0.0998847484588623,
+    "IC": 0.04842650485247577,
+    "DailyIC": 0.04958905357561983,
+    "ICIR": 0.7382056009504441,
+    "DirAcc": 0.4463386084123502,
+    "IC_ind": 0.040864593169828045,
+    "DailyIC_ind": 0.04151944990938467,
+    "ICIR_ind": 0.573702946483464,
+    "n": 48088
+  },
+  "test": {
+    "MSE": 0.012126228772103786,
+    "RMSE": 0.11011915715307571,
+    "MAE": 0.09899993985891342,
+    "IC": 0.03242660762682195,
+    "DailyIC": 0.03382879038341008,
+    "ICIR": 0.3200354350997412,
+    "DirAcc": 0.4520354919025438,
+    "IC_ind": 0.033261716060718906,
+    "DailyIC_ind": 0.03430449422943401,
+    "ICIR_ind": 0.3925767466061986,
+    "n": 122576
+  },
+  "has_industry_labels": true
+}

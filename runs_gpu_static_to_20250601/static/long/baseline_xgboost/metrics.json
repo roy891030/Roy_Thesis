@@ -1,0 +1,43 @@
+{
+  "model_type": "xgboost",
+  "artifact_dir": "artifacts_gpu_static_to_20250601/static/long",
+  "weights": "artifacts_gpu_static_to_20250601/static/long/baseline_xgboost.json",
+  "scaler": "artifacts_gpu_static_to_20250601/static/long/baseline_xgboost_scaler.pkl",
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 2003,
+    "val_days": 222,
+    "test_days": 557
+  },
+  "train": {
+    "MSE": 0.002081428188830614,
+    "RMSE": 0.04562267187299111,
+    "MAE": 0.02857045643031597,
+    "IC": 0.7823608678621942,
+    "ICIR": 1.840567557673323,
+    "DirAcc": 0.5490158619141366,
+    "DailyIC": 0.2570121225946876
+  },
+  "val": {
+    "MSE": 0.03597134351730347,
+    "RMSE": 0.18966112811354746,
+    "MAE": 0.03236141428351402,
+    "IC": 0.018996024622043476,
+    "ICIR": 0.42695895702957176,
+    "DirAcc": 0.5099812892891276,
+    "DailyIC": 0.0438965160395365
+  },
+  "test": {
+    "MSE": 0.004061378072947264,
+    "RMSE": 0.06372894219228234,
+    "MAE": 0.03152124956250191,
+    "IC": 0.02052549740296119,
+    "ICIR": 0.45915663564582254,
+    "DirAcc": 0.5012478645819783,
+    "DailyIC": 0.04081630907156715
+  },
+  "has_industry_labels": false,
+  "lookback": null,
+  "model": "xgboost"
+}

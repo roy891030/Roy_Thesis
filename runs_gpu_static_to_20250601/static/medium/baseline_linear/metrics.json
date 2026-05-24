@@ -1,0 +1,43 @@
+{
+  "model_type": "linear",
+  "artifact_dir": "artifacts_gpu_static_to_20250601/static/medium",
+  "weights": "artifacts_gpu_static_to_20250601/static/medium/baseline_linear.pkl",
+  "scaler": "artifacts_gpu_static_to_20250601/static/medium/baseline_linear_scaler.pkl",
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 1118,
+    "val_days": 124,
+    "test_days": 311
+  },
+  "train": {
+    "MSE": 0.0024137203581631184,
+    "RMSE": 0.04912962810935086,
+    "MAE": 0.03047548234462738,
+    "IC": 0.05231744454816562,
+    "ICIR": 0.4640102659359071,
+    "DirAcc": 0.5176176669037329,
+    "DailyIC": 0.04670485658269204
+  },
+  "val": {
+    "MSE": 0.0018655487801879644,
+    "RMSE": 0.04319199902977361,
+    "MAE": 0.02679342031478882,
+    "IC": 0.017776666224428684,
+    "ICIR": 0.18450042595015434,
+    "DirAcc": 0.5112940862200362,
+    "DailyIC": 0.013824946795721426
+  },
+  "test": {
+    "MSE": 0.0025772128719836473,
+    "RMSE": 0.050766257218586124,
+    "MAE": 0.033028971403837204,
+    "IC": 0.029096808141241742,
+    "ICIR": 0.2780050397663081,
+    "DirAcc": 0.5132011830131135,
+    "DailyIC": 0.025280516636493697
+  },
+  "has_industry_labels": false,
+  "lookback": null,
+  "model": "linear"
+}

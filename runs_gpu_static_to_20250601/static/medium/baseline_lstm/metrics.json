@@ -1,0 +1,43 @@
+{
+  "model_type": "lstm",
+  "artifact_dir": "artifacts_gpu_static_to_20250601/static/medium",
+  "weights": "artifacts_gpu_static_to_20250601/static/medium/baseline_lstm.pt",
+  "scaler": null,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 1118,
+    "val_days": 124,
+    "test_days": 311
+  },
+  "train": {
+    "MSE": 0.0024120380610876124,
+    "RMSE": 0.04911250412153317,
+    "MAE": 0.030563592946179663,
+    "IC": 0.08294606763365447,
+    "ICIR": 0.7266476520195629,
+    "DirAcc": 0.5154694690720891,
+    "DailyIC": 0.07415656124704166
+  },
+  "val": {
+    "MSE": 0.00187107005685428,
+    "RMSE": 0.043255867311317205,
+    "MAE": 0.026875241815468867,
+    "IC": 0.03829238559282873,
+    "ICIR": 0.601526381264695,
+    "DirAcc": 0.5157960071967882,
+    "DailyIC": 0.03975575538465836
+  },
+  "test": {
+    "MSE": 0.002582813695595089,
+    "RMSE": 0.05082139013835699,
+    "MAE": 0.03312259026403483,
+    "IC": 0.040560486368412405,
+    "ICIR": 0.3447672121383922,
+    "DirAcc": 0.5082586256243595,
+    "DailyIC": 0.03586480202677366
+  },
+  "has_industry_labels": false,
+  "lookback": 10,
+  "model": "lstm"
+}

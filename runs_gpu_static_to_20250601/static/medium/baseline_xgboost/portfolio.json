@@ -1,0 +1,73 @@
+{
+  "model_type": "xgboost",
+  "artifact_dir": "artifacts_gpu_static_to_20250601/static/medium",
+  "weights": "artifacts_gpu_static_to_20250601/static/medium/baseline_xgboost.json",
+  "scaler": "artifacts_gpu_static_to_20250601/static/medium/baseline_xgboost_scaler.pkl",
+  "plots_dir": "runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots",
+  "plots": {
+    "daily_ic": "runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/daily_ic.png",
+    "pred_dispersion": "runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/pred_dispersion.png",
+    "hitrate_by_month": "runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/hitrate_by_month.png",
+    "ic_distribution": "runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/ic_distribution.png",
+    "cum_returns": "runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/cum_returns.png",
+    "attention_weights": null
+  },
+  "benchmark_path": "GAT0050.csv",
+  "top_pct": 0.1,
+  "rebalance_days": 5,
+  "horizon": 5,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "val_days": 124,
+    "test_days": 311
+  },
+  "strategy": {
+    "n": 63,
+    "mean_return": 0.00636816388485761,
+    "std_return": 0.04818784543716791,
+    "annual_return": 0.32095545979682355,
+    "annual_volatility": 0.34209976581834983,
+    "sharpe": 0.9381925738214227,
+    "hit_rate": 0.5396825396825397,
+    "total_return": 0.3843544994314805,
+    "cagr": 0.29717285901073276,
+    "max_drawdown": -0.2976303261994441
+  },
+  "strategy_aligned": {
+    "n": 63,
+    "mean_return": 0.00636816388485761,
+    "std_return": 0.04818784543716791,
+    "annual_return": 0.32095545979682355,
+    "annual_volatility": 0.34209976581834983,
+    "sharpe": 0.9381925738214227,
+    "hit_rate": 0.5396825396825397,
+    "total_return": 0.3843544994314805,
+    "cagr": 0.29717285901073276,
+    "max_drawdown": -0.2976303261994441
+  },
+  "benchmark": {
+    "n": 63,
+    "mean_return": 0.005063255590419556,
+    "std_return": 0.03843390717692153,
+    "annual_return": 0.25518808175714564,
+    "annual_volatility": 0.27285367348189526,
+    "sharpe": 0.9352561704619243,
+    "hit_rate": 0.5555555555555556,
+    "total_return": 0.31203484656098057,
+    "cagr": 0.24267137872239952,
+    "max_drawdown": -0.2737194557753494
+  },
+  "alignment": {
+    "start": "2024-02-16",
+    "end": "2025-05-29",
+    "n_periods": 63
+  },
+  "top_attention_features": [],
+  "lstm_lookback": null,
+  "excess": {
+    "annual_return": 0.06576737803967792,
+    "total_return": 0.0723196528704999,
+    "sharpe": 0.0029364033594984074
+  }
+}
