@@ -1,21 +1,33 @@
 \begin{table}[H]
 \centering
-\caption{模型跨時間窗與圖模式之穩定性摘要}
+\caption{不同訓練視窗下之模型家族平均表現}
 \label{tab:results_portfolio_metrics}
+\scriptsize
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lrrrrrrr}
+\begin{tabular}{llrrrrr}
 \toprule
-模型 & 實驗數 & 平均 Sharpe & Sharpe 中位數 & Sharpe 標準差 & 平均總報酬 & 平均 Test IC & 組內勝出次數 \\
+視窗 & 模型家族 & 平均 Daily IC & 平均 ICIR & 平均 Sharpe & 平均年化報酬 & 平均總報酬 \\
 \midrule
-GAT-Factor-Mkt & 6 & 3.355 & 1.663 & 2.995 & 35.96\% & 0.0858 & 2 \\
-GAT-Factor-Dual & 6 & 3.250 & 1.695 & 2.773 & 35.41\% & 0.0786 & 2 \\
-GAT-Factor-Ind & 6 & 3.438 & 1.737 & 2.961 & 36.16\% & 0.0747 & 1 \\
-GAT-Factor-Full & 6 & 2.956 & 1.643 & 2.311 & 36.40\% & 0.0793 & 1 \\
-XGBoost & 3 & 3.225 & 1.218 & 3.800 & 31.29\% & 0.0724 & 0 \\
-GAT-Factor-IndNeu & 6 & 3.086 & 1.695 & 2.543 & 35.44\% & 0.0765 & 0 \\
-MLP & 6 & 3.066 & 1.543 & 2.583 & 34.22\% & 0.0813 & 0 \\
-LSTM & 3 & 2.666 & 1.252 & 2.633 & 27.10\% & 0.0634 & 0 \\
-Linear & 3 & 2.021 & 0.775 & 2.691 & 14.12\% & 0.0284 & 0 \\
+Short & Linear & 0.0036 & 0.037 & -0.423 & -16.92\% & -11.26\% \\
+Short & LSTM & 0.0057 & 0.048 & -0.223 & -9.28\% & -8.23\% \\
+Short & XGBoost & 0.0261 & 0.209 & 0.010 & 0.44\% & -4.32\% \\
+Short & DNN & 0.0396 & 0.408 & -0.098 & -4.06\% & -5.88\% \\
+Short & GAT family & 0.0275 & 0.247 & -0.036 & -1.54\% & -5.04\% \\
+Short & GAT neutralization family & 0.0278 & 0.253 & -0.084 & -3.68\% & -5.85\% \\
+\midrule
+Medium & Linear & 0.0253 & 0.278 & 0.561 & 18.14\% & 17.35\% \\
+Medium & LSTM & 0.0359 & 0.345 & 0.776 & 26.53\% & 29.16\% \\
+Medium & XGBoost & 0.0485 & 0.430 & 0.938 & 32.10\% & 38.44\% \\
+Medium & DNN & 0.0453 & 0.581 & 0.980 & 31.88\% & 39.13\% \\
+Medium & GAT family & 0.0454 & 0.478 & 0.842 & 29.21\% & 33.32\% \\
+Medium & GAT neutralization family & 0.0548 & 0.583 & 0.873 & 29.86\% & 34.66\% \\
+\midrule
+Long & Linear & 0.0214 & 0.235 & 0.884 & 22.32\% & 52.55\% \\
+Long & LSTM & 0.0418 & 0.479 & 1.336 & 33.45\% & 95.50\% \\
+Long & XGBoost & 0.0408 & 0.459 & 1.714 & 43.37\% & 143.08\% \\
+Long & DNN & 0.0535 & 0.726 & 1.564 & 35.35\% & 106.45\% \\
+Long & GAT family & 0.0502 & 0.569 & 1.704 & 37.87\% & 118.76\% \\
+Long & GAT neutralization family & 0.0587 & 0.760 & 1.826 & 40.36\% & 131.34\% \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}

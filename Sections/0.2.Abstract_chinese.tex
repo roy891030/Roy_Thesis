@@ -25,13 +25,13 @@
 
 \normalsize 
 
-本研究探討圖注意力機制與多因子表示在股票選取與報酬預測中的有效性，並以統一實驗流程比較傳統基準模型與六種圖／因子消融模型。本文結合技術指標特徵、產業關係與全市場關係，建立可重現的資料處理、模型訓練、預測評估與投資組合回測流程。
+本研究探討在台灣股票市場之橫斷面報酬預測中，模型結構、圖拓樸與訓練視窗長度如何影響 rank signal 與投資組合表現。相較於單純檢驗「GAT 是否優於 baseline」，本文將圖注意力模型定位為關係結構與因子表示的消融實驗，並同時檢視預測層級的 IC / ICIR 與投資組合層級的風險調整報酬。
 
-實證資料採用 TEJ 日頻資料，建構 56 維輸入特徵，標籤為未來 5 日報酬之每日截面去均值。實驗同時建立 static graph 與 dynamic weighted graph：前者使用同產業完全連結與全市場完全圖，後者依 rolling return correlation 建立每日加權邊，edge attributes 為絕對相關與帶符號相關。模型比較包含 Linear、XGBoost、LSTM，以及 MLP、GAT-Factor-Ind、GAT-Factor-Mkt、GAT-Factor-Dual、GAT-Factor-IndNeu 與 GAT-Factor-Full 六種因子消融模型。預測層面以 MSE、RMSE、MAE、IC、Daily IC、ICIR 與 DirAcc 評估；策略層面則於每 5 個交易日依預測分數排序，選取前 10\% 股票等權做多，並與 0050 基準比較。
+實證資料採用 TEJ 台股日頻資料，建構 56 維技術與估值特徵，標籤為未來 5 日報酬之每日截面去均值。實驗建立產業圖與全市場完全圖，並比較 Linear、XGBoost、LSTM、DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral 與 GAT-full。本文設計 short、medium 與 long 三種訓練視窗，以時間序列方式切分訓練、驗證與測試集；策略層面則每 5 個交易日依預測分數排序，選取前 10\% 股票等權做多，並與 0050 基準比較。
 
-研究結果顯示，模型優勢具有時間窗與圖模式異質性。Short/static 組合由 GAT-Factor-Mkt 取得最高 Test IC（0.0843）、總報酬（32.13\%）與 Sharpe（7.832）；Medium/dynamic 組合由 GAT-Factor-Mkt 取得最高總報酬（38.31\%）與 Sharpe（1.866）；Long/static 組合則由 GAT-Factor-Full 取得最高總報酬（54.32\%）與 Sharpe（1.490）。整體 18 組 dynamic-static 可配對比較中，dynamic graph 使 Sharpe 改善 10 組、總報酬改善 11 組，但平均 Test IC 略降 0.0022，顯示 dynamic graph 並非單向優勢，而是依期間與模型結構而定。跨實驗平均而言，GAT-Factor-Ind 具有最高平均 Sharpe（3.438），GAT-Factor-Full 具有最高平均總報酬（36.40\%），GAT-Factor-Mkt 具有最高平均 Test IC（0.0858）。注意力分析則顯示，模型最常關注 rolling min/max、波動與量能相關特徵。整體而言，圖注意力與多因子表示能提升台股截面排序與投資組合表現，但其效益需透過模型消融、圖模式與投組層級指標共同判讀。
+研究結果顯示，訓練視窗長度對 out-of-sample 可用性具有主導性影響。Short window 雖可產生部分正向 Daily IC，但多數投資組合年化報酬接近 0 或為負；medium 與 long window 方能穩定轉化為正向 Sharpe。Long window 下，GAT neutralization family 的平均 Daily IC 為 0.0587、平均 Sharpe 為 1.826，高於 GAT family 的 0.0502 與 1.704，亦高於 DNN 的 0.0535 與 1.564。圖拓樸方面，GAT-industry 在 medium 與 long window 的 Daily IC 與 Sharpe 均優於 GAT-universe，顯示具有明確經濟意義的產業圖比全市場完全連結更能保留個股截面差異。GAT-IndNeutral 在 long window 取得最高 Daily IC（0.0590）與 ICIR（0.786），GAT-full 則取得最高 Sharpe（1.849）與 42.02\% 年化報酬，兩者呈現純 alpha 訊號穩定性與絕對報酬之間的 trade-off。XGBoost 在 long window 總報酬達 143.08\%，但 Train IC 與 Test IC 分別為 0.7824 與 0.0205，顯示其存在顯著過擬合風險。整體而言，圖模型的貢獻應被定位為訊號穩定性、拓樸選擇與可解釋性的提升，而非對非圖模型的全面性主導優勢。
 
 \vspace{1cm}
 
 % 中文摘要及關鍵詞 5-7 個
-\textbf{關鍵字：}圖注意力網路、股票選取、報酬預測、動態多因子模型、量化投資
+\textbf{關鍵字：}圖拓樸、因子注意力、橫斷面報酬預測、資訊係數、台灣股票市場

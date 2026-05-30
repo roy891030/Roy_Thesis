@@ -76,7 +76,7 @@ macd\_signal & 技術指標 & MACD 訊號線（TA-Lib 預設） & -- \\
 macd\_hist & 技術指標 & MACD 柱狀差（\texttt{macd}-\texttt{macd\_signal}） & -- \\
 
 atr\_14 & 風險 & ATR（Average True Range；由 TEJ 最高/最低/收盤價計算） & 14 \\
-mdd\_20 & 風險 & 20 日區間回撤 proxy：$P_t/\max(P_{t-19},\ldots,P_t)-1$（TEJ 收盤價） & 20 \\
+mdd\_20 & 風險 & 20 日區間跌幅 proxy：$P_t/\max(P_{t-19},\ldots,P_t)-1$（TEJ 收盤價） & 20 \\
 
 beta\_60 & 風險 & 60 日個股報酬內部 beta proxy：以個股日報酬與其 rolling 去均值序列計算 rolling covariance / variance。 & 60 \\
 idio\_vol\_60 & 風險 & 60 日殘差波動 proxy：$r_{i,t}-\beta_{60}\cdot(r_{i,t}-\bar r_{i,60})$ 之 rolling std。 & 60 \\
@@ -106,6 +106,7 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
 \end{longtable}
 \renewcommand{\arraystretch}{1.0}
 
+
 \section{完整實驗輸出補充}
 \label{sec:appendix_extra_outputs}
 
@@ -114,341 +115,6 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
 \input{Sections/tables/appendix_pred_detail.tex}
 
 \clearpage
-\subsection{完整累積報酬圖}
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_linear/plots/cum_returns.png}
-    \caption{Linear}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_xgboost/plots/cum_returns.png}
-    \caption{XGBoost}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_lstm/plots/cum_returns.png}
-    \caption{LSTM}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/gat/plots/cum_returns.png}
-    \caption{GAT-Factor-Mkt}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/dmfm/plots/cum_returns.png}
-    \caption{GAT-Factor-Full}
-  \end{subfigure}
-  \caption{short 時間窗各模型累積報酬曲線。}
-  \label{fig:appendix_cumret_short_all}
-\end{figure}
-
-\clearpage
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_linear/plots/cum_returns.png}
-    \caption{Linear}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_xgboost/plots/cum_returns.png}
-    \caption{XGBoost}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_lstm/plots/cum_returns.png}
-    \caption{LSTM}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/gat/plots/cum_returns.png}
-    \caption{GAT-Factor-Mkt}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/dmfm/plots/cum_returns.png}
-    \caption{GAT-Factor-Full}
-  \end{subfigure}
-  \caption{medium 時間窗各模型累積報酬曲線。}
-  \label{fig:appendix_cumret_medium_all}
-\end{figure}
-
-\clearpage
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_linear/plots/cum_returns.png}
-    \caption{Linear}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_xgboost/plots/cum_returns.png}
-    \caption{XGBoost}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_lstm/plots/cum_returns.png}
-    \caption{LSTM}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/gat/plots/cum_returns.png}
-    \caption{GAT-Factor-Mkt}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/dmfm/plots/cum_returns.png}
-    \caption{GAT-Factor-Full}
-  \end{subfigure}
-  \caption{long 時間窗各模型累積報酬曲線。}
-  \label{fig:appendix_cumret_long_all}
-\end{figure}
-
-\clearpage
-\subsection{Daily IC 補充結果}
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_linear/plots/daily_ic.png}
-    \caption{Linear}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_xgboost/plots/daily_ic.png}
-    \caption{XGBoost}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_lstm/plots/daily_ic.png}
-    \caption{LSTM}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/gat/plots/daily_ic.png}
-    \caption{GAT-Factor-Mkt}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/dmfm/plots/daily_ic.png}
-    \caption{GAT-Factor-Full}
-  \end{subfigure}
-  \caption{short 時間窗各模型 Daily IC。}
-  \label{fig:appendix_dailyic_short_all}
-\end{figure}
-
-\clearpage
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_linear/plots/daily_ic.png}
-    \caption{Linear}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_xgboost/plots/daily_ic.png}
-    \caption{XGBoost}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_lstm/plots/daily_ic.png}
-    \caption{LSTM}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/gat/plots/daily_ic.png}
-    \caption{GAT-Factor-Mkt}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/dmfm/plots/daily_ic.png}
-    \caption{GAT-Factor-Full}
-  \end{subfigure}
-  \caption{medium 時間窗各模型 Daily IC。}
-  \label{fig:appendix_dailyic_medium_all}
-\end{figure}
-
-\clearpage
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_linear/plots/daily_ic.png}
-    \caption{Linear}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_xgboost/plots/daily_ic.png}
-    \caption{XGBoost}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_lstm/plots/daily_ic.png}
-    \caption{LSTM}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/gat/plots/daily_ic.png}
-    \caption{GAT-Factor-Mkt}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/dmfm/plots/daily_ic.png}
-    \caption{GAT-Factor-Full}
-  \end{subfigure}
-  \caption{long 時間窗各模型 Daily IC。}
-  \label{fig:appendix_dailyic_long_all}
-\end{figure}
-
-\clearpage
-\subsection{IC 分佈補充結果}
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_linear/plots/ic_distribution.png}
-    \caption{Linear}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_xgboost/plots/ic_distribution.png}
-    \caption{XGBoost}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/baseline_lstm/plots/ic_distribution.png}
-    \caption{LSTM}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/gat/plots/ic_distribution.png}
-    \caption{GAT-Factor-Mkt}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/short/dmfm/plots/ic_distribution.png}
-    \caption{GAT-Factor-Full}
-  \end{subfigure}
-  \caption{short 時間窗各模型 IC 分佈。}
-  \label{fig:appendix_icdist_short_all}
-\end{figure}
-
-\clearpage
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_linear/plots/ic_distribution.png}
-    \caption{Linear}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_xgboost/plots/ic_distribution.png}
-    \caption{XGBoost}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/baseline_lstm/plots/ic_distribution.png}
-    \caption{LSTM}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/gat/plots/ic_distribution.png}
-    \caption{GAT-Factor-Mkt}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/medium/dmfm/plots/ic_distribution.png}
-    \caption{GAT-Factor-Full}
-  \end{subfigure}
-  \caption{medium 時間窗各模型 IC 分佈。}
-  \label{fig:appendix_icdist_medium_all}
-\end{figure}
-
-\clearpage
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_linear/plots/ic_distribution.png}
-    \caption{Linear}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_xgboost/plots/ic_distribution.png}
-    \caption{XGBoost}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/baseline_lstm/plots/ic_distribution.png}
-    \caption{LSTM}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/gat/plots/ic_distribution.png}
-    \caption{GAT-Factor-Mkt}
-  \end{subfigure}
-  \vspace{0.15em}
-  \begin{subfigure}[t]{0.98\textwidth}
-    \centering
-    \includegraphics[width=\textwidth,height=0.145\textheight,keepaspectratio]{runs_gpu_full1/long/dmfm/plots/ic_distribution.png}
-    \caption{GAT-Factor-Full}
-  \end{subfigure}
-  \caption{long 時間窗各模型 IC 分佈。}
-  \label{fig:appendix_icdist_long_all}
-\end{figure}
-
-\clearpage
-\section{統一實驗輸出補充（runs\_unified）}
-\label{sec:appendix_unified_outputs}
-
-本節補充目前正式統一實驗流程 \texttt{runs\_unified/analysis\_report} 產生之彙整輸出。前一節保留舊版完整模型圖表，以維持既有附錄資訊；本節則追加 static / dynamic graph 與 factor ablation models 的新分析結果，供主文第四章對照。
-
 \subsection{完整預測品質指標}
 \label{subsec:appendix_prediction_quality_full}
 
@@ -463,56 +129,571 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
 \clearpage
 \subsection{全模型關鍵指標彙整}
 
+圖 \ref{fig:appendix_static_gpu_key_metrics_by_window} 將表 \ref{tab:appendix_unified_key_metrics} 的數據依 Short、Medium 與 Long 三個訓練視窗分面呈現，並標示資料期間、訓練日數、測試日數與測試期間。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{img/appendix_static_gpu_key_metrics_by_window.png}
+  \caption{全模型關鍵指標之分視窗視覺化}
+  \label{fig:appendix_static_gpu_key_metrics_by_window}
+\end{figure}
+
 \input{Sections/tables/appendix_unified_key_metrics.tex}
 
 \clearpage
-\subsection{統一實驗視覺化補充}
+\subsection{完整累積報酬圖}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.95\textwidth]{runs_unified/analysis_report/charts/heatmap_total_return.png}
-  \caption{不同 window、graph mode 與模型之總報酬 heatmap。}
-  \label{fig:appendix_unified_heatmap_total_return}
+  \captionsetup[subfigure]{font=scriptsize}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_linear/plots/cum_returns.png}
+    \caption{Linear}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_xgboost/plots/cum_returns.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_lstm/plots/cum_returns.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/mlp/plots/cum_returns.png}
+    \caption{DNN}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_industry/plots/cum_returns.png}
+    \caption{GAT-industry}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_universe/plots/cum_returns.png}
+    \caption{GAT-universe}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_two_graph_no_neutral/plots/cum_returns.png}
+    \caption{GAT-TwoGraph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_ind_neutral/plots/cum_returns.png}
+    \caption{GAT-IndNeutral}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_full/plots/cum_returns.png}
+    \caption{GAT-full}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \caption{Short window 各模型累積報酬曲線。}
+  \label{fig:appendix_static_cum_returns_short}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.95\textwidth]{runs_unified/analysis_report/charts/heatmap_sharpe.png}
-  \caption{不同 window、graph mode 與模型之 Sharpe ratio heatmap。}
-  \label{fig:appendix_unified_heatmap_sharpe}
+  \captionsetup[subfigure]{font=scriptsize}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_linear/plots/cum_returns.png}
+    \caption{Linear}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/cum_returns.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_lstm/plots/cum_returns.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/mlp/plots/cum_returns.png}
+    \caption{DNN}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_industry/plots/cum_returns.png}
+    \caption{GAT-industry}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_universe/plots/cum_returns.png}
+    \caption{GAT-universe}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_two_graph_no_neutral/plots/cum_returns.png}
+    \caption{GAT-TwoGraph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_ind_neutral/plots/cum_returns.png}
+    \caption{GAT-IndNeutral}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_full/plots/cum_returns.png}
+    \caption{GAT-full}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \caption{Medium window 各模型累積報酬曲線。}
+  \label{fig:appendix_static_cum_returns_medium}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.95\textwidth]{runs_unified/analysis_report/charts/heatmap_test_ic.png}
-  \caption{不同 window、graph mode 與模型之 Test IC heatmap。}
-  \label{fig:appendix_unified_heatmap_test_ic}
+  \captionsetup[subfigure]{font=scriptsize}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_linear/plots/cum_returns.png}
+    \caption{Linear}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_xgboost/plots/cum_returns.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_lstm/plots/cum_returns.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/mlp/plots/cum_returns.png}
+    \caption{DNN}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_industry/plots/cum_returns.png}
+    \caption{GAT-industry}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_universe/plots/cum_returns.png}
+    \caption{GAT-universe}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_two_graph_no_neutral/plots/cum_returns.png}
+    \caption{GAT-TwoGraph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_ind_neutral/plots/cum_returns.png}
+    \caption{GAT-IndNeutral}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_full/plots/cum_returns.png}
+    \caption{GAT-full}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \caption{Long window 各模型累積報酬曲線。}
+  \label{fig:appendix_static_cum_returns_long}
+\end{figure}
+
+\clearpage
+\subsection{Daily IC 補充結果}
+
+\begin{figure}[H]
+  \centering
+  \captionsetup[subfigure]{font=scriptsize}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_linear/plots/daily_ic.png}
+    \caption{Linear}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_xgboost/plots/daily_ic.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_lstm/plots/daily_ic.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/mlp/plots/daily_ic.png}
+    \caption{DNN}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_industry/plots/daily_ic.png}
+    \caption{GAT-industry}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_universe/plots/daily_ic.png}
+    \caption{GAT-universe}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_two_graph_no_neutral/plots/daily_ic.png}
+    \caption{GAT-TwoGraph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_ind_neutral/plots/daily_ic.png}
+    \caption{GAT-IndNeutral}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_full/plots/daily_ic.png}
+    \caption{GAT-full}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \caption{Short window 各模型Daily IC。}
+  \label{fig:appendix_static_daily_ic_short}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{runs_unified/analysis_report/charts/model_robustness_sharpe.png}
-  \caption{各模型跨實驗 Sharpe 穩定性比較。}
-  \label{fig:appendix_unified_model_robustness_sharpe}
+  \captionsetup[subfigure]{font=scriptsize}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_linear/plots/daily_ic.png}
+    \caption{Linear}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/daily_ic.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_lstm/plots/daily_ic.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/mlp/plots/daily_ic.png}
+    \caption{DNN}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_industry/plots/daily_ic.png}
+    \caption{GAT-industry}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_universe/plots/daily_ic.png}
+    \caption{GAT-universe}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_two_graph_no_neutral/plots/daily_ic.png}
+    \caption{GAT-TwoGraph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_ind_neutral/plots/daily_ic.png}
+    \caption{GAT-IndNeutral}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_full/plots/daily_ic.png}
+    \caption{GAT-full}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \caption{Medium window 各模型Daily IC。}
+  \label{fig:appendix_static_daily_ic_medium}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{runs_unified/analysis_report/charts/risk_return_scatter.png}
-  \caption{統一實驗之風險報酬散點圖。}
-  \label{fig:appendix_unified_risk_return_scatter}
+  \captionsetup[subfigure]{font=scriptsize}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_linear/plots/daily_ic.png}
+    \caption{Linear}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_xgboost/plots/daily_ic.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_lstm/plots/daily_ic.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/mlp/plots/daily_ic.png}
+    \caption{DNN}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_industry/plots/daily_ic.png}
+    \caption{GAT-industry}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_universe/plots/daily_ic.png}
+    \caption{GAT-universe}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_two_graph_no_neutral/plots/daily_ic.png}
+    \caption{GAT-TwoGraph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_ind_neutral/plots/daily_ic.png}
+    \caption{GAT-IndNeutral}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_full/plots/daily_ic.png}
+    \caption{GAT-full}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \caption{Long window 各模型Daily IC。}
+  \label{fig:appendix_static_daily_ic_long}
+\end{figure}
+
+\clearpage
+\subsection{IC 分佈補充結果}
+
+\begin{figure}[H]
+  \centering
+  \captionsetup[subfigure]{font=scriptsize}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_linear/plots/ic_distribution.png}
+    \caption{Linear}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_xgboost/plots/ic_distribution.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_lstm/plots/ic_distribution.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/mlp/plots/ic_distribution.png}
+    \caption{DNN}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_industry/plots/ic_distribution.png}
+    \caption{GAT-industry}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_universe/plots/ic_distribution.png}
+    \caption{GAT-universe}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_two_graph_no_neutral/plots/ic_distribution.png}
+    \caption{GAT-TwoGraph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_ind_neutral/plots/ic_distribution.png}
+    \caption{GAT-IndNeutral}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_full/plots/ic_distribution.png}
+    \caption{GAT-full}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \caption{Short window 各模型IC 分佈。}
+  \label{fig:appendix_static_ic_distribution_short}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.95\textwidth]{runs_unified/analysis_report/charts/dynamic_minus_static_deltas.png}
-  \caption{Dynamic graph 相對 static graph 之差異比較。}
-  \label{fig:appendix_unified_dynamic_minus_static_deltas}
+  \captionsetup[subfigure]{font=scriptsize}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_linear/plots/ic_distribution.png}
+    \caption{Linear}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/ic_distribution.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_lstm/plots/ic_distribution.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/mlp/plots/ic_distribution.png}
+    \caption{DNN}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_industry/plots/ic_distribution.png}
+    \caption{GAT-industry}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_universe/plots/ic_distribution.png}
+    \caption{GAT-universe}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_two_graph_no_neutral/plots/ic_distribution.png}
+    \caption{GAT-TwoGraph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_ind_neutral/plots/ic_distribution.png}
+    \caption{GAT-IndNeutral}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_full/plots/ic_distribution.png}
+    \caption{GAT-full}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \caption{Medium window 各模型IC 分佈。}
+  \label{fig:appendix_static_ic_distribution_medium}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{runs_unified/analysis_report/charts/attention_feature_frequency.png}
-  \caption{注意力前五特徵出現頻率。}
-  \label{fig:appendix_unified_attention_feature_frequency}
+  \captionsetup[subfigure]{font=scriptsize}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_linear/plots/ic_distribution.png}
+    \caption{Linear}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_xgboost/plots/ic_distribution.png}
+    \caption{XGBoost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_lstm/plots/ic_distribution.png}
+    \caption{LSTM}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/mlp/plots/ic_distribution.png}
+    \caption{DNN}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_industry/plots/ic_distribution.png}
+    \caption{GAT-industry}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_universe/plots/ic_distribution.png}
+    \caption{GAT-universe}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_two_graph_no_neutral/plots/ic_distribution.png}
+    \caption{GAT-TwoGraph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_ind_neutral/plots/ic_distribution.png}
+    \caption{GAT-IndNeutral}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.31\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_full/plots/ic_distribution.png}
+    \caption{GAT-full}
+  \end{subfigure}
+  \par\vspace{0.4em}
+  \caption{Long window 各模型IC 分佈。}
+  \label{fig:appendix_static_ic_distribution_long}
 \end{figure}

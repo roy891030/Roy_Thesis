@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="580" viewBox="0 0 1500 580">
+<rect width="100%" height="100%" fill="white"/>
+<text x="750" y="55" text-anchor="middle" font-family="Arial" font-size="28" font-weight="700">Train / Validation / Test Trading-Day Counts</text>
+<line x1="240" y1="95" x2="240" y2="438" stroke="#e6e6e6"/>
+<text x="240" y="465" text-anchor="middle" font-family="Arial" font-size="18" fill="#555">0</text>
+<line x1="423" y1="95" x2="423" y2="438" stroke="#e6e6e6"/>
+<text x="423" y="465" text-anchor="middle" font-family="Arial" font-size="18" fill="#555">500</text>
+<line x1="606" y1="95" x2="606" y2="438" stroke="#e6e6e6"/>
+<text x="606" y="465" text-anchor="middle" font-family="Arial" font-size="18" fill="#555">1000</text>
+<line x1="789" y1="95" x2="789" y2="438" stroke="#e6e6e6"/>
+<text x="789" y="465" text-anchor="middle" font-family="Arial" font-size="18" fill="#555">1500</text>
+<line x1="973" y1="95" x2="973" y2="438" stroke="#e6e6e6"/>
+<text x="973" y="465" text-anchor="middle" font-family="Arial" font-size="18" fill="#555">2000</text>
+<line x1="1156" y1="95" x2="1156" y2="438" stroke="#e6e6e6"/>
+<text x="1156" y="465" text-anchor="middle" font-family="Arial" font-size="18" fill="#555">2500</text>
+<line x1="1339" y1="95" x2="1339" y2="438" stroke="#e6e6e6"/>
+<text x="1339" y="465" text-anchor="middle" font-family="Arial" font-size="18" fill="#555">3000</text>
+<text x="205" y="155" text-anchor="end" font-family="Arial" font-size="22" font-weight="700">Short</text>
+<rect x="240" y="125" width="151" height="46" rx="4" fill="#3B73B9" stroke="white" stroke-width="3"/>
+<text x="315" y="155" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="white">414</text>
+<rect x="391" y="125" width="17" height="46" rx="4" fill="#D89C2B" stroke="white" stroke-width="3"/>
+<line x1="399" y1="125" x2="399" y2="117" stroke="#666"/>
+<text x="399" y="114" text-anchor="middle" font-family="Arial" font-size="15" fill="#333">46</text>
+<rect x="408" y="125" width="43" height="46" rx="4" fill="#B54A4A" stroke="white" stroke-width="3"/>
+<line x1="429" y1="125" x2="429" y2="117" stroke="#666"/>
+<text x="429" y="114" text-anchor="middle" font-family="Arial" font-size="15" fill="#333">116</text>
+<text x="486" y="155" font-family="Arial" font-size="18" fill="#333">Total 576</text>
+<text x="205" y="263" text-anchor="end" font-family="Arial" font-size="22" font-weight="700">Medium</text>
+<rect x="240" y="233" width="409" height="46" rx="4" fill="#3B73B9" stroke="white" stroke-width="3"/>
+<text x="444" y="263" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="white">1118</text>
+<rect x="649" y="233" width="46" height="46" rx="4" fill="#D89C2B" stroke="white" stroke-width="3"/>
+<line x1="672" y1="233" x2="672" y2="225" stroke="#666"/>
+<text x="672" y="222" text-anchor="middle" font-family="Arial" font-size="15" fill="#333">124</text>
+<rect x="695" y="233" width="114" height="46" rx="4" fill="#B54A4A" stroke="white" stroke-width="3"/>
+<text x="752" y="263" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="white">311</text>
+<text x="844" y="263" font-family="Arial" font-size="18" fill="#333">Total 1553</text>
+<text x="205" y="371" text-anchor="end" font-family="Arial" font-size="22" font-weight="700">Long</text>
+<rect x="240" y="341" width="734" height="46" rx="4" fill="#3B73B9" stroke="white" stroke-width="3"/>
+<text x="607" y="371" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="white">2003</text>
+<rect x="974" y="341" width="81" height="46" rx="4" fill="#D89C2B" stroke="white" stroke-width="3"/>
+<text x="1014" y="371" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="white">222</text>
+<rect x="1055" y="341" width="205" height="46" rx="4" fill="#B54A4A" stroke="white" stroke-width="3"/>
+<text x="1157" y="371" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="white">557</text>
+<text x="1295" y="371" font-family="Arial" font-size="18" fill="#333">Total 2782</text>
+<rect x="455" y="525" width="28" height="18" fill="#3B73B9"/>
+<text x="493" y="540" font-family="Arial" font-size="18" fill="#333">Train</text>
+<rect x="665" y="525" width="28" height="18" fill="#D89C2B"/>
+<text x="703" y="540" font-family="Arial" font-size="18" fill="#333">Validation</text>
+<rect x="875" y="525" width="28" height="18" fill="#B54A4A"/>
+<text x="913" y="540" font-family="Arial" font-size="18" fill="#333">Test</text>
+</svg>

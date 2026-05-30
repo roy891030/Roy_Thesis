@@ -1,19 +1,17 @@
 \begin{table}[H]
 \centering
-\caption{各時間窗與圖模式下之勝出模型摘要}
+\caption{正式實驗中各訓練視窗之勝出模型摘要}
 \label{tab:results_pred_metrics}
+\scriptsize
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{llrllll}
+\begin{tabularx}{\textwidth}{@{}lYYYY@{}}
 \toprule
-時間窗 & 圖模式 & 模型數 & Test IC 最佳 & 總報酬最佳 & Sharpe 最佳 & 超額報酬最佳 \\
+視窗 & Daily IC 最佳 & ICIR 最佳 & Sharpe 最佳 & 總報酬最佳 \\
 \midrule
-Short & static & 9 & GAT-Factor-Mkt (0.0843) & GAT-Factor-Mkt (32.13\%) & GAT-Factor-Mkt (7.832) & GAT-Factor-Mkt (11.16\%) \\
-Short & dynamic & 6 & GAT-Factor-Mkt (0.0812) & GAT-Factor-Full (27.66\%) & GAT-Factor-Dual (7.318) & GAT-Factor-Full (6.69\%) \\
-Medium & static & 9 & GAT-Factor-Ind (0.0933) & GAT-Factor-Dual (36.12\%) & GAT-Factor-Ind (1.832) & GAT-Factor-Dual (43.61\%) \\
-Medium & dynamic & 6 & GAT-Factor-Dual (0.0893) & GAT-Factor-Mkt (38.31\%) & GAT-Factor-Mkt (1.866) & GAT-Factor-Mkt (45.79\%) \\
-Long & static & 9 & GAT-Factor-Dual (0.0894) & GAT-Factor-Full (54.32\%) & GAT-Factor-Full (1.490) & GAT-Factor-Full (36.09\%) \\
-Long & dynamic & 6 & GAT-Factor-Mkt (0.0955) & GAT-Factor-Dual (51.59\%) & GAT-Factor-Dual (1.378) & GAT-Factor-Dual (33.36\%) \\
+Short & DNN\newline (0.0396) & DNN\newline (0.408) & GAT-industry\newline (0.057) & GAT-industry\newline (-3.23\%) \\
+Medium & GAT-full\newline (0.0596) & GAT-full\newline (0.628) & DNN\newline (0.980) & DNN\newline (39.13\%) \\
+Long & GAT-IndNeutral\newline (0.0590) & GAT-IndNeutral\newline (0.786) & GAT-full\newline (1.849) & XGBoost\newline (143.08\%) \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{adjustbox}
 \end{table}

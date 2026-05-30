@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2300" height="1876" viewBox="0 0 2300 1876">
+<style>
+  .panelTitle{font:700 30px 'PingFang TC','Noto Sans CJK TC','Heiti TC',Arial,sans-serif;}
+  .meta{font:500 22px 'Times New Roman','PingFang TC','Noto Sans CJK TC',serif; fill:#4b5563;}
+  .header{font:700 22px 'Times New Roman','PingFang TC','Noto Sans CJK TC',serif; fill:#111827;}
+  .model{font:600 21px 'Times New Roman','PingFang TC','Noto Sans CJK TC',serif; fill:#111827;}
+  .cellText{font:500 20px 'Times New Roman','PingFang TC','Noto Sans CJK TC',serif;}
+</style>
+<rect x="0" y="0" width="2300" height="1876" fill="#ffffff"/>
+<g transform="translate(72,46)">
+<rect x="0" y="0" width="2154" height="580" rx="14" fill="#ffffff" stroke="#d1d5db" stroke-width="2"/>
+<rect x="0" y="0" width="2154" height="56" rx="14" fill="#f3f4f6"/>
+<rect x="0" y="44" width="2154" height="12" fill="#f3f4f6"/>
+<rect x="0" y="0" width="10" height="56" fill="#6b7280" rx="5"/>
+<text class="panelTitle" x="28" y="38" fill="#6b7280">Short window</text>
+<text class="meta" text-anchor="end" x="2130" y="36">Data 2019-09-16--2020-12-31 | Train 230d / Test 64d | Test 2020-09-30--2020-12-31</text>
+<line x1="0" y1="56" x2="2154" y2="56" stroke="#d1d5db" stroke-width="2"/>
+<rect x="0" y="56" width="2154" height="56" fill="#f9fafb"/>
+<text class="header" x="24" y="92">模型</text>
+<text class="header" text-anchor="middle" x="482" y="92">Test IC</text>
+<text class="header" text-anchor="middle" x="786" y="92">Daily IC</text>
+<text class="header" text-anchor="middle" x="1090" y="92">ICIR</text>
+<text class="header" text-anchor="middle" x="1394" y="92">DirAcc</text>
+<text class="header" text-anchor="middle" x="1698" y="92">總報酬</text>
+<text class="header" text-anchor="middle" x="2002" y="92">Sharpe</text>
+<line x1="0" y1="112" x2="2154" y2="112" stroke="#d1d5db" stroke-width="2"/>
+<rect x="0" y="112" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="146">Linear</text>
+<rect x="334" y="117" width="296" height="42" rx="8" fill="rgb(245,205,197)"/>
+<text class="cellText" text-anchor="middle" x="482" y="146" fill="#111827">0.0255</text>
+<rect x="638" y="117" width="296" height="42" rx="8" fill="rgb(245,210,199)"/>
+<text class="cellText" text-anchor="middle" x="786" y="146" fill="#111827">0.0263</text>
+<rect x="942" y="117" width="296" height="42" rx="8" fill="rgb(246,225,204)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="146" fill="#111827">0.416</text>
+<rect x="1246" y="117" width="296" height="42" rx="8" fill="rgb(224,233,199)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="146" fill="#111827">52.38%</text>
+<rect x="1550" y="117" width="296" height="42" rx="8" fill="rgb(246,225,204)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="146" fill="#111827">17.26%</text>
+<rect x="1854" y="117" width="296" height="42" rx="8" fill="rgb(219,231,196)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="146" fill="#111827">5.109</text>
+<line x1="0" y1="164" x2="2154" y2="164" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="164" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="198">LSTM</text>
+<rect x="334" y="169" width="296" height="42" rx="8" fill="rgb(247,232,207)"/>
+<text class="cellText" text-anchor="middle" x="482" y="198" fill="#111827">0.0491</text>
+<rect x="638" y="169" width="296" height="42" rx="8" fill="rgb(247,232,207)"/>
+<text class="cellText" text-anchor="middle" x="786" y="198" fill="#111827">0.0460</text>
+<rect x="942" y="169" width="296" height="42" rx="8" fill="rgb(248,241,210)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="198" fill="#111827">0.585</text>
+<rect x="1246" y="169" width="296" height="42" rx="8" fill="rgb(247,241,209)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="198" fill="#111827">50.16%</text>
+<rect x="1550" y="169" width="296" height="42" rx="8" fill="rgb(247,230,206)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="198" fill="#111827">20.47%</text>
+<rect x="1854" y="169" width="296" height="42" rx="8" fill="rgb(203,226,189)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="198" fill="#111827">5.704</text>
+<line x1="0" y1="216" x2="2154" y2="216" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="216" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="250">XGBoost</text>
+<rect x="334" y="221" width="296" height="42" rx="8" fill="rgb(210,228,192)"/>
+<text class="cellText" text-anchor="middle" x="482" y="250" fill="#111827">0.0704</text>
+<rect x="638" y="221" width="296" height="42" rx="8" fill="rgb(207,227,191)"/>
+<text class="cellText" text-anchor="middle" x="786" y="250" fill="#111827">0.0695</text>
+<rect x="942" y="221" width="296" height="42" rx="8" fill="rgb(146,207,163)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="250" fill="#0f2a18">1.044</text>
+<rect x="1246" y="221" width="296" height="42" rx="8" fill="rgb(221,232,197)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="250" fill="#111827">52.70%</text>
+<rect x="1550" y="221" width="296" height="42" rx="8" fill="rgb(234,236,204)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="250" fill="#111827">31.11%</text>
+<rect x="1854" y="221" width="296" height="42" rx="8" fill="rgb(152,209,166)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="250" fill="#0f2a18">7.608</text>
+<line x1="0" y1="268" x2="2154" y2="268" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="268" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="302">DNN</text>
+<rect x="334" y="273" width="296" height="42" rx="8" fill="rgb(175,217,176)"/>
+<text class="cellText" text-anchor="middle" x="482" y="302" fill="#0f2a18">0.0830</text>
+<rect x="638" y="273" width="296" height="42" rx="8" fill="rgb(167,214,173)"/>
+<text class="cellText" text-anchor="middle" x="786" y="302" fill="#0f2a18">0.0842</text>
+<rect x="942" y="273" width="296" height="42" rx="8" fill="rgb(179,218,178)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="302" fill="#0f2a18">0.898</text>
+<rect x="1246" y="273" width="296" height="42" rx="8" fill="rgb(146,207,163)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="302" fill="#0f2a18">60.03%</text>
+<rect x="1550" y="273" width="296" height="42" rx="8" fill="rgb(248,238,209)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="302" fill="#111827">25.32%</text>
+<rect x="1854" y="273" width="296" height="42" rx="8" fill="rgb(198,224,187)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="302" fill="#111827">5.896</text>
+<line x1="0" y1="320" x2="2154" y2="320" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="320" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="354">GAT-industry</text>
+<rect x="334" y="325" width="296" height="42" rx="8" fill="rgb(235,237,204)"/>
+<text class="cellText" text-anchor="middle" x="482" y="354" fill="#111827">0.0613</text>
+<rect x="638" y="325" width="296" height="42" rx="8" fill="rgb(219,231,197)"/>
+<text class="cellText" text-anchor="middle" x="786" y="354" fill="#111827">0.0649</text>
+<rect x="942" y="325" width="296" height="42" rx="8" fill="rgb(224,233,199)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="354" fill="#111827">0.697</text>
+<rect x="1246" y="325" width="296" height="42" rx="8" fill="rgb(234,236,203)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="354" fill="#111827">51.42%</text>
+<rect x="1550" y="325" width="296" height="42" rx="8" fill="rgb(248,237,209)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="354" fill="#111827">24.84%</text>
+<rect x="1854" y="325" width="296" height="42" rx="8" fill="rgb(162,212,170)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="354" fill="#0f2a18">7.248</text>
+<line x1="0" y1="372" x2="2154" y2="372" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="372" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="406">GAT-universe</text>
+<rect x="334" y="377" width="296" height="42" rx="8" fill="rgb(171,215,175)"/>
+<text class="cellText" text-anchor="middle" x="482" y="406" fill="#0f2a18">0.0843</text>
+<rect x="638" y="377" width="296" height="42" rx="8" fill="rgb(167,214,173)"/>
+<text class="cellText" text-anchor="middle" x="786" y="406" fill="#0f2a18">0.0843</text>
+<rect x="942" y="377" width="296" height="42" rx="8" fill="rgb(167,214,173)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="406" fill="#0f2a18">0.949</text>
+<rect x="1246" y="377" width="296" height="42" rx="8" fill="rgb(166,214,172)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="406" fill="#0f2a18">58.09%</text>
+<rect x="1550" y="377" width="296" height="42" rx="8" fill="rgb(230,235,202)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="406" fill="#111827">32.13%</text>
+<rect x="1854" y="377" width="296" height="42" rx="8" fill="rgb(146,207,163)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="406" fill="#0f2a18">7.832</text>
+<line x1="0" y1="424" x2="2154" y2="424" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="424" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="458">GAT-TwoGraph</text>
+<rect x="334" y="429" width="296" height="42" rx="8" fill="rgb(235,237,204)"/>
+<text class="cellText" text-anchor="middle" x="482" y="458" fill="#111827">0.0612</text>
+<rect x="638" y="429" width="296" height="42" rx="8" fill="rgb(215,230,195)"/>
+<text class="cellText" text-anchor="middle" x="786" y="458" fill="#111827">0.0664</text>
+<rect x="942" y="429" width="296" height="42" rx="8" fill="rgb(218,231,196)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="458" fill="#111827">0.724</text>
+<rect x="1246" y="429" width="296" height="42" rx="8" fill="rgb(146,207,163)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="458" fill="#0f2a18">60.02%</text>
+<rect x="1550" y="429" width="296" height="42" rx="8" fill="rgb(247,232,207)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="458" fill="#111827">21.80%</text>
+<rect x="1854" y="429" width="296" height="42" rx="8" fill="rgb(188,221,182)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="458" fill="#111827">6.271</text>
+<line x1="0" y1="476" x2="2154" y2="476" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="476" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="510">GAT-IndNeutral</text>
+<rect x="334" y="481" width="296" height="42" rx="8" fill="rgb(219,231,197)"/>
+<text class="cellText" text-anchor="middle" x="482" y="510" fill="#111827">0.0670</text>
+<rect x="638" y="481" width="296" height="42" rx="8" fill="rgb(215,230,195)"/>
+<text class="cellText" text-anchor="middle" x="786" y="510" fill="#111827">0.0664</text>
+<rect x="942" y="481" width="296" height="42" rx="8" fill="rgb(210,228,192)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="510" fill="#111827">0.759</text>
+<rect x="1246" y="481" width="296" height="42" rx="8" fill="rgb(191,222,184)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="510" fill="#111827">55.63%</text>
+<rect x="1550" y="481" width="296" height="42" rx="8" fill="rgb(248,239,209)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="510" fill="#111827">26.37%</text>
+<rect x="1854" y="481" width="296" height="42" rx="8" fill="rgb(167,214,173)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="510" fill="#0f2a18">7.056</text>
+<line x1="0" y1="528" x2="2154" y2="528" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="528" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="562">GAT-full</text>
+<rect x="334" y="533" width="296" height="42" rx="8" fill="rgb(190,222,183)"/>
+<text class="cellText" text-anchor="middle" x="482" y="562" fill="#111827">0.0776</text>
+<rect x="638" y="533" width="296" height="42" rx="8" fill="rgb(185,220,181)"/>
+<text class="cellText" text-anchor="middle" x="786" y="562" fill="#111827">0.0776</text>
+<rect x="942" y="533" width="296" height="42" rx="8" fill="rgb(163,213,171)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="562" fill="#0f2a18">0.969</text>
+<rect x="1246" y="533" width="296" height="42" rx="8" fill="rgb(244,199,195)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="562" fill="#111827">40.00%</text>
+<rect x="1550" y="533" width="296" height="42" rx="8" fill="rgb(247,233,207)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="562" fill="#111827">22.37%</text>
+<rect x="1854" y="533" width="296" height="42" rx="8" fill="rgb(216,230,195)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="562" fill="#111827">5.196</text>
+<line x1="0" y1="580" x2="2154" y2="580" stroke="#eef2f7" stroke-width="1"/>
+</g>
+<g transform="translate(72,662)">
+<rect x="0" y="0" width="2154" height="580" rx="14" fill="#ffffff" stroke="#d1d5db" stroke-width="2"/>
+<rect x="0" y="0" width="2154" height="56" rx="14" fill="#fff7ed"/>
+<rect x="0" y="44" width="2154" height="12" fill="#fff7ed"/>
+<rect x="0" y="0" width="10" height="56" fill="#b45309" rx="5"/>
+<text class="panelTitle" x="28" y="38" fill="#b45309">Medium window</text>
+<text class="meta" text-anchor="end" x="2130" y="36">Data 2019-09-16--2022-12-30 | Train 583d / Test 162d | Test 2022-05-16--2022-12-30</text>
+<line x1="0" y1="56" x2="2154" y2="56" stroke="#d1d5db" stroke-width="2"/>
+<rect x="0" y="56" width="2154" height="56" fill="#f9fafb"/>
+<text class="header" x="24" y="92">模型</text>
+<text class="header" text-anchor="middle" x="482" y="92">Test IC</text>
+<text class="header" text-anchor="middle" x="786" y="92">Daily IC</text>
+<text class="header" text-anchor="middle" x="1090" y="92">ICIR</text>
+<text class="header" text-anchor="middle" x="1394" y="92">DirAcc</text>
+<text class="header" text-anchor="middle" x="1698" y="92">總報酬</text>
+<text class="header" text-anchor="middle" x="2002" y="92">Sharpe</text>
+<line x1="0" y1="112" x2="2154" y2="112" stroke="#d1d5db" stroke-width="2"/>
+<rect x="0" y="112" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="146">Linear</text>
+<rect x="334" y="117" width="296" height="42" rx="8" fill="rgb(244,199,195)"/>
+<text class="cellText" text-anchor="middle" x="482" y="146" fill="#111827">0.0200</text>
+<rect x="638" y="117" width="296" height="42" rx="8" fill="rgb(244,199,195)"/>
+<text class="cellText" text-anchor="middle" x="786" y="146" fill="#111827">0.0160</text>
+<rect x="942" y="117" width="296" height="42" rx="8" fill="rgb(244,199,195)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="146" fill="#111827">0.132</text>
+<rect x="1246" y="117" width="296" height="42" rx="8" fill="rgb(240,238,206)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="146" fill="#111827">50.82%</text>
+<rect x="1550" y="117" width="296" height="42" rx="8" fill="rgb(244,199,195)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="146" fill="#111827">0.71%</text>
+<rect x="1854" y="117" width="296" height="42" rx="8" fill="rgb(244,199,195)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="146" fill="#111827">0.178</text>
+<line x1="0" y1="164" x2="2154" y2="164" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="164" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="198">LSTM</text>
+<rect x="334" y="169" width="296" height="42" rx="8" fill="rgb(209,228,192)"/>
+<text class="cellText" text-anchor="middle" x="482" y="198" fill="#111827">0.0707</text>
+<rect x="638" y="169" width="296" height="42" rx="8" fill="rgb(212,229,193)"/>
+<text class="cellText" text-anchor="middle" x="786" y="198" fill="#111827">0.0676</text>
+<rect x="942" y="169" width="296" height="42" rx="8" fill="rgb(248,240,210)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="198" fill="#111827">0.579</text>
+<rect x="1246" y="169" width="296" height="42" rx="8" fill="rgb(209,228,192)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="198" fill="#111827">53.90%</text>
+<rect x="1550" y="169" width="296" height="42" rx="8" fill="rgb(247,233,207)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="198" fill="#111827">22.73%</text>
+<rect x="1854" y="169" width="296" height="42" rx="8" fill="rgb(245,211,199)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="198" fill="#111827">1.252</text>
+<line x1="0" y1="216" x2="2154" y2="216" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="216" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="250">XGBoost</text>
+<rect x="334" y="221" width="296" height="42" rx="8" fill="rgb(236,237,204)"/>
+<text class="cellText" text-anchor="middle" x="482" y="250" fill="#111827">0.0610</text>
+<rect x="638" y="221" width="296" height="42" rx="8" fill="rgb(229,235,201)"/>
+<text class="cellText" text-anchor="middle" x="786" y="250" fill="#111827">0.0611</text>
+<rect x="942" y="221" width="296" height="42" rx="8" fill="rgb(247,232,207)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="250" fill="#111827">0.486</text>
+<rect x="1246" y="221" width="296" height="42" rx="8" fill="rgb(226,234,200)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="250" fill="#111827">52.14%</text>
+<rect x="1550" y="221" width="296" height="42" rx="8" fill="rgb(246,220,203)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="250" fill="#111827">14.42%</text>
+<rect x="1854" y="221" width="296" height="42" rx="8" fill="rgb(245,206,198)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="250" fill="#111827">0.849</text>
+<line x1="0" y1="268" x2="2154" y2="268" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="268" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="302">DNN</text>
+<rect x="334" y="273" width="296" height="42" rx="8" fill="rgb(173,216,176)"/>
+<text class="cellText" text-anchor="middle" x="482" y="302" fill="#0f2a18">0.0835</text>
+<rect x="638" y="273" width="296" height="42" rx="8" fill="rgb(175,217,176)"/>
+<text class="cellText" text-anchor="middle" x="786" y="302" fill="#0f2a18">0.0812</text>
+<rect x="942" y="273" width="296" height="42" rx="8" fill="rgb(208,228,191)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="302" fill="#111827">0.768</text>
+<rect x="1246" y="273" width="296" height="42" rx="8" fill="rgb(206,227,191)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="302" fill="#111827">54.10%</text>
+<rect x="1550" y="273" width="296" height="42" rx="8" fill="rgb(244,240,208)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="302" fill="#111827">28.44%</text>
+<rect x="1854" y="273" width="296" height="42" rx="8" fill="rgb(245,213,200)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="302" fill="#111827">1.431</text>
+<line x1="0" y1="320" x2="2154" y2="320" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="320" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="354">GAT-industry</text>
+<rect x="334" y="325" width="296" height="42" rx="8" fill="rgb(146,207,163)"/>
+<text class="cellText" text-anchor="middle" x="482" y="354" fill="#0f2a18">0.0933</text>
+<rect x="638" y="325" width="296" height="42" rx="8" fill="rgb(146,207,163)"/>
+<text class="cellText" text-anchor="middle" x="786" y="354" fill="#0f2a18">0.0921</text>
+<rect x="942" y="325" width="296" height="42" rx="8" fill="rgb(170,215,174)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="354" fill="#0f2a18">0.934</text>
+<rect x="1246" y="325" width="296" height="42" rx="8" fill="rgb(210,228,193)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="354" fill="#111827">53.75%</text>
+<rect x="1550" y="325" width="296" height="42" rx="8" fill="rgb(215,230,195)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="354" fill="#111827">36.07%</text>
+<rect x="1854" y="325" width="296" height="42" rx="8" fill="rgb(246,217,201)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="354" fill="#111827">1.832</text>
+<line x1="0" y1="372" x2="2154" y2="372" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="372" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="406">GAT-universe</text>
+<rect x="334" y="377" width="296" height="42" rx="8" fill="rgb(170,215,174)"/>
+<text class="cellText" text-anchor="middle" x="482" y="406" fill="#0f2a18">0.0848</text>
+<rect x="638" y="377" width="296" height="42" rx="8" fill="rgb(168,214,173)"/>
+<text class="cellText" text-anchor="middle" x="786" y="406" fill="#0f2a18">0.0839</text>
+<rect x="942" y="377" width="296" height="42" rx="8" fill="rgb(177,217,177)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="406" fill="#0f2a18">0.904</text>
+<rect x="1246" y="377" width="296" height="42" rx="8" fill="rgb(192,222,184)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="406" fill="#111827">55.49%</text>
+<rect x="1550" y="377" width="296" height="42" rx="8" fill="rgb(248,241,210)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="406" fill="#111827">27.39%</text>
+<rect x="1854" y="377" width="296" height="42" rx="8" fill="rgb(245,213,200)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="406" fill="#111827">1.459</text>
+<line x1="0" y1="424" x2="2154" y2="424" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="424" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="458">GAT-TwoGraph</text>
+<rect x="334" y="429" width="296" height="42" rx="8" fill="rgb(156,210,168)"/>
+<text class="cellText" text-anchor="middle" x="482" y="458" fill="#0f2a18">0.0896</text>
+<rect x="638" y="429" width="296" height="42" rx="8" fill="rgb(153,209,166)"/>
+<text class="cellText" text-anchor="middle" x="786" y="458" fill="#0f2a18">0.0896</text>
+<rect x="942" y="429" width="296" height="42" rx="8" fill="rgb(207,227,191)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="458" fill="#111827">0.773</text>
+<rect x="1246" y="429" width="296" height="42" rx="8" fill="rgb(198,224,187)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="458" fill="#111827">54.91%</text>
+<rect x="1550" y="429" width="296" height="42" rx="8" fill="rgb(215,230,195)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="458" fill="#111827">36.12%</text>
+<rect x="1854" y="429" width="296" height="42" rx="8" fill="rgb(246,216,201)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="458" fill="#111827">1.717</text>
+<line x1="0" y1="476" x2="2154" y2="476" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="476" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="510">GAT-IndNeutral</text>
+<rect x="334" y="481" width="296" height="42" rx="8" fill="rgb(169,215,174)"/>
+<text class="cellText" text-anchor="middle" x="482" y="510" fill="#0f2a18">0.0850</text>
+<rect x="638" y="481" width="296" height="42" rx="8" fill="rgb(168,214,173)"/>
+<text class="cellText" text-anchor="middle" x="786" y="510" fill="#0f2a18">0.0838</text>
+<rect x="942" y="481" width="296" height="42" rx="8" fill="rgb(204,226,190)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="510" fill="#111827">0.786</text>
+<rect x="1246" y="481" width="296" height="42" rx="8" fill="rgb(189,221,183)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="510" fill="#111827">55.83%</text>
+<rect x="1550" y="481" width="296" height="42" rx="8" fill="rgb(220,232,197)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="510" fill="#111827">34.99%</text>
+<rect x="1854" y="481" width="296" height="42" rx="8" fill="rgb(246,216,201)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="510" fill="#111827">1.695</text>
+<line x1="0" y1="528" x2="2154" y2="528" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="528" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="562">GAT-full</text>
+<rect x="334" y="533" width="296" height="42" rx="8" fill="rgb(185,220,181)"/>
+<text class="cellText" text-anchor="middle" x="482" y="562" fill="#111827">0.0794</text>
+<rect x="638" y="533" width="296" height="42" rx="8" fill="rgb(182,219,180)"/>
+<text class="cellText" text-anchor="middle" x="786" y="562" fill="#0f2a18">0.0785</text>
+<rect x="942" y="533" width="296" height="42" rx="8" fill="rgb(209,228,192)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="562" fill="#111827">0.764</text>
+<rect x="1246" y="533" width="296" height="42" rx="8" fill="rgb(214,230,194)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="562" fill="#111827">53.40%</text>
+<rect x="1550" y="533" width="296" height="42" rx="8" fill="rgb(233,236,203)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="562" fill="#111827">31.58%</text>
+<rect x="1854" y="533" width="296" height="42" rx="8" fill="rgb(245,215,201)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="562" fill="#111827">1.593</text>
+<line x1="0" y1="580" x2="2154" y2="580" stroke="#eef2f7" stroke-width="1"/>
+</g>
+<g transform="translate(72,1278)">
+<rect x="0" y="0" width="2154" height="580" rx="14" fill="#ffffff" stroke="#d1d5db" stroke-width="2"/>
+<rect x="0" y="0" width="2154" height="56" rx="14" fill="#ecfdf5"/>
+<rect x="0" y="44" width="2154" height="12" fill="#ecfdf5"/>
+<rect x="0" y="0" width="10" height="56" fill="#047857" rx="5"/>
+<text class="panelTitle" x="28" y="38" fill="#047857">Long window</text>
+<text class="meta" text-anchor="end" x="2130" y="36">Data 2019-09-16--2025-09-12 | Train 1052d / Test 292d | Test 2024-07-04--2025-09-12</text>
+<line x1="0" y1="56" x2="2154" y2="56" stroke="#d1d5db" stroke-width="2"/>
+<rect x="0" y="56" width="2154" height="56" fill="#f9fafb"/>
+<text class="header" x="24" y="92">模型</text>
+<text class="header" text-anchor="middle" x="482" y="92">Test IC</text>
+<text class="header" text-anchor="middle" x="786" y="92">Daily IC</text>
+<text class="header" text-anchor="middle" x="1090" y="92">ICIR</text>
+<text class="header" text-anchor="middle" x="1394" y="92">DirAcc</text>
+<text class="header" text-anchor="middle" x="1698" y="92">總報酬</text>
+<text class="header" text-anchor="middle" x="2002" y="92">Sharpe</text>
+<line x1="0" y1="112" x2="2154" y2="112" stroke="#d1d5db" stroke-width="2"/>
+<rect x="0" y="112" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="146">Linear</text>
+<rect x="334" y="117" width="296" height="42" rx="8" fill="rgb(246,221,203)"/>
+<text class="cellText" text-anchor="middle" x="482" y="146" fill="#111827">0.0396</text>
+<rect x="638" y="117" width="296" height="42" rx="8" fill="rgb(246,220,202)"/>
+<text class="cellText" text-anchor="middle" x="786" y="146" fill="#111827">0.0346</text>
+<rect x="942" y="117" width="296" height="42" rx="8" fill="rgb(246,221,203)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="146" fill="#111827">0.366</text>
+<rect x="1246" y="117" width="296" height="42" rx="8" fill="rgb(239,238,206)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="146" fill="#111827">50.92%</text>
+<rect x="1550" y="117" width="296" height="42" rx="8" fill="rgb(248,236,208)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="146" fill="#111827">24.40%</text>
+<rect x="1854" y="117" width="296" height="42" rx="8" fill="rgb(245,206,197)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="146" fill="#111827">0.775</text>
+<line x1="0" y1="164" x2="2154" y2="164" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="164" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="198">LSTM</text>
+<rect x="334" y="169" width="296" height="42" rx="8" fill="rgb(210,228,192)"/>
+<text class="cellText" text-anchor="middle" x="482" y="198" fill="#111827">0.0704</text>
+<rect x="638" y="169" width="296" height="42" rx="8" fill="rgb(233,236,203)"/>
+<text class="cellText" text-anchor="middle" x="786" y="198" fill="#111827">0.0595</text>
+<rect x="942" y="169" width="296" height="42" rx="8" fill="rgb(246,240,209)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="198" fill="#111827">0.595</text>
+<rect x="1246" y="169" width="296" height="42" rx="8" fill="rgb(225,233,199)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="198" fill="#111827">52.26%</text>
+<rect x="1550" y="169" width="296" height="42" rx="8" fill="rgb(208,228,191)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="198" fill="#111827">38.09%</text>
+<rect x="1854" y="169" width="296" height="42" rx="8" fill="rgb(245,208,198)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="198" fill="#111827">1.043</text>
+<line x1="0" y1="216" x2="2154" y2="216" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="216" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="250">XGBoost</text>
+<rect x="334" y="221" width="296" height="42" rx="8" fill="rgb(167,214,173)"/>
+<text class="cellText" text-anchor="middle" x="482" y="250" fill="#0f2a18">0.0856</text>
+<rect x="638" y="221" width="296" height="42" rx="8" fill="rgb(171,215,174)"/>
+<text class="cellText" text-anchor="middle" x="786" y="250" fill="#0f2a18">0.0828</text>
+<rect x="942" y="221" width="296" height="42" rx="8" fill="rgb(211,229,193)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="250" fill="#111827">0.754</text>
+<rect x="1246" y="221" width="296" height="42" rx="8" fill="rgb(215,230,195)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="250" fill="#111827">53.21%</text>
+<rect x="1550" y="221" width="296" height="42" rx="8" fill="rgb(169,215,173)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="250" fill="#0f2a18">48.36%</text>
+<rect x="1854" y="221" width="296" height="42" rx="8" fill="rgb(245,210,199)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="250" fill="#111827">1.218</text>
+<line x1="0" y1="268" x2="2154" y2="268" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="268" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="302">DNN</text>
+<rect x="334" y="273" width="296" height="42" rx="8" fill="rgb(168,214,173)"/>
+<text class="cellText" text-anchor="middle" x="482" y="302" fill="#0f2a18">0.0854</text>
+<rect x="638" y="273" width="296" height="42" rx="8" fill="rgb(166,214,172)"/>
+<text class="cellText" text-anchor="middle" x="786" y="302" fill="#0f2a18">0.0845</text>
+<rect x="942" y="273" width="296" height="42" rx="8" fill="rgb(193,223,184)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="302" fill="#111827">0.836</text>
+<rect x="1246" y="273" width="296" height="42" rx="8" fill="rgb(246,215,201)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="302" fill="#111827">43.89%</text>
+<rect x="1550" y="273" width="296" height="42" rx="8" fill="rgb(166,214,172)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="302" fill="#0f2a18">49.08%</text>
+<rect x="1854" y="273" width="296" height="42" rx="8" fill="rgb(245,211,199)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="302" fill="#111827">1.302</text>
+<line x1="0" y1="320" x2="2154" y2="320" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="320" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="354">GAT-industry</text>
+<rect x="334" y="325" width="296" height="42" rx="8" fill="rgb(176,217,177)"/>
+<text class="cellText" text-anchor="middle" x="482" y="354" fill="#0f2a18">0.0827</text>
+<rect x="638" y="325" width="296" height="42" rx="8" fill="rgb(173,216,176)"/>
+<text class="cellText" text-anchor="middle" x="786" y="354" fill="#0f2a18">0.0819</text>
+<rect x="942" y="325" width="296" height="42" rx="8" fill="rgb(196,224,186)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="354" fill="#111827">0.822</text>
+<rect x="1246" y="325" width="296" height="42" rx="8" fill="rgb(189,221,183)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="354" fill="#111827">55.83%</text>
+<rect x="1550" y="325" width="296" height="42" rx="8" fill="rgb(161,212,170)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="354" fill="#0f2a18">50.49%</text>
+<rect x="1854" y="325" width="296" height="42" rx="8" fill="rgb(245,212,200)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="354" fill="#111827">1.358</text>
+<line x1="0" y1="372" x2="2154" y2="372" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="372" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="406">GAT-universe</text>
+<rect x="334" y="377" width="296" height="42" rx="8" fill="rgb(177,217,177)"/>
+<text class="cellText" text-anchor="middle" x="482" y="406" fill="#0f2a18">0.0821</text>
+<rect x="638" y="377" width="296" height="42" rx="8" fill="rgb(175,217,177)"/>
+<text class="cellText" text-anchor="middle" x="786" y="406" fill="#0f2a18">0.0811</text>
+<rect x="942" y="377" width="296" height="42" rx="8" fill="rgb(182,219,180)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="406" fill="#0f2a18">0.881</text>
+<rect x="1246" y="377" width="296" height="42" rx="8" fill="rgb(177,217,177)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="406" fill="#0f2a18">56.99%</text>
+<rect x="1550" y="377" width="296" height="42" rx="8" fill="rgb(186,220,182)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="406" fill="#111827">43.69%</text>
+<rect x="1854" y="377" width="296" height="42" rx="8" fill="rgb(245,210,199)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="406" fill="#111827">1.215</text>
+<line x1="0" y1="424" x2="2154" y2="424" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="424" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="458">GAT-TwoGraph</text>
+<rect x="334" y="429" width="296" height="42" rx="8" fill="rgb(157,211,168)"/>
+<text class="cellText" text-anchor="middle" x="482" y="458" fill="#0f2a18">0.0894</text>
+<rect x="638" y="429" width="296" height="42" rx="8" fill="rgb(177,217,177)"/>
+<text class="cellText" text-anchor="middle" x="786" y="458" fill="#0f2a18">0.0804</text>
+<rect x="942" y="429" width="296" height="42" rx="8" fill="rgb(224,233,199)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="458" fill="#111827">0.697</text>
+<rect x="1246" y="429" width="296" height="42" rx="8" fill="rgb(177,217,177)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="458" fill="#0f2a18">56.98%</text>
+<rect x="1550" y="429" width="296" height="42" rx="8" fill="rgb(184,220,180)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="458" fill="#111827">44.42%</text>
+<rect x="1854" y="429" width="296" height="42" rx="8" fill="rgb(245,210,199)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="458" fill="#111827">1.142</text>
+<line x1="0" y1="476" x2="2154" y2="476" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="476" width="2154" height="52" fill="#fbfbfb"/>
+<text class="model" x="24" y="510">GAT-IndNeutral</text>
+<rect x="334" y="481" width="296" height="42" rx="8" fill="rgb(176,217,177)"/>
+<text class="cellText" text-anchor="middle" x="482" y="510" fill="#0f2a18">0.0825</text>
+<rect x="638" y="481" width="296" height="42" rx="8" fill="rgb(174,216,176)"/>
+<text class="cellText" text-anchor="middle" x="786" y="510" fill="#0f2a18">0.0814</text>
+<rect x="942" y="481" width="296" height="42" rx="8" fill="rgb(205,227,190)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="510" fill="#111827">0.780</text>
+<rect x="1246" y="481" width="296" height="42" rx="8" fill="rgb(207,227,191)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="510" fill="#111827">54.07%</text>
+<rect x="1550" y="481" width="296" height="42" rx="8" fill="rgb(187,221,182)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="510" fill="#111827">43.61%</text>
+<rect x="1854" y="481" width="296" height="42" rx="8" fill="rgb(245,210,199)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="510" fill="#111827">1.178</text>
+<line x1="0" y1="528" x2="2154" y2="528" stroke="#eef2f7" stroke-width="1"/>
+<rect x="0" y="528" width="2154" height="52" fill="#ffffff"/>
+<text class="model" x="24" y="562">GAT-full</text>
+<rect x="334" y="533" width="296" height="42" rx="8" fill="rgb(194,223,185)"/>
+<text class="cellText" text-anchor="middle" x="482" y="562" fill="#111827">0.0761</text>
+<rect x="638" y="533" width="296" height="42" rx="8" fill="rgb(191,222,184)"/>
+<text class="cellText" text-anchor="middle" x="786" y="562" fill="#111827">0.0754</text>
+<rect x="942" y="533" width="296" height="42" rx="8" fill="rgb(172,216,175)"/>
+<text class="cellText" text-anchor="middle" x="1090" y="562" fill="#0f2a18">0.929</text>
+<rect x="1246" y="533" width="296" height="42" rx="8" fill="rgb(219,231,196)"/>
+<text class="cellText" text-anchor="middle" x="1394" y="562" fill="#111827">52.90%</text>
+<rect x="1550" y="533" width="296" height="42" rx="8" fill="rgb(146,207,163)"/>
+<text class="cellText" text-anchor="middle" x="1698" y="562" fill="#0f2a18">54.32%</text>
+<rect x="1854" y="533" width="296" height="42" rx="8" fill="rgb(245,213,200)"/>
+<text class="cellText" text-anchor="middle" x="2002" y="562" fill="#111827">1.490</text>
+<line x1="0" y1="580" x2="2154" y2="580" stroke="#eef2f7" stroke-width="1"/>
+</g>
+</svg>

@@ -1,0 +1,20 @@
+\begin{table}[H]
+\centering
+\caption{Long window 下模型結構與圖拓樸之比較}
+\label{tab:results_static_long_topology}
+\scriptsize
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{llrrrrrrr}
+\toprule
+模型 & 圖拓樸 / 設計 & Daily IC & ICIR & Sharpe & 年化報酬 & 總報酬 & 最大跌幅 & DirAcc \\
+\midrule
+DNN & 無圖 & 0.0535 & 0.726 & 1.564 & 35.35\% & 106.45\% & -21.79\% & 42.58\% \\
+GAT-universe & 全市場完全圖 & 0.0452 & 0.526 & 1.506 & 36.01\% & 108.10\% & -23.12\% & 42.93\% \\
+GAT-industry & 產業圖 & 0.0543 & 0.677 & 1.779 & 38.13\% & 120.83\% & -20.44\% & 57.51\% \\
+GAT-TwoGraph & 產業圖 + 全市場圖（無中性化）& 0.0512 & 0.504 & 1.827 & 39.45\% & 127.33\% & -19.23\% & 57.50\% \\
+GAT-IndNeutral & 產業圖 + 產業中性化 & 0.0590 & 0.786 & 1.803 & 38.70\% & 123.60\% & -20.11\% & 57.51\% \\
+GAT-full & 產業圖 + 全市場圖 + 階層中性化 & 0.0583 & 0.735 & 1.849 & 42.02\% & 139.08\% & -21.86\% & 57.52\% \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}
