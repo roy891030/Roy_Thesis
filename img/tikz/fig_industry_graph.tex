@@ -1,0 +1,102 @@
+\documentclass[tikz,border=14pt]{standalone}
+\usepackage[no-math]{fontspec}
+\usepackage{xeCJK}
+\usepackage[UTF8,fontset=none]{ctex}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,backgrounds}
+
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
+  {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
+    {\setCJKmainfont{PingFang TC}}}
+
+\input{thesis_colors}
+
+\begin{document}
+\begin{tikzpicture}[
+  arr/.style={-{Stealth[length=1.8mm,width=1.5mm]}, thesisDark!45, line width=0.6pt},
+  clustertitle/.style={font=\small\bfseries, thesisDark, anchor=south},
+  nodelabel/.style={font=\fontsize{5.8pt}{7pt}\selectfont, thesisDark, align=center},
+  centerlabel/.style={font=\footnotesize\itshape, thesisDark!60, align=center},
+]
+
+
+%%── Cluster 1: 電子零組件 ─────────────────────────────────────
+\def\cx{0}\def\cy{0}
+\def\ndx{1.05}\def\ndy{1.60}
+\foreach \i/\ii in {1/tl,2/tr,3/ml,4/mr,5/bl,6/br}{
+  \ifnum\i=1 \coordinate (na_\i) at ({-\ndx},{\ndy}); \fi
+  \ifnum\i=2 \coordinate (na_\i) at ({+\ndx},{\ndy}); \fi
+  \ifnum\i=3 \coordinate (na_\i) at ({-\ndx},{0});    \fi
+  \ifnum\i=4 \coordinate (na_\i) at ({+\ndx},{0});    \fi
+  \ifnum\i=5 \coordinate (na_\i) at ({-\ndx},{-\ndy});\fi
+  \ifnum\i=6 \coordinate (na_\i) at ({+\ndx},{-\ndy});\fi
+}
+% Edges
+\foreach \i in {1,...,6}{
+  \foreach \j in {1,...,6}{
+    \ifnum\i<\j
+      \draw[arr] (na_\i) -- (na_\j);
+    \fi
+  }
+}
+% Nodes
+\foreach \k/\lbl in {1/6133\\金橋,2/6224\\英典,3/8210\\勤誠,4/6282\\康舒,5/3015\\德淵電,6/6235\\華宇}{
+  \node[circle, draw=thesisTeal!80!thesisDark, fill=thesisTeal!30, thick, minimum size=10mm]
+       (Na_\k) at (na_\k) {};
+  \draw[arr, looseness=7, out=105, in=75] (Na_\k) to (Na_\k);
+  \node[nodelabel, below=5pt] at (Na_\k.south) {\lbl};
+}
+\node[clustertitle] at (0, {1.35+0.75}) {電子零組件};
+
+%%── Cluster 2: 光電及I/O ──────────────────────────────────────
+\begin{scope}[xshift=5.2cm]
+\foreach \i in {1,...,6}{
+  \ifnum\i=1 \coordinate (nb_\i) at ({-\ndx},{\ndy}); \fi
+  \ifnum\i=2 \coordinate (nb_\i) at ({+\ndx},{\ndy}); \fi
+  \ifnum\i=3 \coordinate (nb_\i) at ({-\ndx},{0});    \fi
+  \ifnum\i=4 \coordinate (nb_\i) at ({+\ndx},{0});    \fi
+  \ifnum\i=5 \coordinate (nb_\i) at ({-\ndx},{-\ndy});\fi
+  \ifnum\i=6 \coordinate (nb_\i) at ({+\ndx},{-\ndy});\fi
+}
+\foreach \i in {1,...,6}{
+  \foreach \j in {1,...,6}{
+    \ifnum\i<\j \draw[arr] (nb_\i) -- (nb_\j); \fi
+  }
+}
+\foreach \k/\lbl in {1/3481\\群創,2/2301\\光寶科,3/2406\\國碩,4/3454\\晶豪,5/2390\\云辰,6/9912\\偉聯}{
+  \node[circle, draw=thesisForest!80!thesisDark, fill=thesisForest!30, thick, minimum size=10mm]
+       (Nb_\k) at (nb_\k) {};
+  \draw[arr, looseness=7, out=105, in=75] (Nb_\k) to (Nb_\k);
+  \node[nodelabel, below=5pt] at (Nb_\k.south) {\lbl};
+}
+\node[clustertitle] at (0,{1.35+0.75}) {光電及I/O};
+\node[centerlabel] at (0, 2.4) {產業關係圖示（同產業完全連結與自迴圖結構）};
+\end{scope}
+
+%%── Cluster 3: 半導體 ─────────────────────────────────────────
+\begin{scope}[xshift=10.4cm]
+\foreach \i in {1,...,6}{
+  \ifnum\i=1 \coordinate (nc_\i) at ({-\ndx},{\ndy}); \fi
+  \ifnum\i=2 \coordinate (nc_\i) at ({+\ndx},{\ndy}); \fi
+  \ifnum\i=3 \coordinate (nc_\i) at ({-\ndx},{0});    \fi
+  \ifnum\i=4 \coordinate (nc_\i) at ({+\ndx},{0});    \fi
+  \ifnum\i=5 \coordinate (nc_\i) at ({-\ndx},{-\ndy});\fi
+  \ifnum\i=6 \coordinate (nc_\i) at ({+\ndx},{-\ndy});\fi
+}
+\foreach \i in {1,...,6}{
+  \foreach \j in {1,...,6}{
+    \ifnum\i<\j \draw[arr] (nc_\i) -- (nc_\j); \fi
+  }
+}
+\foreach \k/\lbl in {1/2451\\創見,2/6799\\采頡,3/1560\\中砂,4/2337\\旺宏,5/3094\\聯傑,6/6271\\同欣電}{
+  \node[circle, draw=thesisSand!80!thesisDark, fill=thesisSand!50, thick, minimum size=10mm]
+       (Nc_\k) at (nc_\k) {};
+  \draw[arr, looseness=7, out=105, in=75] (Nc_\k) to (Nc_\k);
+  \node[nodelabel, below=5pt] at (Nc_\k.south) {\lbl};
+}
+\node[clustertitle] at (0,{1.35+0.75}) {半導體};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

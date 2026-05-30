@@ -1,0 +1,70 @@
+\documentclass[tikz,border=12pt]{standalone}
+\usepackage[no-math]{fontspec}
+\usepackage{xeCJK}
+\usepackage[UTF8,fontset=none]{ctex}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,backgrounds}
+
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
+  {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
+    {\setCJKmainfont{PingFang TC}}}
+
+\input{thesis_colors}
+
+\begin{document}
+\begin{tikzpicture}[
+  gnode/.style={circle, draw=#1!80!thesisDark, fill=#1!35, thick, minimum size=9.5mm,
+                font=\fontsize{5.5pt}{6pt}\selectfont, align=center, inner sep=0pt},
+  edgestyle/.style={thesisDark!22, line width=0.55pt},
+  selfarr/.style={-{Stealth[length=1.4mm,width=1.2mm]}, thesisDark!40, line width=0.5pt},
+]
+
+\def\R{3.4}    % circle radius
+\def\N{13}     % number of nodes
+
+%% ── place nodes on circle ────────────────────────────────────
+% 13 nodes, mix of colors to reflect multiple industries
+\def\nodecolors{thesisTeal,thesisForest,thesisSand,thesisBlue,thesisTeal,thesisForest,
+                thesisSand,thesisBlue,thesisTeal,thesisForest,thesisSand,thesisBlue,thesisTeal}
+\def\nodelabels{2330\\台積電, 2317\\鴻海, 2454\\聯發科, 2882\\國泰金,
+                3481\\群創, 2412\\中華電, 1301\\台塑, 2308\\台達電,
+                2207\\和泰車, 5876\\上海商銀, 2395\\研華, 4904\\遠傳,
+                2886\\兆豐金}
+
+\foreach \i in {1,...,\N}{
+  \pgfmathsetmacro{\angle}{90 + 360/\N * (\i-1)}
+  \pgfmathsetmacro{\xp}{\R * cos(\angle)}
+  \pgfmathsetmacro{\yp}{\R * sin(\angle)}
+  % cycle through colors
+  \pgfmathtruncatemacro{\ci}{mod(\i-1,4)}
+  \ifnum\ci=0 \def\ncol{thesisTeal}   \fi
+  \ifnum\ci=1 \def\ncol{thesisForest} \fi
+  \ifnum\ci=2 \def\ncol{thesisSand}   \fi
+  \ifnum\ci=3 \def\ncol{thesisBlue}   \fi
+  \node[gnode=\ncol] (m\i) at (\xp, \yp) {};
+  % self-loop
+  \pgfmathsetmacro{\outang}{\angle+15}
+  \pgfmathsetmacro{\inang}{\angle-15}
+  \draw[selfarr, looseness=6, out=\outang, in=\inang] (m\i) to (m\i);
+}
+
+%% ── draw all edges (complete graph) ─────────────────────────
+\begin{pgfonlayer}{background}
+  \foreach \i in {1,...,\N}{
+    \foreach \j in {1,...,\N}{
+      \ifnum\i<\j
+        \draw[edgestyle] (m\i) -- (m\j);
+      \fi
+    }
+  }
+\end{pgfonlayer}
+
+%% ── center label ─────────────────────────────────────────────
+\node[font=\small\bfseries, thesisDark, align=center] at (0, 0.45)
+      {全市場圖（Universe Graph）};
+\node[font=\footnotesize, thesisDark!70, align=center] at (0,-0.15)
+      {所有股票完全連結與自迴圖結構};
+
+\end{tikzpicture}
+\end{document}

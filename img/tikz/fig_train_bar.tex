@@ -1,0 +1,91 @@
+\documentclass[tikz,border=12pt]{standalone}
+\usepackage[no-math]{fontspec}
+\usepackage{xeCJK}
+\usepackage[UTF8,fontset=none]{ctex}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
+  {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
+    {\setCJKmainfont{PingFang TC}}}
+
+\input{thesis_colors}
+
+\begin{document}
+\begin{tikzpicture}[
+  barlab/.style={font=\small\bfseries, white, align=center},
+  annlab/.style={font=\scriptsize, thesisDark, anchor=south, align=center},
+  ylab/.style={font=\small\bfseries, thesisDark, anchor=east},
+  xlab/.style={font=\scriptsize, thesisDark!70, anchor=north},
+  totlab/.style={font=\footnotesize, thesisDark, anchor=west},
+  titlefont/.style={font=\normalsize\bfseries, thesisDark},
+]
+
+%% ── x-scale: total = 2782 days → 10 cm, so 1cm = 278.2 days ─
+\def\sc{0.003596}  % cm per day  (10/2782)
+\def\rowh{0.85}    % bar height
+\def\rowy{0.35}    % y offset in band
+
+%% Day counts
+% Short:  Train 414, Val 46, Test 116  (total 576)
+% Medium: Train 1118,Val 124,Test 311  (total 1553)
+% Long:   Train 2003,Val 222,Test 557  (total 2782)
+
+\newcommand{\drawbarrow}[9]{%
+  % #1=y-bot #2=Train #3=Val #4=Test #5=total
+  % #6=train_lab #7=val_days #8=test_lab #9=total_label
+  \pgfmathsetmacro{\xTrE}{#2*\sc}
+  \pgfmathsetmacro{\xVaE}{(#2+#3)*\sc}
+  \pgfmathsetmacro{\xTeE}{(#2+#3+#4)*\sc}
+  % bars
+  \fill[thesisBlue]    (0, {#1+\rowy}) rectangle (\xTrE, {#1+\rowy+\rowh});
+  \fill[thesisAmber]   (\xTrE, {#1+\rowy}) rectangle (\xVaE, {#1+\rowy+\rowh});
+  \fill[thesisCrimson] (\xVaE, {#1+\rowy}) rectangle (\xTeE, {#1+\rowy+\rowh});
+  % train label inside bar
+  \node[barlab] at ({(\xTrE)/2}, {#1+\rowy+\rowh/2}) {#6};
+  % val annotation above (small, narrow bar)
+  \node[annlab] at ({(\xTrE+\xVaE)/2}, {#1+\rowy+\rowh}) {#7};
+  % test label inside bar (if wide enough)
+  \pgfmathsetmacro{\testw}{#4*\sc}
+  \ifdim\testw pt > 0.8cm
+    \node[barlab] at ({(\xVaE+\xTeE)/2}, {#1+\rowy+\rowh/2}) {#8};
+  \fi
+  % total label right
+  \node[totlab] at ({\xTeE+0.15}, {#1+\rowy+\rowh/2})
+        {Total #5};
+}
+
+%% ── Draw rows ────────────────────────────────────────────────
+\drawbarrow{0.0}{2003}{222}{557}{2782}{2003}{222}{557}{2782}
+\drawbarrow{1.6}{1118}{124}{311}{1553}{1118}{124}{311}{1553}
+\drawbarrow{3.2}{414}{46}{116}{576}{414}{46}{116}{576}
+
+%% ── Y-axis row labels ────────────────────────────────────────
+\node[ylab] at (-0.25, {0.0+\rowy+\rowh/2}) {Long};
+\node[ylab] at (-0.25, {1.6+\rowy+\rowh/2}) {Medium};
+\node[ylab] at (-0.25, {3.2+\rowy+\rowh/2}) {Short};
+
+%% ── X-axis tick labels + grid ────────────────────────────────
+\foreach \d in {0,500,1000,1500,2000,2500,3000}{
+  \pgfmathsetmacro{\xp}{\d*\sc}
+  \draw[thesisDark!15, thin] (\xp, 0.0) -- (\xp, 4.45);
+  \node[xlab] at (\xp, -0.08) {\d};
+}
+
+%% ── Title ────────────────────────────────────────────────────
+\node[titlefont, anchor=south] at ({2782*\sc/2}, 4.65)
+      {Train / Validation / Test Trading-Day Counts};
+
+%% ── Legend ───────────────────────────────────────────────────
+\def\legx{1.0}
+\def\legy{-0.90}
+\fill[thesisBlue]    (\legx,\legy) rectangle ({\legx+0.40},{\legy+0.28});
+\fill[thesisAmber]   ({\legx+1.5},\legy) rectangle ({\legx+1.9},{\legy+0.28});
+\fill[thesisCrimson] ({\legx+3.2},\legy) rectangle ({\legx+3.6},{\legy+0.28});
+\node[font=\footnotesize,thesisDark,anchor=west] at ({\legx+0.46},{\legy+0.14}) {Train};
+\node[font=\footnotesize,thesisDark,anchor=west] at ({\legx+1.96},{\legy+0.14}) {Validation};
+\node[font=\footnotesize,thesisDark,anchor=west] at ({\legx+3.66},{\legy+0.14}) {Test};
+
+\end{tikzpicture}
+\end{document}

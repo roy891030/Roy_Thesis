@@ -1,0 +1,114 @@
+\documentclass[tikz,border=12pt]{standalone}
+\usepackage[no-math]{fontspec}
+\usepackage{xeCJK}
+\usepackage[UTF8,fontset=none]{ctex}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
+  {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
+    {\setCJKmainfont{PingFang TC}}}
+
+\input{thesis_colors}
+
+\begin{document}
+\begin{tikzpicture}[
+  barlab/.style={font=\scriptsize\bfseries, white, align=center},
+  annlab/.style={font=\scriptsize, thesisDark, align=center},
+  ylab/.style={font=\small\bfseries, thesisDark, anchor=east},
+  xlab/.style={font=\scriptsize, thesisDark!70, anchor=north},
+  titlefont/.style={font=\normalsize\bfseries, thesisDark},
+]
+
+%% ── dimensions ──────────────────────────────────────────────
+%% x-scale: 1 cm = 1 calendar year, origin = 2014
+%% y-rows: Long=0, Medium=1.6, Short=3.2
+\def\rowh{0.90}    % bar height (cm)
+\def\rowy{0.35}    % y offset within row band
+\def\sc{1.0}       % cm per year
+
+%% ── calendar-day counts → calendar years ────────────────────
+%% Short  (2023.01 – 2025.42): total 576d → 2.41 cal years
+%%   ratio = 2.41/576 = 0.004184 yr/day
+%%   Train 414d → 1.732 yr, Val 46d → 0.192 yr, Test 116d → 0.485 yr
+\def\ShStart{9.01}
+\def\ShTrE  {10.742}  % 9.01 + 1.732
+\def\ShVaE  {10.934}  % + 0.192
+\def\ShEnd  {11.419}  % + 0.485
+
+%% Medium (2019.01 – 2025.42): total 1553d → 6.41 cal years
+%%   ratio = 6.41/1553 = 0.004127 yr/day
+%%   Train 1118d → 4.614 yr, Val 124d → 0.512 yr, Test 311d → 1.283 yr
+\def\MeStart{5.01}
+\def\MeTrE  {9.624}
+\def\MeVaE  {10.136}
+\def\MeEnd  {11.419}
+
+%% Long (2014.01 – 2025.42): total 2782d → 11.41 cal years
+%%   ratio = 11.41/2782 = 0.004102 yr/day
+%%   Train 2003d → 8.216 yr, Val 222d → 0.911 yr, Test 557d → 2.285 yr
+\def\LgStart{0.01}
+\def\LgTrE  {8.226}
+\def\LgVaE  {9.137}
+\def\LgEnd  {11.419}
+
+%% ── helper: draw one bar row ────────────────────────────────
+%% #1=y-bottom, #2=x_start, #3=x_trainEnd, #4=x_valEnd, #5=x_end
+%% #6=Train label, #7=Val label, #8=Test label
+\newcommand{\drawrow}[8]{%
+  % Train bar
+  \fill[thesisBlue] ({#2*\sc},{#1+\rowy}) rectangle ({#3*\sc},{#1+\rowy+\rowh});
+  % Val bar
+  \fill[thesisAmber] ({#3*\sc},{#1+\rowy}) rectangle ({#4*\sc},{#1+\rowy+\rowh});
+  % Test bar
+  \fill[thesisCrimson] ({#4*\sc},{#1+\rowy}) rectangle ({#5*\sc},{#1+\rowy+\rowh});
+  % Train label (only if wide enough)
+  \node[barlab] at ({(\sc*(#2+#3)/2)}, {#1+\rowy+\rowh/2}) {#6};
+  % Val annotation (above bar, since too narrow)
+  \node[annlab, above=2pt] at ({(\sc*(#3+#4)/2)}, {#1+\rowy+\rowh}) {#7};
+  % Test label
+  \node[barlab] at ({(\sc*(#4+#5)/2)}, {#1+\rowy+\rowh/2}) {#8};
+}
+
+%% ── Draw three rows ─────────────────────────────────────────
+% Long  y-bottom=0.0
+\drawrow{0.0}{\LgStart}{\LgTrE}{\LgVaE}{\LgEnd}
+        {Train 2003d}{Validation 222d}{Test 557d}
+
+% Medium y-bottom=1.6
+\drawrow{1.6}{\MeStart}{\MeTrE}{\MeVaE}{\MeEnd}
+        {Train 1118d}{Validation 124d}{Test 311d}
+
+% Short  y-bottom=3.2
+\drawrow{3.2}{\ShStart}{\ShTrE}{\ShVaE}{\ShEnd}
+        {Train 414d}{Validation 46d}{Test 116d}
+
+%% ── Y-axis row labels ────────────────────────────────────────
+\node[ylab] at (-0.2, {0.0+\rowy+\rowh/2}) {Long};
+\node[ylab] at (-0.2, {1.6+\rowy+\rowh/2}) {Medium};
+\node[ylab] at (-0.2, {3.2+\rowy+\rowh/2}) {Short};
+
+%% ── X-axis year labels + grid lines ────────────────────────
+\foreach \yr in {2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025}{
+  \pgfmathsetmacro{\xp}{(\yr-2014)*\sc}
+  \draw[thesisDark!15, thin] (\xp, 0.0) -- (\xp, 4.55);
+  \node[xlab] at (\xp, -0.05) {\yr};
+}
+
+%% ── Title ────────────────────────────────────────────────────
+\node[titlefont, anchor=south] at ({11.42*\sc/2}, 4.75)
+      {Chronological Train / Validation / Test Split by Window};
+
+%% ── Legend ───────────────────────────────────────────────────
+\def\legx{2.5}
+\def\legy{-0.85}
+\fill[thesisBlue]   (\legx, \legy) rectangle ({\legx+0.45}, {\legy+0.30});
+\fill[thesisAmber]  ({\legx+1.5}, \legy) rectangle ({\legx+1.95}, {\legy+0.30});
+\fill[thesisCrimson]({\legx+3.3}, \legy) rectangle ({\legx+3.75}, {\legy+0.30});
+\node[font=\footnotesize, thesisDark, anchor=west] at ({\legx+0.52}, {\legy+0.15}) {Train};
+\node[font=\footnotesize, thesisDark, anchor=west] at ({\legx+2.02}, {\legy+0.15}) {Validation};
+\node[font=\footnotesize, thesisDark, anchor=west] at ({\legx+3.82}, {\legy+0.15}) {Test};
+
+\end{tikzpicture}
+\end{document}
