@@ -1,125 +1,129 @@
-\documentclass[tikz,border=12pt]{standalone}
+\documentclass[tikz,border=14pt]{standalone}
 \usepackage[no-math]{fontspec}
 \usepackage{xeCJK}
 \usepackage[UTF8,fontset=none]{ctex}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit,calc,decorations.pathreplacing,backgrounds}
+\usetikzlibrary{arrows.meta,positioning,calc,decorations.pathreplacing,backgrounds}
 
 \IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
 \IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
   {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
     {\setCJKmainfont{PingFang TC}}}
-
 \input{thesis_colors}
 
 \begin{document}
 \begin{tikzpicture}[
-  gnode/.style={circle, draw=thesisDark, fill=thesisLight, thick, minimum size=10mm,
-                font=\small},
-  centernode/.style={circle, draw=thesisBlue!80!thesisDark, fill=thesisBlue!22,
-                     very thick, minimum size=12mm, font=\small\bfseries},
-  outputnode/.style={circle, draw=thesisDark, fill=thesisLight!80, thick,
-                     minimum size=10mm, font=\small},
-  actnode/.style={circle, draw=thesisDark!70, fill=white, thin, minimum size=9mm,
-                  font=\small, inner sep=1pt},
-  arr/.style={-{Stealth[length=2.2mm,width=2mm]}, thick},
-  darkarr/.style={arr, thesisDark},
-  thinwire/.style={thesisDark!50, line width=0.6pt},
+  bignode/.style={circle, draw=thesisDark, fill=thesisLight, very thick,
+                  minimum size=14mm, font=\normalsize\bfseries, inner sep=0},
+  centernode/.style={circle, draw=thesisBlue, fill=thesisBlue!22, very thick,
+                     minimum size=16mm, font=\normalsize\bfseries, inner sep=0},
+  outnode/.style={circle, draw=thesisDark, fill=thesisLight, thick,
+                  minimum size=14mm, font=\normalsize, inner sep=0},
+  actnode/.style={circle, draw=thesisDark!60, fill=white, thick,
+                  minimum size=13mm, font=\footnotesize, align=center, inner sep=0},
+  featurenode/.style={circle, draw=#1!70!thesisDark, fill=#1!25, thick,
+                      minimum size=10mm, inner sep=0},
+  arr/.style={-{Stealth[length=3mm,width=2.5mm]}, thick, thesisDark},
+  alpharr/.style={-{Stealth[length=3mm,width=2.5mm]}, very thick},
+  divline/.style={thesisDark!25, dashed, thick},
 ]
 
-%%──────────────────────────────────────────────────────────────────
-%% LEFT PANEL: Attention coefficient calculation
-%%──────────────────────────────────────────────────────────────────
-\def\lx{0}
+%%═══════════════════════════════════════════════════════════
+%% LEFT PANEL — Attention coefficient computation
+%%═══════════════════════════════════════════════════════════
 
-% Result at top: α_ij
-\node[font=\normalsize] (aij) at (\lx, 5.8) {$\alpha_{ij}$};
+% α_ij result at top
+\node[font=\large\bfseries, thesisDark] (aij) at (0, 9.0) {$\alpha_{ij}$};
 
-% softmax arrow
-\draw[darkarr] (\lx, 5.1) -- (aij.south);
-\node[font=\footnotesize\itshape, thesisDark!70, right=2pt] at (\lx, 5.45)
-      {softmax${}_j$};
+% softmax arrow (with label)
+\draw[arr] (0, 7.8) -- (aij.south)
+      node[midway, right=4pt, font=\small\itshape, thesisDark!70]
+           {softmax${}_j$};
 
-% LeakyReLU / activation circle
-\node[actnode] (act) at (\lx, 4.6) {\tiny LeakyReLU};
-\draw[darkarr] (\lx, 4.2) -- (act.south);
-\draw[darkarr] (act.north) -- (\lx, 5.1);
+% Activation node
+\node[actnode] (act) at (0, 7.1) {Leaky\\ReLU};
 
-% shared attention vector a label
-\node[font=\small, thesisDark] (alabel) at (\lx+1.05, 3.7) {$\vec{\mathbf{a}}$};
-\draw[thinwire] (\lx, 4.2) -- (\lx+0.9, 3.85);
+% Connection from fan-in junction to activation
+\draw[arr] (0, 5.95) -- (act.south);
+\draw[arr] (act.north) -- (0, 7.8);
 
-% Fan-in arrows from feature nodes below
-\foreach \dx in {-1.5,-1.0,-0.5,0,0.5,1.0,1.5}{
-  \draw[darkarr, opacity=0.7] (\lx+\dx, 3.0) -- (\lx, 4.2);
+% ā label (shared attention vector)
+\node[font=\normalsize, thesisDark] (avec) at (2.1, 5.5) {$\vec{\mathbf{a}}$};
+\draw[thesisDark!50, thin] (avec.west) -- (0.25, 5.8);
+
+% Fan-in: 7 arrows from below converging to a junction point
+\node[fill=thesisDark, circle, minimum size=4pt, inner sep=0] (junction) at (0, 5.95) {};
+\foreach \dx in {-1.8, -1.2, -0.6, 0, 0.6, 1.2, 1.8}{
+  \draw[thesisDark!60, thick] (\dx, 4.5) -- (junction);
 }
 
-% Bottom feature nodes: W*h_i (left group) and W*h_j (right group)
+% Feature nodes at bottom: W*h_i (left 3) and W*h_j (right 4)
 \foreach \k in {1,2,3}{
-  \node[circle, draw=thesisBlue!60, fill=thesisBlue!12, minimum size=7mm,
-        font=\footnotesize] at ({\lx-1.5+(\k-1)*0.6}, 2.65) {};
+  \pgfmathsetmacro{\xpos}{-1.8 + (\k-1)*0.6}
+  \node[featurenode=thesisBlue] at (\xpos, 4.0) {};
 }
-\foreach \k in {1,2,3}{
-  \node[circle, draw=thesisPurple!60, fill=thesisPurple!12, minimum size=7mm,
-        font=\footnotesize] at ({\lx+0.3+(\k-1)*0.6}, 2.65) {};
+\foreach \k in {1,2,3,4}{
+  \pgfmathsetmacro{\xpos}{0 + (\k-1)*0.6}
+  \node[featurenode=thesisPurple] at (\xpos, 4.0) {};
 }
 
-% Braces and labels
-\draw[decorate, decoration={brace,amplitude=4pt}, thesisDark!60]
-     ({\lx-1.8}, 2.3) -- ({\lx-0.15}, 2.3)
-     node[midway, below=3pt, font=\footnotesize]{$\mathbf{W}\vec{h}_i$};
-\draw[decorate, decoration={brace,amplitude=4pt}, thesisDark!60]
-     ({\lx+0.15}, 2.3) -- ({\lx+1.65}, 2.3)
-     node[midway, below=3pt, font=\footnotesize]{$\mathbf{W}\vec{h}_j$};
+% Braces + labels
+\draw[decorate, decoration={brace,amplitude=5pt,mirror}, thesisDark!55]
+     (-2.1, 3.5) -- (-0.2, 3.5)
+     node[midway, below=5pt, font=\small]{$\mathbf{W}\vec{h}_i$};
+\draw[decorate, decoration={brace,amplitude=5pt,mirror}, thesisDark!55]
+     (0.2, 3.5) -- (2.0, 3.5)
+     node[midway, below=5pt, font=\small]{$\mathbf{W}\vec{h}_j$};
 
-% Separator line
-\draw[thesisDark!25, dashed, thin] (3.6, 1.5) -- (3.6, 6.3);
+%%═══════════════════════════════════════════════════════════
+%% PANEL DIVIDER
+%%═══════════════════════════════════════════════════════════
+\draw[divline] (3.3, 2.5) -- (3.3, 9.5);
 
-%%──────────────────────────────────────────────────────────────────
-%% RIGHT PANEL: Radial neighbor aggregation
-%%──────────────────────────────────────────────────────────────────
-\def\rx{7.5}   % x center
-\def\ry{4.3}   % y center
-\def\R{2.5}    % radius
+%%═══════════════════════════════════════════════════════════
+%% RIGHT PANEL — Neighbor attention aggregation
+%%═══════════════════════════════════════════════════════════
+\def\rx{8.5}   % x-centre of radial layout
+\def\ry{6.0}   % y-centre
+\def\R{3.2}    % radius of neighbor circle
 
-% Central node h_1 (bold blue)
+% Central node h_1
 \node[centernode] (h1) at (\rx, \ry) {$\vec{h}_1$};
 
-% Six surrounding neighbor nodes at angles (starting top, going CW)
-% h2: 125° h3: 160° h4: 225° h5: 270° h6: 315° (and h1 self at ~70°)
-\node[gnode] (h2) at ({(\rx)+\R*cos(120)}, {(\ry)+\R*sin(120)}) {$\vec{h}_2$};
-\node[gnode] (h3) at ({(\rx)+\R*cos(170)}, {(\ry)+\R*sin(170)}) {$\vec{h}_3$};
-\node[gnode] (h4) at ({(\rx)+\R*cos(225)}, {(\ry)+\R*sin(225)}) {$\vec{h}_4$};
-\node[gnode] (h5) at ({(\rx)+\R*cos(275)}, {(\ry)+\R*sin(275)}) {$\vec{h}_5$};
-\node[gnode] (h6) at ({(\rx)+\R*cos(340)}, {(\ry)+\R*sin(340)}) {$\vec{h}_6$};
+% 6 neighbor nodes at angles: 100°, 150°, 210°, 270°, 330°, 20° (spread around h_1)
+\node[bignode] (h2) at ({(\rx)+\R*cos(100)}, {(\ry)+\R*sin(100)}) {$\vec{h}_2$};
+\node[bignode] (h3) at ({(\rx)+\R*cos(155)}, {(\ry)+\R*sin(155)}) {$\vec{h}_3$};
+\node[bignode] (h4) at ({(\rx)+\R*cos(215)}, {(\ry)+\R*sin(215)}) {$\vec{h}_4$};
+\node[bignode] (h5) at ({(\rx)+\R*cos(270)}, {(\ry)+\R*sin(270)}) {$\vec{h}_5$};
+\node[bignode] (h6) at ({(\rx)+\R*cos(325)}, {(\ry)+\R*sin(325)}) {$\vec{h}_6$};
 
-% Attention edges: colored arrows + α labels
-% α_11 (self-loop): top of center node
-\draw[arr, thesisBlue, line width=1.4pt, looseness=6, in=50, out=130]
-      (h1.north) to
-      node[pos=0.5, font=\scriptsize, thesisBlue, above=1pt] {$\vec{\alpha}_{11}$}
-      (h1.north);
+% Self-loop: clean arc at the top of h1, label above
+\draw[alpharr, thesisBlue, looseness=7, in=160, out=20]
+     (h1.north) to
+     node[pos=0.5, above=5pt, font=\small\bfseries, thesisBlue] {$\vec{\alpha}_{11}$}
+     (h1.north);
 
-\draw[arr, thesisBlue, line width=1.3pt, shorten >=1pt] (h2) to
-      node[pos=0.55, font=\scriptsize, thesisBlue, above right=-1pt] {$\vec{\alpha}_{12}$}
-      (h1);
-\draw[arr, thesisPurple, line width=1.3pt, shorten >=1pt, bend right=8] (h3) to
-      node[pos=0.5, font=\scriptsize, thesisPurple, left=1pt] {$\vec{\alpha}_{13}$}
-      (h1);
-\draw[arr, thesisForest, line width=1.3pt, shorten >=1pt] (h4) to
-      node[pos=0.5, font=\scriptsize, thesisForest, below left=-1pt] {$\vec{\alpha}_{14}$}
-      (h1);
-\draw[arr, thesisCrimson, line width=1.3pt, shorten >=1pt] (h5) to
-      node[pos=0.5, font=\scriptsize, thesisCrimson, below] {$\vec{\alpha}_{15}$}
-      (h1);
-\draw[arr, thesisAmber, line width=1.3pt, shorten >=1pt] (h6) to
-      node[pos=0.55, font=\scriptsize, thesisAmber, right=1pt] {$\vec{\alpha}_{16}$}
-      (h1);
+% Attention arrows: each from neighbor to h1, different colors
+\draw[alpharr, thesisBlue, line width=1.8pt] (h2) -- (h1)
+      node[pos=0.55, above left=1pt, font=\small\bfseries, thesisBlue]
+           {$\vec{\alpha}_{12}$};
+\draw[alpharr, thesisPurple, line width=1.8pt] (h3) -- (h1)
+      node[pos=0.5,  left=4pt, font=\small\bfseries, thesisPurple]
+           {$\vec{\alpha}_{13}$};
+\draw[alpharr, thesisForest, line width=1.8pt] (h4) -- (h1)
+      node[pos=0.5, below left=1pt, font=\small\bfseries, thesisForest]
+           {$\vec{\alpha}_{14}$};
+\draw[alpharr, thesisCrimson, line width=1.8pt] (h5) -- (h1)
+      node[pos=0.5, below=4pt, font=\small\bfseries, thesisCrimson]
+           {$\vec{\alpha}_{15}$};
+\draw[alpharr, thesisAmber, line width=1.8pt] (h6) -- (h1)
+      node[pos=0.55, right=4pt, font=\small\bfseries, thesisAmber]
+           {$\vec{\alpha}_{16}$};
 
-% Output arrow: concat/avg → h'_1
-\node[outputnode] (h1p) at ({\rx+3.0}, \ry) {$\vec{h}^{\,\prime}_1$};
-\draw[darkarr, line width=1.5pt] (h1.east) -- (h1p.west)
-      node[midway, above, font=\footnotesize] {concat/avg};
+% Output node h'_1 with concat/avg annotation
+\node[outnode] (h1p) at ({(\rx)+4.5}, \ry) {$\vec{h}^{\,\prime}_1$};
+\draw[arr, very thick] (h1.east) -- (h1p.west)
+      node[midway, above=4pt, font=\small] {concat/avg};
 
 \end{tikzpicture}
 \end{document}

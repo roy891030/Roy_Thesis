@@ -1,4 +1,4 @@
-\documentclass[tikz,border=12pt]{standalone}
+\documentclass[tikz,border=14pt]{standalone}
 \usepackage[no-math]{fontspec}
 \usepackage{xeCJK}
 \usepackage[UTF8,fontset=none]{ctex}
@@ -9,106 +9,98 @@
 \IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
   {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
     {\setCJKmainfont{PingFang TC}}}
-
 \input{thesis_colors}
 
 \begin{document}
 \begin{tikzpicture}[
-  barlab/.style={font=\scriptsize\bfseries, white, align=center},
-  annlab/.style={font=\scriptsize, thesisDark, align=center},
-  ylab/.style={font=\small\bfseries, thesisDark, anchor=east},
-  xlab/.style={font=\scriptsize, thesisDark!70, anchor=north},
-  titlefont/.style={font=\normalsize\bfseries, thesisDark},
+  inlabel/.style={font=\small\bfseries, white, align=center},
+  annlabel/.style={font=\small, thesisDark, align=center},
+  ylabel/.style={font=\normalsize\bfseries, thesisDark, anchor=east},
+  xlabel/.style={font=\small, thesisDark!70, anchor=north},
 ]
 
-%% ── dimensions ──────────────────────────────────────────────
-%% x-scale: 1 cm = 1 calendar year, origin = 2014
-%% y-rows: Long=0, Medium=1.6, Short=3.2
-\def\rowh{0.90}    % bar height (cm)
-\def\rowy{0.35}    % y offset within row band
-\def\sc{1.0}       % cm per year
+%% ── scale: 1 cm = 1 calendar year, origin = year 2014 ───
+%% ── row height & y positions (bottom of each bar) ────────
+\def\rh{1.00}     % bar height
+\def\ryS{0}       % Short  row y-bottom
+\def\ryM{1.7}     % Medium row y-bottom
+\def\ryL{3.4}     % Long   row y-bottom
 
-%% ── calendar-day counts → calendar years ────────────────────
-%% Short  (2023.01 – 2025.42): total 576d → 2.41 cal years
-%%   ratio = 2.41/576 = 0.004184 yr/day
-%%   Train 414d → 1.732 yr, Val 46d → 0.192 yr, Test 116d → 0.485 yr
-\def\ShStart{9.01}
-\def\ShTrE  {10.742}  % 9.01 + 1.732
-\def\ShVaE  {10.934}  % + 0.192
-\def\ShEnd  {11.419}  % + 0.485
+%% ── x endpoints computed from trading-day ratios ─────────
+%%  Short  (2023.01–2025.42, 576d → 2.41 yr):
+%%    Train 414d → 1.732yr,  Val 46d → 0.192yr,  Test 116d → 0.485yr
+\def\ShX{9.01}
+\def\ShTrE{10.742}  \def\ShVaE{10.934}  \def\ShEnd{11.419}
 
-%% Medium (2019.01 – 2025.42): total 1553d → 6.41 cal years
-%%   ratio = 6.41/1553 = 0.004127 yr/day
-%%   Train 1118d → 4.614 yr, Val 124d → 0.512 yr, Test 311d → 1.283 yr
-\def\MeStart{5.01}
-\def\MeTrE  {9.624}
-\def\MeVaE  {10.136}
-\def\MeEnd  {11.419}
+%%  Medium (2019.01–2025.42, 1553d → 6.41 yr):
+%%    Train 1118d → 4.614yr, Val 124d → 0.512yr, Test 311d → 1.283yr
+\def\MeX{5.01}
+\def\MeTrE{9.624}   \def\MeVaE{10.136}  \def\MeEnd{11.419}
 
-%% Long (2014.01 – 2025.42): total 2782d → 11.41 cal years
-%%   ratio = 11.41/2782 = 0.004102 yr/day
-%%   Train 2003d → 8.216 yr, Val 222d → 0.911 yr, Test 557d → 2.285 yr
-\def\LgStart{0.01}
-\def\LgTrE  {8.226}
-\def\LgVaE  {9.137}
-\def\LgEnd  {11.419}
+%%  Long   (2014.01–2025.42, 2782d → 11.41 yr):
+%%    Train 2003d → 8.216yr, Val 222d → 0.910yr, Test 557d → 2.285yr
+\def\LgX{0.01}
+\def\LgTrE{8.226}   \def\LgVaE{9.136}   \def\LgEnd{11.421}
 
-%% ── helper: draw one bar row ────────────────────────────────
-%% #1=y-bottom, #2=x_start, #3=x_trainEnd, #4=x_valEnd, #5=x_end
-%% #6=Train label, #7=Val label, #8=Test label
-\newcommand{\drawrow}[8]{%
+%% ── helper: draw one Gantt row ───────────────────────────
+%% args: y-bot, x_start, x_trainEnd, x_valEnd, x_end
+%%       trainLabel, valAnnotation, testLabel
+\newcommand{\ganttrow}[8]{
   % Train bar
-  \fill[thesisBlue] ({#2*\sc},{#1+\rowy}) rectangle ({#3*\sc},{#1+\rowy+\rowh});
+  \fill[thesisBlue]    (#2, {#1})   rectangle (#3, {#1+\rh});
   % Val bar
-  \fill[thesisAmber] ({#3*\sc},{#1+\rowy}) rectangle ({#4*\sc},{#1+\rowy+\rowh});
+  \fill[thesisAmber]   (#3, {#1})   rectangle (#4, {#1+\rh});
   % Test bar
-  \fill[thesisCrimson] ({#4*\sc},{#1+\rowy}) rectangle ({#5*\sc},{#1+\rowy+\rowh});
-  % Train label (only if wide enough)
-  \node[barlab] at ({(\sc*(#2+#3)/2)}, {#1+\rowy+\rowh/2}) {#6};
-  % Val annotation (above bar, since too narrow)
-  \node[annlab, above=2pt] at ({(\sc*(#3+#4)/2)}, {#1+\rowy+\rowh}) {#7};
-  % Test label
-  \node[barlab] at ({(\sc*(#4+#5)/2)}, {#1+\rowy+\rowh/2}) {#8};
+  \fill[thesisCrimson] (#4, {#1})   rectangle (#5, {#1+\rh});
+  % Train label (inside bar, large enough)
+  \node[inlabel] at ({(#2+#3)/2}, {#1+\rh/2}) {#6};
+  % Val annotation (above bar, since narrow)
+  \node[annlabel, above=2pt] at ({(#3+#4)/2}, {#1+\rh}) {#7};
+  % Test label (inside bar if wide enough, else outside right)
+  \pgfmathsetmacro{\testwidth}{(#5-#4)}
+  \ifdim\testwidth cm > 1.2cm
+    \node[inlabel] at ({(#4+#5)/2}, {#1+\rh/2}) {#8};
+  \else
+    \node[annlabel, right=2pt] at (#5, {#1+\rh/2}) {#8};
+  \fi
 }
 
-%% ── Draw three rows ─────────────────────────────────────────
-% Long  y-bottom=0.0
-\drawrow{0.0}{\LgStart}{\LgTrE}{\LgVaE}{\LgEnd}
-        {Train 2003d}{Validation 222d}{Test 557d}
+%% ── Draw rows ────────────────────────────────────────────
+\ganttrow{\ryL}{\LgX}{\LgTrE}{\LgVaE}{\LgEnd}
+         {Train 2003d}{Validation 222d}{Test 557d}
 
-% Medium y-bottom=1.6
-\drawrow{1.6}{\MeStart}{\MeTrE}{\MeVaE}{\MeEnd}
-        {Train 1118d}{Validation 124d}{Test 311d}
+\ganttrow{\ryM}{\MeX}{\MeTrE}{\MeVaE}{\MeEnd}
+         {Train 1118d}{Validation 124d}{Test 311d}
 
-% Short  y-bottom=3.2
-\drawrow{3.2}{\ShStart}{\ShTrE}{\ShVaE}{\ShEnd}
-        {Train 414d}{Validation 46d}{Test 116d}
+\ganttrow{\ryS}{\ShX}{\ShTrE}{\ShVaE}{\ShEnd}
+         {Train 414d}{Validation 46d}{Test 116d}
 
-%% ── Y-axis row labels ────────────────────────────────────────
-\node[ylab] at (-0.2, {0.0+\rowy+\rowh/2}) {Long};
-\node[ylab] at (-0.2, {1.6+\rowy+\rowh/2}) {Medium};
-\node[ylab] at (-0.2, {3.2+\rowy+\rowh/2}) {Short};
+%% ── Y-axis row labels ────────────────────────────────────
+\node[ylabel] at (-0.3, {\ryL+\rh/2}) {Long};
+\node[ylabel] at (-0.3, {\ryM+\rh/2}) {Medium};
+\node[ylabel] at (-0.3, {\ryS+\rh/2}) {Short};
 
-%% ── X-axis year labels + grid lines ────────────────────────
-\foreach \yr in {2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025}{
-  \pgfmathsetmacro{\xp}{(\yr-2014)*\sc}
-  \draw[thesisDark!15, thin] (\xp, 0.0) -- (\xp, 4.55);
-  \node[xlab] at (\xp, -0.05) {\yr};
+%% ── X-axis year ticks + grid lines ──────────────────────
+\foreach \yr in {2014,2015,...,2025}{
+  \pgfmathsetmacro{\xp}{(\yr-2014)*1}
+  \draw[thesisDark!15, thin] (\xp, -0.15) -- (\xp, {3.4+\rh+0.15});
+  \node[xlabel] at (\xp, -0.22) {\yr};
 }
 
-%% ── Title ────────────────────────────────────────────────────
-\node[titlefont, anchor=south] at ({11.42*\sc/2}, 4.75)
-      {Chronological Train / Validation / Test Split by Window};
+%% ── Title ────────────────────────────────────────────────
+\node[font=\normalsize\bfseries, thesisDark, anchor=south]
+     at ({11.42/2}, {3.4+\rh+0.55})
+     {Chronological Train / Validation / Test Split by Window};
 
-%% ── Legend ───────────────────────────────────────────────────
-\def\legx{2.5}
-\def\legy{-0.85}
-\fill[thesisBlue]   (\legx, \legy) rectangle ({\legx+0.45}, {\legy+0.30});
-\fill[thesisAmber]  ({\legx+1.5}, \legy) rectangle ({\legx+1.95}, {\legy+0.30});
-\fill[thesisCrimson]({\legx+3.3}, \legy) rectangle ({\legx+3.75}, {\legy+0.30});
-\node[font=\footnotesize, thesisDark, anchor=west] at ({\legx+0.52}, {\legy+0.15}) {Train};
-\node[font=\footnotesize, thesisDark, anchor=west] at ({\legx+2.02}, {\legy+0.15}) {Validation};
-\node[font=\footnotesize, thesisDark, anchor=west] at ({\legx+3.82}, {\legy+0.15}) {Test};
+%% ── Legend ───────────────────────────────────────────────
+\def\legx{2.8}
+\def\legy{-1.1}
+\fill[thesisBlue]   (\legx, \legy) rectangle ({\legx+0.5}, {\legy+0.32});
+\node[font=\small, thesisDark, anchor=west] at ({\legx+0.6}, {\legy+0.16}) {Train};
+\fill[thesisAmber]  ({\legx+2.0}, \legy) rectangle ({\legx+2.5}, {\legy+0.32});
+\node[font=\small, thesisDark, anchor=west] at ({\legx+2.6}, {\legy+0.16}) {Validation};
+\fill[thesisCrimson]({\legx+4.5}, \legy) rectangle ({\legx+5.0}, {\legy+0.32});
+\node[font=\small, thesisDark, anchor=west] at ({\legx+5.1}, {\legy+0.16}) {Test};
 
 \end{tikzpicture}
 \end{document}

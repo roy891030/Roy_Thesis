@@ -1,4 +1,4 @@
-\documentclass[tikz,border=12pt]{standalone}
+\documentclass[tikz,border=14pt]{standalone}
 \usepackage[no-math]{fontspec}
 \usepackage{xeCJK}
 \usepackage[UTF8,fontset=none]{ctex}
@@ -9,241 +9,227 @@
 \IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
   {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
     {\setCJKmainfont{PingFang TC}}}
-
 \input{thesis_colors}
 
 \begin{document}
 \begin{tikzpicture}[
-  %% box styles
-  databox/.style={draw=thesisDark!60, fill=#1!12, rounded corners=3pt,
-                  minimum width=2.8cm, minimum height=1.8cm, thick, align=center,
-                  inner sep=4pt},
-  treebox/.style={draw=thesisDark!60, fill=thesisLight, rounded corners=3pt,
-                  minimum width=2.8cm, minimum height=1.8cm, thick},
-  predbox/.style={draw=thesisDark!60, fill=thesisBlue!12, rounded corners=3pt,
-                  minimum width=2.8cm, minimum height=0.9cm, thick, align=center,
-                  font=\small},
-  aggrbox/.style={draw=thesisCrimson!70, fill=thesisCrimson!10, rounded corners=4pt,
-                  minimum width=9.5cm, minimum height=0.85cm, thick, align=center,
-                  font=\small},
-  arr/.style={-{Stealth[length=2.5mm,width=2mm]}, thick, thesisDark},
-  redarr/.style={-{Stealth[length=2.2mm]}, thick, thesisCrimson, dashed},
-  sidewire/.style={very thick, thesisDark!50},
-  labelnode/.style={font=\small, thesisDark, align=center},
+  databox/.style={draw=thesisDark!50, fill=#1!12, rounded corners=4pt,
+                  minimum width=3.4cm, minimum height=2.2cm, thick},
+  treebox/.style={draw=thesisDark!50, fill=thesisLight, rounded corners=4pt,
+                  minimum width=3.4cm, minimum height=2.2cm, thick},
+  predbox/.style={draw=thesisBlue!60, fill=thesisBlue!10, rounded corners=4pt,
+                  minimum width=3.4cm, minimum height=1.1cm, thick, align=center,
+                  font=\normalsize},
+  aggrbox/.style={draw=thesisCrimson!70, fill=thesisCrimson!10, rounded corners=5pt,
+                  minimum width=12.0cm, minimum height=1.1cm, thick, align=center,
+                  font=\normalsize},
+  arr/.style={-{Stealth[length=3mm,width=2.5mm]}, thick, thesisDark},
+  redarr/.style={-{Stealth[length=2.5mm,width=2mm]}, thick, thesisCrimson, dashed},
+  rowlabel/.style={font=\small\bfseries, thesisDark, align=right},
+  coltitle/.style={font=\normalsize, thesisDark, align=center},
 ]
 
-%% ── Column x-centers ──────────────────────────────────────────
-\def\cx{0}    % column 1 (L_1)
-\def\cy{3.8}  % column 2 (L_2)
-\def\cz{7.6}  % column 3 (L_n)
+%% ── column x-centres ─────────────────────────────────────
+\def\cx{0}     % L_1
+\def\cy{4.2}   % L_2
+\def\cz{8.4}   % L_n
 
-%% ── Row y-positions ──────────────────────────────────────────
-\def\ydata{6.0}    % scatter data row
-\def\ytree{3.5}    % CART tree row
-\def\yrdata{1.0}   % reweighted data row
-\def\ypred{-1.0}   % prediction row
-\def\yaggr{-2.6}   % aggregation row
+%% ── row y-centres ────────────────────────────────────────
+\def\ydata{7.5}    % scatter data row
+\def\ytree{4.5}    % CART tree row
+\def\yrdata{1.5}   % reweighted data row
+\def\ypred{-1.2}   % prediction row
+\def\yaggr{-3.3}   % aggregation row
 
-%%──────────────────────────────────────────────────────────────
-%% TRAINING DATA header box
-%%──────────────────────────────────────────────────────────────
-\node[draw=thesisDark!60, dashed, fill=thesisBlue!6, rounded corners=4pt,
-      minimum width=10.5cm, minimum height=0.85cm, thick, font=\small\bfseries]
-     (tdata) at ({(\cx+\cz)/2}, 7.85) {Training data};
+%%──────────────────────────────────────────────────────────
+%% TRAINING DATA HEADER
+%%──────────────────────────────────────────────────────────
+\node[draw=thesisDark!55, dashed, fill=thesisBlue!6, rounded corners=5pt,
+      minimum width=13.5cm, minimum height=1.0cm, thick,
+      font=\normalsize\bfseries] (hdr)
+     at ({(\cx+\cz)/2}, 9.5) {Training data};
 
-%%──────────────────────────────────────────────────────────────
-%% COLUMN 1: L_1
-%%──────────────────────────────────────────────────────────────
-% Scatter data (colored dots inside box)
+%%──────────────────────────────────────────────────────────
+%% COLUMN 1  ( L_1 )
+%%──────────────────────────────────────────────────────────
+% --- scatter data
 \node[databox=thesisTeal] (d1) at (\cx, \ydata) {};
-\foreach \x/\y/\c in
-   {-0.7/0.3/thesisTeal, -0.2/0.5/thesisTeal, 0.4/-0.1/thesisTeal!60,
-    0.6/0.4/thesisAmber!80, -0.5/-0.3/thesisAmber!80, 0.1/-0.4/thesisCrimson!60}{
-   \fill[\c] ({(\cx)+\x*0.55}, {\ydata+\y*0.55}) circle (3pt);
-}
-\node[font=\small, above, thesisDark] at (d1.north) {$f(L_1)$};
+\begin{scope}[shift={(\cx, \ydata)}]
+  \foreach \px/\py/\pc/\ps in
+    {-0.8/0.5/thesisTeal/4.5pt, -0.3/0.7/thesisTeal/5pt,
+     0.5/0.1/thesisTeal!70/4pt, 0.7/0.6/thesisAmber!80/5.5pt,
+     -0.7/-0.4/thesisAmber!80/4.5pt, 0.1/-0.5/thesisCrimson!70/4pt}{
+    \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
+  }
+\end{scope}
+\node[coltitle, above=4pt] at (d1.north) {$f(L_1)$};
 
-% CART tree
+% --- CART tree
 \node[treebox] (t1) at (\cx, \ytree) {};
 \begin{scope}[shift={(\cx,\ytree)}]
-  % root
-  \fill[thesisDark!60] (0,0.55) circle(4pt);
-  % level 1
-  \fill[thesisTeal!70]    (-0.55,-0.1) circle(3.5pt);
-  \fill[thesisAmber!70]   ( 0.55,-0.1) circle(3.5pt);
-  % level 2
-  \fill[thesisTeal!50]   (-0.9,-0.7) circle(3pt);
-  \fill[thesisTeal!50]   (-0.2,-0.7) circle(3pt);
-  \fill[thesisAmber!50]  ( 0.2,-0.7) circle(3pt);
-  \fill[thesisAmber!50]  ( 0.9,-0.7) circle(3pt);
-  % edges
-  \draw[thesisDark!50, thin] (0,0.55) -- (-0.55,-0.1);
-  \draw[thesisDark!50, thin] (0,0.55) -- ( 0.55,-0.1);
-  \draw[thesisDark!50, thin] (-0.55,-0.1) -- (-0.9,-0.7);
-  \draw[thesisDark!50, thin] (-0.55,-0.1) -- (-0.2,-0.7);
-  \draw[thesisDark!50, thin] ( 0.55,-0.1) -- ( 0.2,-0.7);
-  \draw[thesisDark!50, thin] ( 0.55,-0.1) -- ( 0.9,-0.7);
+  \fill[thesisDark!55]   (0, 0.65) circle(5.5pt);
+  \fill[thesisTeal!70]   (-0.65,-0.10) circle(5pt);
+  \fill[thesisAmber!70]  ( 0.65,-0.10) circle(5pt);
+  \fill[thesisTeal!55]   (-1.0,-0.80) circle(4pt);
+  \fill[thesisTeal!55]   (-0.25,-0.80) circle(4pt);
+  \fill[thesisAmber!55]  ( 0.25,-0.80) circle(4pt);
+  \fill[thesisAmber!55]  ( 1.0,-0.80) circle(4pt);
+  \draw[thesisDark!45, thin] (0,0.65)--(-0.65,-0.10) (0,0.65)--(0.65,-0.10);
+  \draw[thesisDark!45, thin] (-0.65,-0.10)--(-1.0,-0.80) (-0.65,-0.10)--(-0.25,-0.80);
+  \draw[thesisDark!45, thin]  (0.65,-0.10)--( 0.25,-0.80)  (0.65,-0.10)--( 1.0,-0.80);
 \end{scope}
 
-% Reweighted data
+% --- reweighted data
 \node[databox=thesisTeal] (r1) at (\cx, \yrdata) {};
-\foreach \x/\y/\c/\s in
-   {-0.6/0.4/thesisTeal/4pt, -0.1/0.6/thesisTeal/5pt, 0.5/0.1/thesisTeal!60/3pt,
-    0.5/0.5/thesisAmber!80/5pt, -0.5/-0.3/thesisAmber!80/4pt, 0.0/-0.5/thesisCrimson!60/6pt}{
-   \fill[\c] ({(\cx)+\x*0.55}, {\yrdata+\y*0.55}) circle(\s);
-}
+\begin{scope}[shift={(\cx, \yrdata)}]
+  \foreach \px/\py/\pc/\ps in
+    {-0.7/0.5/thesisTeal/4pt, -0.1/0.8/thesisTeal/5.5pt,
+     0.6/0.1/thesisTeal!70/4pt, 0.7/0.7/thesisAmber!80/6.5pt,
+     -0.6/-0.3/thesisAmber!80/5.5pt, 0.1/-0.5/thesisCrimson!70/6pt}{
+    \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
+  }
+\end{scope}
 
-%%──────────────────────────────────────────────────────────────
-%% COLUMN 2: L_2
-%%──────────────────────────────────────────────────────────────
+%%──────────────────────────────────────────────────────────
+%% COLUMN 2  ( L_2 )
+%%──────────────────────────────────────────────────────────
 \node[databox=thesisAmber] (d2) at (\cy, \ydata) {};
-\foreach \x/\y/\c in
-   {-0.6/0.2/thesisTeal, 0.1/0.5/thesisTeal!70, 0.5/0.0/thesisTeal!50,
-    0.4/0.5/thesisAmber!80, -0.4/-0.2/thesisAmber!80, -0.1/-0.5/thesisCrimson!60}{
-   \fill[\c] ({(\cy)+\x*0.55}, {\ydata+\y*0.55}) circle (3pt);
-}
-\node[font=\small, above, thesisDark] at (d2.north) {$f(L_2)$};
+\begin{scope}[shift={(\cy,\ydata)}]
+  \foreach \px/\py/\pc/\ps in
+    {-0.7/0.3/thesisTeal/4pt, 0.2/0.7/thesisTeal!70/4.5pt,
+     0.6/0.0/thesisTeal!60/3.5pt, 0.5/0.7/thesisAmber!80/6pt,
+     -0.6/-0.3/thesisAmber!80/5pt, -0.1/-0.6/thesisCrimson!70/4.5pt}{
+    \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
+  }
+\end{scope}
+\node[coltitle, above=4pt] at (d2.north) {$f(L_2)$};
 
 \node[treebox] (t2) at (\cy, \ytree) {};
 \begin{scope}[shift={(\cy,\ytree)}]
-  \fill[thesisDark!60] (0,0.55) circle(4pt);
-  \fill[thesisTeal!70]    (-0.55,-0.1) circle(3.5pt);
-  \fill[thesisAmber!70]   ( 0.55,-0.1) circle(3.5pt);
-  \fill[thesisTeal!50]   (-0.9,-0.7) circle(3pt);
-  \fill[thesisTeal!50]   (-0.2,-0.7) circle(3pt);
-  \fill[thesisAmber!50]  ( 0.2,-0.7) circle(3pt);
-  \fill[thesisCrimson!60]( 0.9,-0.7) circle(3pt);
-  \draw[thesisDark!50, thin] (0,0.55) -- (-0.55,-0.1);
-  \draw[thesisDark!50, thin] (0,0.55) -- ( 0.55,-0.1);
-  \draw[thesisDark!50, thin] (-0.55,-0.1) -- (-0.9,-0.7);
-  \draw[thesisDark!50, thin] (-0.55,-0.1) -- (-0.2,-0.7);
-  \draw[thesisDark!50, thin] ( 0.55,-0.1) -- ( 0.2,-0.7);
-  \draw[thesisDark!50, thin] ( 0.55,-0.1) -- ( 0.9,-0.7);
+  \fill[thesisDark!55]   (0, 0.65) circle(5.5pt);
+  \fill[thesisTeal!70]   (-0.65,-0.10) circle(5pt);
+  \fill[thesisAmber!70]  ( 0.65,-0.10) circle(5pt);
+  \fill[thesisTeal!55]   (-1.0,-0.80) circle(4pt);
+  \fill[thesisTeal!55]   (-0.25,-0.80) circle(4pt);
+  \fill[thesisAmber!55]  ( 0.25,-0.80) circle(4pt);
+  \fill[thesisCrimson!60]( 1.0,-0.80) circle(4pt);
+  \draw[thesisDark!45, thin] (0,0.65)--(-0.65,-0.10) (0,0.65)--(0.65,-0.10);
+  \draw[thesisDark!45, thin] (-0.65,-0.10)--(-1.0,-0.80) (-0.65,-0.10)--(-0.25,-0.80);
+  \draw[thesisDark!45, thin]  (0.65,-0.10)--( 0.25,-0.80)  (0.65,-0.10)--( 1.0,-0.80);
 \end{scope}
 
 \node[databox=thesisAmber] (r2) at (\cy, \yrdata) {};
-\foreach \x/\y/\c/\s in
-   {-0.6/0.5/thesisTeal/3pt,-0.0/0.6/thesisTeal/4pt,0.5/0.2/thesisTeal!60/3pt,
-    0.5/0.6/thesisAmber!80/6pt,-0.4/-0.1/thesisAmber!80/5pt,0.0/-0.4/thesisCrimson!60/5pt}{
-   \fill[\c] ({(\cy)+\x*0.55}, {\yrdata+\y*0.55}) circle(\s);
-}
+\begin{scope}[shift={(\cy,\yrdata)}]
+  \foreach \px/\py/\pc/\ps in
+    {-0.6/0.6/thesisTeal/4pt, 0.0/0.8/thesisTeal/5pt,
+     0.6/0.2/thesisTeal!60/3.5pt, 0.7/0.7/thesisAmber!80/7pt,
+     -0.5/-0.2/thesisAmber!80/5.5pt, 0.1/-0.5/thesisCrimson!70/5.5pt}{
+    \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
+  }
+\end{scope}
 
-%%──────────────────────────────────────────────────────────────
-%% DOTS between col2 and col3
-%%──────────────────────────────────────────────────────────────
-\node[font=\large, thesisDark!50] at ({(\cy+\cz)/2}, \ydata) {$\cdots$};
-\node[font=\large, thesisDark!50] at ({(\cy+\cz)/2}, \ytree) {$\cdots$};
-\node[font=\large, thesisDark!50] at ({(\cy+\cz)/2}, \yrdata) {$\cdots$};
+%%──────────────────────────────────────────────────────────
+%% ELLIPSIS between col2 and col3
+%%──────────────────────────────────────────────────────────
+\node[font=\LARGE, thesisDark!45] at ({(\cy+\cz)/2}, \ydata)  {$\cdots$};
+\node[font=\LARGE, thesisDark!45] at ({(\cy+\cz)/2}, \ytree)  {$\cdots$};
+\node[font=\LARGE, thesisDark!45] at ({(\cy+\cz)/2}, \yrdata) {$\cdots$};
 
-%%──────────────────────────────────────────────────────────────
-%% COLUMN 3: L_n
-%%──────────────────────────────────────────────────────────────
+%%──────────────────────────────────────────────────────────
+%% COLUMN 3  ( L_n )
+%%──────────────────────────────────────────────────────────
 \node[databox=thesisCrimson] (dn) at (\cz, \ydata) {};
-\foreach \x/\y/\c in
-   {-0.5/0.3/thesisTeal,-0.1/0.5/thesisTeal!70,0.5/0.1/thesisTeal!50,
-    0.6/0.5/thesisAmber!80,-0.6/-0.3/thesisAmber!80,0.1/-0.5/thesisCrimson!80}{
-   \fill[\c] ({(\cz)+\x*0.55}, {\ydata+\y*0.55}) circle (3pt);
-}
-\node[font=\small, above, thesisDark] at (dn.north) {$f(L_n)$};
+\begin{scope}[shift={(\cz,\ydata)}]
+  \foreach \px/\py/\pc/\ps in
+    {-0.6/0.4/thesisTeal/4pt, -0.1/0.6/thesisTeal!70/4.5pt,
+     0.6/0.1/thesisTeal!60/3.5pt, 0.7/0.6/thesisAmber!80/5.5pt,
+     -0.7/-0.3/thesisAmber!80/5pt, 0.1/-0.5/thesisCrimson!80/5.5pt}{
+    \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
+  }
+\end{scope}
+\node[coltitle, above=4pt] at (dn.north) {$f(L_n)$};
 
 \node[treebox] (tn) at (\cz, \ytree) {};
 \begin{scope}[shift={(\cz,\ytree)}]
-  \fill[thesisDark!60] (0,0.55) circle(4pt);
-  \fill[thesisTeal!70]    (-0.55,-0.1) circle(3.5pt);
-  \fill[thesisCrimson!70] ( 0.55,-0.1) circle(3.5pt);
-  \fill[thesisTeal!50]    (-0.9,-0.7) circle(3pt);
-  \fill[thesisTeal!50]    (-0.2,-0.7) circle(3pt);
-  \fill[thesisCrimson!50] ( 0.2,-0.7) circle(3pt);
-  \fill[thesisCrimson!50] ( 0.9,-0.7) circle(3pt);
-  \draw[thesisDark!50, thin] (0,0.55) -- (-0.55,-0.1);
-  \draw[thesisDark!50, thin] (0,0.55) -- ( 0.55,-0.1);
-  \draw[thesisDark!50, thin] (-0.55,-0.1) -- (-0.9,-0.7);
-  \draw[thesisDark!50, thin] (-0.55,-0.1) -- (-0.2,-0.7);
-  \draw[thesisDark!50, thin] ( 0.55,-0.1) -- ( 0.2,-0.7);
-  \draw[thesisDark!50, thin] ( 0.55,-0.1) -- ( 0.9,-0.7);
+  \fill[thesisDark!55]    (0, 0.65) circle(5.5pt);
+  \fill[thesisTeal!70]    (-0.65,-0.10) circle(5pt);
+  \fill[thesisCrimson!70] ( 0.65,-0.10) circle(5pt);
+  \fill[thesisTeal!55]    (-1.0,-0.80) circle(4pt);
+  \fill[thesisTeal!55]    (-0.25,-0.80) circle(4pt);
+  \fill[thesisCrimson!55] ( 0.25,-0.80) circle(4pt);
+  \fill[thesisCrimson!55] ( 1.0,-0.80) circle(4pt);
+  \draw[thesisDark!45, thin] (0,0.65)--(-0.65,-0.10) (0,0.65)--(0.65,-0.10);
+  \draw[thesisDark!45, thin] (-0.65,-0.10)--(-1.0,-0.80) (-0.65,-0.10)--(-0.25,-0.80);
+  \draw[thesisDark!45, thin]  (0.65,-0.10)--( 0.25,-0.80)  (0.65,-0.10)--( 1.0,-0.80);
 \end{scope}
 
 \node[databox=thesisCrimson] (rn) at (\cz, \yrdata) {};
-\foreach \x/\y/\c/\s in
-   {-0.6/0.3/thesisTeal/3pt,-0.0/0.5/thesisTeal/4pt,0.5/0.1/thesisTeal!50/3pt,
-    0.6/0.6/thesisAmber!80/7pt,-0.5/-0.2/thesisAmber!80/5pt,0.1/-0.4/thesisCrimson!80/6pt}{
-   \fill[\c] ({(\cz)+\x*0.55}, {\yrdata+\y*0.55}) circle(\s);
-}
+\begin{scope}[shift={(\cz,\yrdata)}]
+  \foreach \px/\py/\pc/\ps in
+    {-0.6/0.4/thesisTeal/4pt, 0.0/0.6/thesisTeal/4.5pt,
+     0.6/0.1/thesisTeal!60/3.5pt, 0.7/0.7/thesisAmber!80/8pt,
+     -0.6/-0.2/thesisAmber!80/6pt, 0.1/-0.4/thesisCrimson!80/6.5pt}{
+    \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
+  }
+\end{scope}
 
-%%──────────────────────────────────────────────────────────────
-%% TRAINING PHASE arrows (top → bottom within each column)
-%%──────────────────────────────────────────────────────────────
+%%──────────────────────────────────────────────────────────
+%% VERTICAL ARROWS (training-phase flow)
+%%──────────────────────────────────────────────────────────
 \foreach \col in {\cx, \cy, \cz}{
-  \draw[arr] (\col, {\ydata-0.9}) -- (\col, {\ytree+0.9});
-  \draw[arr] (\col, {\ytree-0.9}) -- (\col, {\yrdata+0.9});
-}
-% Arrow from training data header
-\foreach \col in {\cx, \cy, \cz}{
-  \draw[arr] (\col, 7.4) -- (\col, {\ydata+0.9});
+  \draw[arr] (\col, 8.8) -- (\col, {\ydata+1.1});
+  \draw[arr] (\col, {\ydata-1.1}) -- (\col, {\ytree+1.1});
+  \draw[arr] (\col, {\ytree-1.1}) -- (\col, {\yrdata+1.1});
+  \draw[arr] (\col, {\yrdata-1.1}) -- (\col, {\ypred+0.6});
 }
 
-%%──────────────────────────────────────────────────────────────
-%% WEIGHTING INCREASE dashed red arrows (between columns)
-%%──────────────────────────────────────────────────────────────
-\draw[redarr, bend left=20] (r1.east) to node[above, font=\tiny, thesisCrimson]
-      {weight} (r2.west);
-\node[font=\tiny, thesisCrimson] at ({(\cy+\cz)/2}, {\yrdata+0.7}) {Weighting};
-\node[font=\tiny, thesisCrimson] at ({(\cy+\cz)/2}, {\yrdata+0.35}) {increase};
+%%──────────────────────────────────────────────────────────
+%% WEIGHTING FEEDBACK ARROW (col 1 → col 2)
+%%──────────────────────────────────────────────────────────
+\draw[redarr, bend left=20] (r1.east)
+      to node[midway, above=3pt, font=\small, thesisCrimson] {Weighting increase}
+         (r2.west);
 
-%%──────────────────────────────────────────────────────────────
-%% DIVIDING LINE between Training and Testing
-%%──────────────────────────────────────────────────────────────
-\draw[thesisDark!30, dashed, line width=1pt]
-     (-2.0, {(\yrdata+\ypred)/2}) -- (9.8, {(\yrdata+\ypred)/2});
+%%──────────────────────────────────────────────────────────
+%% DIVIDING LINE (Training / Testing)
+%%──────────────────────────────────────────────────────────
+\draw[thesisDark!30, dashed, line width=1.2pt]
+     (-2.6, {(\yrdata+\ypred)/2}) -- (10.8, {(\yrdata+\ypred)/2});
 
-%%──────────────────────────────────────────────────────────────
-%% PREDICTION ROW (Testing phase)
-%%──────────────────────────────────────────────────────────────
+%%──────────────────────────────────────────────────────────
+%% PREDICTION ROW
+%%──────────────────────────────────────────────────────────
 \node[predbox] (p1) at (\cx, \ypred) {$\hat{y}_L^{(1)}$};
 \node[predbox] (p2) at (\cy, \ypred) {$\hat{y}_L^{(2)}$};
 \node[predbox] (pn) at (\cz, \ypred) {$\hat{y}_L^{(N)}$};
-\node[font=\large, thesisDark!50] at ({(\cy+\cz)/2}, \ypred) {$\cdots$};
+\node[font=\LARGE, thesisDark!45] at ({(\cy+\cz)/2}, \ypred) {$\cdots$};
 
-% Weighting increase label between predictions
-\node[font=\tiny, thesisCrimson!80] at ({(\cy+\cz)/2}, {\ypred-0.55}) {Weighting increase};
-
-% Arrows: reweighted → prediction
-\foreach \col in {\cx, \cy, \cz}{
-  \draw[arr] (\col, {\yrdata-0.9}) -- (\col, {\ypred+0.45});
-}
-
-%%──────────────────────────────────────────────────────────────
+%%──────────────────────────────────────────────────────────
 %% AGGREGATION BOX
-%%──────────────────────────────────────────────────────────────
+%%──────────────────────────────────────────────────────────
 \node[aggrbox] (aggr) at ({(\cx+\cz)/2}, \yaggr)
       {Average aggregation of predictors};
 
-% Convergence arrows from predictions to aggregation
 \draw[arr, thesisCrimson!70] (p1.south) -- (aggr.north west);
 \draw[arr, thesisCrimson!70] (p2.south) -- (aggr.north);
 \draw[arr, thesisCrimson!70] (pn.south) -- (aggr.north east);
 
-%%──────────────────────────────────────────────────────────────
-%% LEFT SIDE LABELS (horizontal, bracketed)
-%%──────────────────────────────────────────────────────────────
-% Building T CART trees — bracket spanning data→reweighted rows
-\draw[decorate, decoration={brace,amplitude=5pt,mirror}, thesisDark!55]
-     (-1.8, {\ytree+0.9}) -- (-1.8, {\yrdata-0.9})
-     node[midway, left=5pt, rotate=90, font=\small, thesisDark, align=center]
-          {Building $T$ CART trees};
-% Prediction label left of prediction row
-\node[labelnode, rotate=90, font=\small] at (-1.5, \ypred)
-      {Prediction};
+%%──────────────────────────────────────────────────────────
+%% LEFT ROW LABELS
+%%──────────────────────────────────────────────────────────
+\node[rowlabel, anchor=east] at (-2.4, \ytree)   {Building $T$\\CART trees};
+\node[rowlabel, anchor=east] at (-2.4, \yrdata)  {Weighting\\increase};
+\node[rowlabel, anchor=east] at (-2.4, \ypred)   {Prediction};
 
-%%──────────────────────────────────────────────────────────────
+%%──────────────────────────────────────────────────────────
 %% RIGHT SIDE BRACKETS
-%%──────────────────────────────────────────────────────────────
-\draw[decorate, decoration={brace,amplitude=6pt}, thesisDark!60]
-     (9.5, {\ydata+0.9}) -- (9.5, {\yrdata-0.9})
-     node[midway, right=6pt, font=\small\bfseries, thesisDark] {Training};
-\draw[decorate, decoration={brace,amplitude=6pt}, thesisDark!60]
-     (9.5, {\ypred+0.45}) -- (9.5, {\ypred-0.45})
-     node[midway, right=6pt, font=\small\bfseries, thesisDark] {Testing};
+%%──────────────────────────────────────────────────────────
+\draw[decorate, decoration={brace,amplitude=7pt}, thesisDark!60]
+     (10.5, {9.5+0.45}) -- (10.5, {\yrdata-1.1})
+     node[midway, right=7pt, font=\small\bfseries, thesisDark] {Training};
+\draw[decorate, decoration={brace,amplitude=7pt}, thesisDark!60]
+     (10.5, {\ypred+0.55}) -- (10.5, {\ypred-0.55})
+     node[midway, right=7pt, font=\small\bfseries, thesisDark] {Testing};
 
 \end{tikzpicture}
 \end{document}

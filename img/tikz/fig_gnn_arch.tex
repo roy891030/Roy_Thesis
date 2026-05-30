@@ -1,4 +1,4 @@
-\documentclass[tikz,border=12pt]{standalone}
+\documentclass[tikz,border=14pt]{standalone}
 \usepackage[no-math]{fontspec}
 \usepackage{xeCJK}
 \usepackage[UTF8,fontset=none]{ctex}
@@ -9,118 +9,93 @@
 \IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
   {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
     {\setCJKmainfont{PingFang TC}}}
-
 \input{thesis_colors}
-
-% Node colors cycling for input/output feature nodes
-\colorlet{nc1}{thesisTeal}
-\colorlet{nc2}{thesisCrimson}
-\colorlet{nc3}{thesisAmber}
-\colorlet{nc4}{thesisPurple}
-\colorlet{nc5}{thesisForest}
 
 \begin{document}
 \begin{tikzpicture}[
-  bignode/.style={circle, draw=thesisForest!80!thesisDark, fill=thesisForest!40,
-                  thick, minimum size=13mm},
-  smallnode/.style={circle, draw=#1!80!thesisDark, fill=#1!50, thick, minimum size=7mm},
-  arr/.style={-{Stealth[length=3mm,width=2.5mm]}, thesisDark!70, line width=1.2pt},
-  layerlabel/.style={font=\small\itshape, thesisDark},
-  eqlabel/.style={font=\small, thesisDark, align=center},
+  % ── generic node ─────────────────────────────────────────
+  fnode/.style={circle, draw=#1!80!thesisDark, fill=#1!40, thick,
+                minimum size=14mm, font=\normalsize\bfseries, inner sep=0},
+  hnode/.style={circle, draw=thesisForest, fill=thesisForest!40, very thick,
+                minimum size=14mm, font=\normalsize, inner sep=0},
+  % ── arrows ───────────────────────────────────────────────
+  arr/.style={-{Stealth[length=3mm,width=2.5mm]}, thesisDark!55, line width=1.0pt},
+  laybox/.style={draw=thesisDark!40, dashed, rounded corners=4pt,
+                 inner sep=10pt, line width=0.8pt},
+  laylabel/.style={font=\small\itshape, thesisDark},
+  eqlabel/.style={font=\normalsize, thesisDark, align=center},
 ]
 
-\def\sep{4.0}    % horizontal spacing between layers
-\def\vsep{1.15}  % vertical spacing between nodes within layer
-\def\depth{0.28} % 3-D offset depth
-\def\lw{1.5}     % layer panel width
-\def\lh{5.8}     % layer panel height
+%% ─── column positions & node y-spacing ──────────────────
+\def\colsep{5.0}   % horizontal distance between column centres
+\def\nodesep{2.2}  % vertical distance between nodes in a column
+\def\N{5}          % nodes per column
 
-% ─── helper macro: draw one layer column ───────────────────────
-% #1=x-center, #2=y-top, #3=panel label text, #4=number of feature nodes
-\newcommand{\drawlayer}[4]{%
-  \begin{pgfonlayer}{background}
-    % front face (white, slight border)
-    \fill[white, draw=thesisDark!40, line width=0.6pt]
-         ({#1-\lw/2},{#2-\lh}) rectangle ({#1+\lw/2},{#2});
-    % top face (light gray parallelogram)
-    \fill[thesisLight, draw=thesisDark!30, line width=0.5pt]
-         ({#1-\lw/2},{#2}) -- ({#1-\lw/2+\depth},{#2+\depth})
-         -- ({#1+\lw/2+\depth},{#2+\depth}) -- ({#1+\lw/2},{#2}) -- cycle;
-    % right face (light gray parallelogram)
-    \fill[thesisLight!80, draw=thesisDark!30, line width=0.5pt]
-         ({#1+\lw/2},{#2}) -- ({#1+\lw/2+\depth},{#2+\depth})
-         -- ({#1+\lw/2+\depth},{#2-\lh+\depth}) -- ({#1+\lw/2},{#2-\lh}) -- cycle;
-  \end{pgfonlayer}
+% Colour cycle for input / output columns
+\def\colorA{thesisTeal}
+\def\colorB{thesisCrimson}
+\def\colorC{thesisAmber}
+\def\colorD{thesisPurple}
+\def\colorE{thesisForest}
+
+%% ─── Column 0: Input X ───────────────────────────────────
+\foreach \row/\col in {1/\colorA, 2/\colorB, 3/\colorC, 4/\colorD, 5/\colorE}{
+  \node[fnode=\col] (x\row) at (0, {(\N-\row)*\nodesep})
+      {$x_{\row}$};
+}
+\begin{pgfonlayer}{background}
+  \node[laybox, fit=(x1)(x5)] (box0) {};
+\end{pgfonlayer}
+\node[laylabel, below=4pt] at (box0.south) {input layer};
+\node[eqlabel, below=16pt] at (box0.south) {$X$};
+
+%% ─── Column 1: Hidden H^1 ───────────────────────────────
+\foreach \row in {1,...,5}{
+  \node[hnode] (h1\row) at (\colsep, {(\N-\row)*\nodesep}) {};
+}
+\begin{pgfonlayer}{background}
+  \node[laybox, fit=(h11)(h15)] (box1) {};
+\end{pgfonlayer}
+\node[laylabel, below=4pt]  at (box1.south) {hidden layer};
+\node[eqlabel, below=18pt] at (box1.south) {$H^1 = \delta(AXW^0)$};
+
+%% ─── Column 2: Hidden H^2 ───────────────────────────────
+\foreach \row in {1,...,5}{
+  \node[hnode] (h2\row) at ({2*\colsep}, {(\N-\row)*\nodesep}) {};
+}
+\begin{pgfonlayer}{background}
+  \node[laybox, fit=(h21)(h25)] (box2) {};
+\end{pgfonlayer}
+\node[laylabel, below=4pt]  at (box2.south) {hidden layer};
+\node[eqlabel, below=18pt] at (box2.south) {$H^2 = \delta(AH^1W^1)$};
+
+%% ─── Column 3: Output Z ─────────────────────────────────
+\foreach \row/\col in {1/\colorB, 2/\colorE, 3/\colorC, 4/\colorA, 5/\colorD}{
+  \node[fnode=\col] (z\row) at ({3*\colsep}, {(\N-\row)*\nodesep})
+      {$z_{\row}$};
+}
+\begin{pgfonlayer}{background}
+  \node[laybox, fit=(z1)(z5)] (box3) {};
+\end{pgfonlayer}
+\node[laylabel, below=4pt] at (box3.south) {output layer};
+\node[eqlabel, below=16pt] at (box3.south) {$Z$};
+
+%% ─── Arrows: X → H^1 (sampled, representative) ─────────
+\foreach \fr/\to in {x1/h11, x1/h12, x2/h11, x3/h13, x4/h13,
+                     x4/h14, x5/h14, x5/h15, x2/h15, x3/h12}{
+  \draw[arr] (\fr.east) -- (\to.west);
 }
 
-% ─── Layer 0: Input X ──────────────────────────────────────────
-\def\x{0}
-\drawlayer{\x}{4.5}{}{5}
-\node[layerlabel, below] at (\x, -1.6) {input layer};
-\node[layerlabel, below=1pt] at (\x, -2.0) {$X$};
-
-% Feature nodes in layer 0
-\foreach \row/\col in {1/nc1, 2/nc2, 3/nc3, 4/nc4, 5/nc5}{
-  \node[smallnode=\col] (x\row) at (\x, {4.0 - (\row-1)*\vsep})
-      {\tiny $X_{\row}$};
+%% ─── Arrows: H^1 → H^2 ──────────────────────────────────
+\foreach \fr/\to in {h11/h21, h12/h21, h11/h22, h13/h22, h13/h23,
+                     h14/h23, h15/h24, h14/h25, h12/h25, h15/h24}{
+  \draw[arr] (\fr.east) -- (\to.west);
 }
 
-% ─── Layer 1: H^1 ──────────────────────────────────────────────
-\def\x{\sep}
-\drawlayer{\x}{4.5}{}{4}
-\node[layerlabel, below] at (\x,-1.6) {hidden layer};
-\node[eqlabel, below=1pt] at (\x,-2.05)
-    {$H^1\!=\!\delta(AXW^0)$};
-
-% Big green aggregation nodes
-\foreach \row in {1,2,3}{
-  \node[bignode] (h1big\row) at (\x, {3.7 - (\row-1)*1.7}) {};
-}
-% Small feature nodes (lighter)
-\foreach \row/\col in {1/nc1, 2/nc2, 3/nc3, 4/nc4}{
-  \node[smallnode=\col, minimum size=5mm] (h1s\row) at ({\x+0.55}, {3.8-(\row-1)*0.9})
-      {\tiny $\tilde{X}_{\row}$};
-}
-% dots
-\node[font=\small, thesisDark!60] at (\x, -0.5) {$\vdots$};
-
-% ─── Layer 2: H^2 ──────────────────────────────────────────────
-\def\x{2*\sep}
-\drawlayer{\x}{4.5}{}{4}
-\node[layerlabel, below] at (\x,-1.6) {hidden layer};
-\node[eqlabel, below=1pt] at (\x,-2.05)
-    {$H^2\!=\!\delta(AH^1W^1)$};
-
-\foreach \row in {1,2,3}{
-  \node[bignode] (h2big\row) at (\x, {3.7 - (\row-1)*1.7}) {};
-}
-\foreach \row/\col in {1/nc1, 2/nc3, 3/nc2, 4/nc5}{
-  \node[smallnode=\col, minimum size=5mm] (h2s\row) at ({\x+0.55}, {3.8-(\row-1)*0.9})
-      {\tiny $\tilde{X}_{\row}$};
-}
-\node[font=\small, thesisDark!60] at (\x,-0.5) {$\vdots$};
-
-% ─── Layer 3: Output Z ─────────────────────────────────────────
-\def\x{3*\sep}
-\drawlayer{\x}{4.5}{}{5}
-\node[layerlabel, below] at (\x,-1.6) {output layer};
-\node[layerlabel, below=1pt] at (\x,-2.0) {$Z$};
-
-\foreach \row/\col in {1/nc2, 2/nc5, 3/nc3, 4/nc1, 5/nc4}{
-  \node[smallnode=\col] (z\row) at (\x, {4.0-(\row-1)*\vsep})
-      {\tiny $Z_{\row}$};
-}
-
-% ─── Layer-to-layer arrows (batch, sampled) ─────────────────────
-\foreach \fr/\to in {x1/h1big1, x2/h1big1, x3/h1big2, x4/h1big2, x5/h1big3}{
-  \draw[arr, opacity=0.55] (\fr.east) -- (\to.west);
-}
-\foreach \fr/\to in {h1big1/h2big1, h1big2/h2big2, h1big3/h2big3,
-                     h1big1/h2big2, h1big3/h2big1}{
-  \draw[arr, opacity=0.55] (\fr.east) -- (\to.west);
-}
-\foreach \fr/\to in {h2big1/z1, h2big1/z2, h2big2/z3, h2big3/z4, h2big3/z5}{
-  \draw[arr, opacity=0.55] (\fr.east) -- (\to.west);
+%% ─── Arrows: H^2 → Z ────────────────────────────────────
+\foreach \fr/\to in {h21/z1, h21/z2, h22/z2, h23/z3, h23/z4,
+                     h24/z4, h25/z5, h24/z1, h22/z3, h25/z5}{
+  \draw[arr] (\fr.east) -- (\to.west);
 }
 
 \end{tikzpicture}

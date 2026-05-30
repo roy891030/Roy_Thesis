@@ -9,94 +9,93 @@
 \IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
   {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
     {\setCJKmainfont{PingFang TC}}}
-
 \input{thesis_colors}
 
 \begin{document}
 \begin{tikzpicture}[
-  arr/.style={-{Stealth[length=1.8mm,width=1.5mm]}, thesisDark!45, line width=0.6pt},
-  clustertitle/.style={font=\small\bfseries, thesisDark, anchor=south},
-  nodelabel/.style={font=\fontsize{5.8pt}{7pt}\selectfont, thesisDark, align=center},
-  centerlabel/.style={font=\footnotesize\itshape, thesisDark!60, align=center},
+  arr/.style={-{Stealth[length=1.6mm,width=1.3mm]}, thesisDark!35, line width=0.5pt},
+  nodefont/.style={font=\fontsize{6.5pt}{7.5pt}\selectfont, thesisDark, align=center},
 ]
 
+%% ── Cluster macro ────────────────────────────────────────
+%% Draws one 6-node fully-connected cluster (2 cols × 3 rows).
+%% #1 = x offset,  #2 = node colour,  #3 = cluster title,
+%% #4..#9 = six stock labels (top-left to bot-right, row-major)
+%%
+%% Node layout (local coords):
+%%   ( -hg,  vg ) ( hg,  vg )   ← row 1 (top)
+%%   ( -hg,   0 ) ( hg,   0 )   ← row 2 (mid)
+%%   ( -hg, -vg ) ( hg, -vg )   ← row 3 (bot)
 
-%%── Cluster 1: 電子零組件 ─────────────────────────────────────
-\def\cx{0}\def\cy{0}
-\def\ndx{1.05}\def\ndy{1.60}
-\foreach \i/\ii in {1/tl,2/tr,3/ml,4/mr,5/bl,6/br}{
-  \ifnum\i=1 \coordinate (na_\i) at ({-\ndx},{\ndy}); \fi
-  \ifnum\i=2 \coordinate (na_\i) at ({+\ndx},{\ndy}); \fi
-  \ifnum\i=3 \coordinate (na_\i) at ({-\ndx},{0});    \fi
-  \ifnum\i=4 \coordinate (na_\i) at ({+\ndx},{0});    \fi
-  \ifnum\i=5 \coordinate (na_\i) at ({-\ndx},{-\ndy});\fi
-  \ifnum\i=6 \coordinate (na_\i) at ({+\ndx},{-\ndy});\fi
-}
-% Edges
-\foreach \i in {1,...,6}{
-  \foreach \j in {1,...,6}{
-    \ifnum\i<\j
-      \draw[arr] (na_\i) -- (na_\j);
-    \fi
+\newcommand{\cluster}[9]{%
+  \def\hg{1.15}  % half horizontal gap (col offset)
+  \def\vg{2.10}  % vertical gap (row offset) — enough room for label + edge
+  \def\nr{0.55}  % node radius in cm (min size = 2*\nr = 11mm)
+  %
+  % Compute 6 node coordinates (in absolute coords)
+  \coordinate (cA) at ({#1-\hg}, { \vg});
+  \coordinate (cB) at ({#1+\hg}, { \vg});
+  \coordinate (cC) at ({#1-\hg}, {  0 });
+  \coordinate (cD) at ({#1+\hg}, {  0 });
+  \coordinate (cE) at ({#1-\hg}, {-\vg});
+  \coordinate (cF) at ({#1+\hg}, {-\vg});
+  %
+  % Draw ALL edges (complete graph, 15 pairs)
+  \begin{pgfonlayer}{background}
+    \foreach \ii/\jj in {cA/cB, cA/cC, cA/cD, cA/cE, cA/cF,
+                         cB/cC, cB/cD, cB/cE, cB/cF,
+                         cC/cD, cC/cE, cC/cF,
+                         cD/cE, cD/cF, cE/cF}{
+      \draw[arr] (\ii) -- (\jj);
+    }
+  \end{pgfonlayer}
+  %
+  % Draw nodes on top
+  \foreach \nd in {cA,cB,cC,cD,cE,cF}{
+    \node[circle, draw=#2!75!thesisDark, fill=#2!35, thick,
+          minimum size={2*\nr cm}, inner sep=0]
+         (N\nd) at (\nd) {};
+    % Self-loop (outward)
+    \draw[arr, looseness=7.5, out=100, in=80] (N\nd) to (N\nd);
   }
+  %
+  % Labels: above top nodes, beside middle nodes, below bottom nodes
+  \node[nodefont, above=3pt] at (NcA.north) {#4};
+  \node[nodefont, above=3pt] at (NcB.north) {#5};
+  \node[nodefont, left=4pt]  at (NcC.west)  {#6};
+  \node[nodefont, right=4pt] at (NcD.east)  {#7};
+  \node[nodefont, below=3pt] at (NcE.south) {#8};
+  \node[nodefont, below=3pt] at (NcF.south) {#9};
+  %
+  % Cluster title
+  \node[font=\small\bfseries, thesisDark, anchor=south]
+       at (#1, {\vg+0.9}) {#3};
 }
-% Nodes
-\foreach \k/\lbl in {1/6133\\金橋,2/6224\\英典,3/8210\\勤誠,4/6282\\康舒,5/3015\\德淵電,6/6235\\華宇}{
-  \node[circle, draw=thesisTeal!80!thesisDark, fill=thesisTeal!30, thick, minimum size=10mm]
-       (Na_\k) at (na_\k) {};
-  \draw[arr, looseness=7, out=105, in=75] (Na_\k) to (Na_\k);
-  \node[nodelabel, below=5pt] at (Na_\k.south) {\lbl};
-}
-\node[clustertitle] at (0, {1.35+0.75}) {電子零組件};
 
-%%── Cluster 2: 光電及I/O ──────────────────────────────────────
-\begin{scope}[xshift=5.2cm]
-\foreach \i in {1,...,6}{
-  \ifnum\i=1 \coordinate (nb_\i) at ({-\ndx},{\ndy}); \fi
-  \ifnum\i=2 \coordinate (nb_\i) at ({+\ndx},{\ndy}); \fi
-  \ifnum\i=3 \coordinate (nb_\i) at ({-\ndx},{0});    \fi
-  \ifnum\i=4 \coordinate (nb_\i) at ({+\ndx},{0});    \fi
-  \ifnum\i=5 \coordinate (nb_\i) at ({-\ndx},{-\ndy});\fi
-  \ifnum\i=6 \coordinate (nb_\i) at ({+\ndx},{-\ndy});\fi
-}
-\foreach \i in {1,...,6}{
-  \foreach \j in {1,...,6}{
-    \ifnum\i<\j \draw[arr] (nb_\i) -- (nb_\j); \fi
-  }
-}
-\foreach \k/\lbl in {1/3481\\群創,2/2301\\光寶科,3/2406\\國碩,4/3454\\晶豪,5/2390\\云辰,6/9912\\偉聯}{
-  \node[circle, draw=thesisForest!80!thesisDark, fill=thesisForest!30, thick, minimum size=10mm]
-       (Nb_\k) at (nb_\k) {};
-  \draw[arr, looseness=7, out=105, in=75] (Nb_\k) to (Nb_\k);
-  \node[nodelabel, below=5pt] at (Nb_\k.south) {\lbl};
-}
-\node[clustertitle] at (0,{1.35+0.75}) {光電及I/O};
-\node[centerlabel] at (0, 2.4) {產業關係圖示（同產業完全連結與自迴圖結構）};
-\end{scope}
+%%──────────────────────────────────────────────────────────
+%% Three clusters, separated by 5.2 cm
+%%──────────────────────────────────────────────────────────
+%% Cluster 1: 電子零組件 (teal)
+\cluster{0}{thesisTeal}{電子零組件}%
+        {6133\\金橋}{6224\\英典}%
+        {8210\\勤誠}{6282\\康舒}%
+        {3015\\德淵電}{6235\\華宇}
 
-%%── Cluster 3: 半導體 ─────────────────────────────────────────
-\begin{scope}[xshift=10.4cm]
-\foreach \i in {1,...,6}{
-  \ifnum\i=1 \coordinate (nc_\i) at ({-\ndx},{\ndy}); \fi
-  \ifnum\i=2 \coordinate (nc_\i) at ({+\ndx},{\ndy}); \fi
-  \ifnum\i=3 \coordinate (nc_\i) at ({-\ndx},{0});    \fi
-  \ifnum\i=4 \coordinate (nc_\i) at ({+\ndx},{0});    \fi
-  \ifnum\i=5 \coordinate (nc_\i) at ({-\ndx},{-\ndy});\fi
-  \ifnum\i=6 \coordinate (nc_\i) at ({+\ndx},{-\ndy});\fi
-}
-\foreach \i in {1,...,6}{
-  \foreach \j in {1,...,6}{
-    \ifnum\i<\j \draw[arr] (nc_\i) -- (nc_\j); \fi
-  }
-}
-\foreach \k/\lbl in {1/2451\\創見,2/6799\\采頡,3/1560\\中砂,4/2337\\旺宏,5/3094\\聯傑,6/6271\\同欣電}{
-  \node[circle, draw=thesisSand!80!thesisDark, fill=thesisSand!50, thick, minimum size=10mm]
-       (Nc_\k) at (nc_\k) {};
-  \draw[arr, looseness=7, out=105, in=75] (Nc_\k) to (Nc_\k);
-  \node[nodelabel, below=5pt] at (Nc_\k.south) {\lbl};
-}
-\node[clustertitle] at (0,{1.35+0.75}) {半導體};
-\end{scope}
+%% Cluster 2: 光電及I/O (forest green)
+\cluster{5.2}{thesisForest}{光電及I/O}%
+        {3481\\群創}{2301\\光寶科}%
+        {2406\\國碩}{3454\\晶豪}%
+        {2390\\云辰}{9912\\偉聯}
+
+%% Cluster 3: 半導體 (sand)
+\cluster{10.4}{thesisSand}{半導體}%
+        {2451\\創見}{6799\\采頡}%
+        {1560\\中砂}{2337\\旺宏}%
+        {3094\\聯傑}{6271\\同欣電}
+
+%% ── Global subtitle ──────────────────────────────────────
+\node[font=\footnotesize\itshape, thesisDark!60, align=center]
+     at (5.2, 4.0) {產業關係圖示（同產業完全連結與自迴圖結構）};
 
 \end{tikzpicture}
 \end{document}

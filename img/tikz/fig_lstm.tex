@@ -1,123 +1,140 @@
-\documentclass[tikz,border=12pt]{standalone}
+\documentclass[tikz,border=14pt]{standalone}
 \usepackage[no-math]{fontspec}
 \usepackage{xeCJK}
 \usepackage[UTF8,fontset=none]{ctex}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,backgrounds}
+\usetikzlibrary{arrows.meta,positioning,calc,backgrounds}
 
 \IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
 \IfFontExistsTF{Kaiti TC}{\setCJKmainfont[AutoFakeBold=3]{Kaiti TC}}
   {\IfFontExistsTF{Songti TC}{\setCJKmainfont[AutoFakeBold=3]{Songti TC}}
     {\setCJKmainfont{PingFang TC}}}
-
 \input{thesis_colors}
 
 \begin{document}
 \begin{tikzpicture}[
-  % ── operation squares on cell-state line ──
-  cellop/.style={draw=thesisDark, fill=thesisDark!18, rectangle,
-                 minimum size=8mm, thick, inner sep=1pt, font=\small\bfseries},
-  % ── gate circles ──
-  fgate/.style={circle, draw=thesisBlue!80!thesisDark, fill=thesisBlue!18,
-                thick, minimum size=11mm, font=\normalsize\bfseries},
-  ugate/.style={circle, draw=thesisForest!80!thesisDark, fill=thesisForest!18,
-                thick, minimum size=11mm, font=\normalsize\bfseries},
-  ogate/.style={circle, draw=thesisCrimson!80!thesisDark, fill=thesisCrimson!16,
-                thick, minimum size=11mm, font=\normalsize\bfseries},
-  % ── arrows ──
-  arr/.style={-{Stealth[length=2.4mm,width=2mm]}, thick, thesisDark},
-  wire/.style={thick, thesisDark},
-  % ── misc ──
-  jdot/.style={fill=thesisDark, circle, minimum size=4pt, inner sep=0},
+  % ── cell-state operation squares ──────────────────────────
+  cellop/.style={draw=thesisDark, fill=thesisDark!14,
+                 rectangle, minimum size=12mm, thick, inner sep=0pt,
+                 font=\large\bfseries},
+  % ── small intermediate ×  ────────────────────────────────
+  smallop/.style={draw=thesisDark, fill=thesisDark!14,
+                  rectangle, minimum size=9mm, thick, inner sep=0pt,
+                  font=\normalsize\bfseries},
+  % ── gate circles (3 colours) ─────────────────────────────
+  fgate/.style={circle, draw=thesisBlue, fill=thesisBlue!18,
+                very thick, minimum size=20mm, font=\LARGE\bfseries},
+  ugate/.style={circle, draw=thesisForest, fill=thesisForest!18,
+                very thick, minimum size=20mm, font=\LARGE\bfseries},
+  ogate/.style={circle, draw=thesisCrimson, fill=thesisCrimson!14,
+                very thick, minimum size=20mm, font=\LARGE\bfseries},
+  % ── arrows / wires ───────────────────────────────────────
+  arr/.style={-{Stealth[length=3.5mm,width=3mm]}, very thick, thesisDark},
+  wire/.style={very thick, thesisDark},
+  jdot/.style={fill=thesisDark, circle, minimum size=6.5pt, inner sep=0pt},
+  % ── labels ───────────────────────────────────────────────
+  iolabel/.style={font=\normalsize, thesisDark},
+  seclabel/.style={font=\normalsize\bfseries},
 ]
 
-%% ─── coordinate helpers ────────────────────────────────────────
-% Cell state line  y = 3.2
-% Gate row y        = 0.9
-% Input wire y      = -0.7
-% x positions: L_in=-.5 | ×f=1.8 | +u=5.2 | junction=8.0 | ×o=9.8 | R_out=11.6
-% x positions gates: f=1.8 | g=4.2 | i=5.8 | o=9.8
+%% ─────────────────────────────────────────────────────────
+%% COORDINATE GRID
+%%   y=7.0  cell state highway
+%%   y=5.2  g×i intermediate / output path
+%%   y=3.0  gate circles
+%%   y=1.2  h_{t-1} input wire
+%%   y=0.0  x_t label (below)
+%%
+%%   x=3.0  ×_f  /  f gate
+%%   x=8.5  +_u  /  ×_gi at y=5.2  /  g(x=7.0) and i(x=10.0)
+%%   x=13.0 junction •
+%%   x=14.5 ×_o  /  o gate
+%% ─────────────────────────────────────────────────────────
 
-\def\cy{3.2}    % cell-state y
-\def\gy{0.9}    % gate y
-\def\iy{-0.7}   % input wire y
+%% ── 1. CELL STATE HIGHWAY ────────────────────────────────
+\draw[wire] (-0.4, 7.0) node[left, iolabel]{$c_{t-1}$} -- (2.35, 7.0);
+\node[cellop] (Xf)  at (3.0,  7.0) {$\times$};
+\draw[wire]   (Xf.east) -- (7.95, 7.0);
+\node[cellop] (Pu)  at (8.5,  7.0) {$+$};
+\draw[wire]   (Pu.east) -- (12.7, 7.0);
+\node[jdot]   (Jct) at (13.0, 7.0) {};
+\draw[wire]   (13.0,7.0) -- (16.3, 7.0) node[right, iolabel]{$c_t$};
 
-%% ─── 1. Cell-state wire c_{t-1} → ×f → +u → junction → c_t ───
-\draw[wire] (-0.5,\cy) node[left]{$c_{t-1}$} -- (1.3,\cy);
-\node[cellop] (Xf) at (1.8,\cy) {$\times$};
-\draw[wire] (Xf.east) -- (4.8,\cy);
-\node[cellop] (Pu) at (5.2,\cy) {$+$};
-\draw[wire] (Pu.east) -- (7.7,\cy);
-\node[jdot]  (Jct) at (8.0,\cy) {};   % junction
-\draw[wire] (Jct) -- (11.6,\cy) node[right]{$c_t$};
+%% ── 2. OUTPUT PATH (junction → L-bend → ×_o → h_t) ─────
+% Vertical drop from junction
+\draw[wire] (13.0, 7.0) -- (13.0, 5.2);
+% Horizontal run to ×_o
+\draw[wire] (13.0, 5.2) -- (13.95, 5.2);
+\node[cellop] (Xo) at (14.5, 5.2) {$\times$};
+% h_t exit
+\draw[arr]  (Xo.east) -- (16.3, 5.2) node[right, iolabel]{$h_t$};
+% tanh label on the output bend
+\node[font=\small\itshape, thesisDark!70, above=3pt] at (13.0, 5.6) {tanh};
 
-%% ─── 2. Output path: junction → ×o → h_t ─────────────────────
-\node[cellop] (Xo) at (9.8,1.85) {$\times$};
-% junction → down then right to ×o
-\draw[wire] (Jct.south) -- (8.0, 1.85) -- (Xo.west);
-% ×o output → h_t
-\draw[arr]  (Xo.east)   -- (11.6,1.85) node[right]{$h_t$};
+%% ── 3. g×i INTERMEDIATE MULTIPLY (below +_u) ────────────
+\node[smallop] (Xgi) at (8.5, 5.2) {$\times$};
 
-%% ─── 3. Gate circles ───────────────────────────────────────────
-\node[fgate] (f) at (1.8,\gy) {$f$};
-\node[ugate] (g) at (4.2,\gy) {$g$};
-\node[ugate] (i) at (5.8,\gy) {$i$};
-\node[ogate] (o) at (9.8,\gy) {$o$};
+%% ── 4. GATE CIRCLES ──────────────────────────────────────
+\node[fgate] (f) at (3.0,  3.0) {$f$};
+\node[ugate] (g) at (7.0,  3.0) {$g$};
+\node[ugate] (i) at (10.0, 3.0) {$i$};
+\node[ogate] (o) at (14.5, 3.0) {$o$};
 
-%% ─── 4. Gate → cell-state connections ─────────────────────────
-% f → ×f
+%% ── 5. GATE → CELL STATE CONNECTIONS ────────────────────
+% f → ×_f  (vertical arrow, perfectly aligned)
 \draw[arr] (f.north) -- (Xf.south);
 
-% g and i → intermediate ⊗ → +u
-\node[cellop, minimum size=6.5mm, font=\footnotesize] (Xgi) at (5.2,2.05) {$\times$};
-\draw[arr] (g.north) -- (4.2,2.05) -- (Xgi.west);
-\draw[arr] (i.north) -- (5.8,2.05) -- (Xgi.east);
+% g and i → ×_gi  (symmetric diagonals; TikZ clips at Xgi border)
+\draw[arr] (g.north) -- (Xgi);
+\draw[arr] (i.north) -- (Xgi);
+
+% ×_gi → +_u  (vertical arrow)
 \draw[arr] (Xgi.north) -- (Pu.south);
 
-% o → ×o
+% o → ×_o  (vertical arrow, perfectly aligned)
 \draw[arr] (o.north) -- (Xo.south);
 
-%% ─── 5. Input wire (h_{t-1} and x_t) ──────────────────────────
-% h_{t-1} enters from left on horizontal wire at y=\iy
-\draw[wire] (-0.5,\iy) node[left]{$h_{t-1}$} -- (9.8,\iy);
-% x_t enters from bottom at x=3.0
-\draw[wire] (3.0,-1.75) node[below]{$x_t$} -- (3.0,\iy);
-\node[jdot] (Jinput) at (3.0,\iy) {};
+%% ── 6. INPUT WIRE (h_{t-1}) AND x_t ─────────────────────
+% Horizontal h_{t-1} wire
+\draw[wire] (-0.4, 1.2) node[left, iolabel]{$h_{t-1}$} -- (15.5, 1.2);
 
-% junction dot on h_{t-1} line before x_t join
-\node[jdot] (Jh) at (-0.1,\iy) {};  % just the entry point
+% x_t enters vertically at x=5.5
+\draw[wire] (5.5, -0.6) node[below, iolabel]{$x_t$} -- (5.5, 1.2);
+\node[jdot] at (5.5, 1.2) {};
 
-% Feed from input wire to each gate (vertical arrows up)
-\foreach \gx/\gt in {1.8/f, 4.2/g, 5.8/i, 9.8/o}{
-  \node[jdot] at (\gx,\iy) {};
-  \draw[arr] (\gx,\iy) -- (\gx,\gy-0.55);
+% Branch points on h_{t-1} wire going up to each gate
+\foreach \gx/\gnode in {3.0/f, 7.0/g, 10.0/i, 14.5/o}{
+  \node[jdot] at (\gx, 1.2) {};
+  \draw[arr] (\gx, 1.2) -- (\gx, {3.0 - 1.0});
 }
 
-%% ─── 6. Section labels & subtle backgrounds ────────────────────
-% Section shading in background
+%% ── 7. SECTION BACKGROUNDS & LABELS ─────────────────────
 \begin{pgfonlayer}{background}
-  \fill[thesisBlue!6]    (0.3, -1.1) rectangle (3.3, 3.75);   % Forget
-  \fill[thesisForest!6]  (3.3, -1.1) rectangle (7.2, 3.75);   % Update
-  \fill[thesisCrimson!6] (7.2, -1.1) rectangle (11.3,3.75);   % Output
-  % outer border
-  \draw[thesisDark!40, rounded corners=4pt, thick]
-        (0.3,-1.1) rectangle (11.3,3.75);
+  \fill[thesisBlue!8]    (1.4, -0.9) rectangle (5.5, 8.2);
+  \fill[thesisForest!8]  (5.5, -0.9) rectangle (11.5, 8.2);
+  \fill[thesisCrimson!8] (11.5, -0.9) rectangle (16.5, 8.2);
+  \draw[thesisDark!35, thick, rounded corners=4pt]
+       (1.4, -0.9) rectangle (16.0, 8.2);
 \end{pgfonlayer}
 
-% Section titles
-\node[font=\small\bfseries, thesisBlue!80!thesisDark]
-      at (1.8, 4.1) {Forget};
-\node[font=\small\bfseries, thesisForest!80!thesisDark]
-      at (5.25,4.1) {Update};
-\node[font=\small\bfseries, thesisCrimson!80!thesisDark]
-      at (9.25,4.1) {Output};
+\node[seclabel, thesisBlue!80!thesisDark]
+      at (3.0, 8.75) {Forget};
+\node[seclabel, thesisForest!80!thesisDark]
+      at (8.5, 8.75) {Update};
+\node[seclabel, thesisCrimson!80!thesisDark]
+      at (14.0, 8.75) {Output};
 
-%% ─── 7. Legend box ──────────────────────────────────────────────
-\node[draw=thesisDark!50, rounded corners=3pt, fill=white, inner sep=5pt,
-      font=\footnotesize, align=left, anchor=north west]
-  at (11.85, 3.75)
-  {$X_t$: Input\\$h_t$: Hidden state\\$C_t$: Cell state\\
-   $f$: Forget gate\\$g$: Memory cell\\$i$: Input gate\\$o$: Output gate};
+%% ── 8. LEGEND BOX ────────────────────────────────────────
+\node[draw=thesisDark!45, rounded corners=4pt, fill=white,
+      inner sep=8pt, font=\small, align=left, anchor=north west]
+  at (17.5, 8.5)
+  {$X_t$\,: Input\\[2pt]
+   $h_t$\,: Hidden state\\[2pt]
+   $C_t$\,: Cell state\\[2pt]
+   $f$\,: Forget gate\\[2pt]
+   $g$\,: Memory cell\\[2pt]
+   $i$\,: Input gate\\[2pt]
+   $o$\,: Output gate};
 
 \end{tikzpicture}
 \end{document}
