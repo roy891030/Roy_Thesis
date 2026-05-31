@@ -24,7 +24,7 @@
                   minimum width=12.0cm, minimum height=1.1cm, thick, align=center,
                   font=\normalsize},
   arr/.style={-{Stealth[length=3mm,width=2.5mm]}, thick, thesisDark},
-  redarr/.style={-{Stealth[length=2.5mm,width=2mm]}, thick, thesisCrimson, dashed},
+  redarr/.style={-{Stealth[length=2.5mm,width=2mm]}, thick, thesisCrimson!80, line width=1.2pt},
   rowlabel/.style={font=\small\bfseries, thesisDark, align=right},
   coltitle/.style={font=\normalsize, thesisDark, align=center},
 ]
@@ -58,7 +58,7 @@
   \foreach \px/\py/\pc/\ps in
     {-0.8/0.5/thesisTeal/4.5pt, -0.3/0.7/thesisTeal/5pt,
      0.5/0.1/thesisTeal!70/4pt, 0.7/0.6/thesisAmber!80/5.5pt,
-     -0.7/-0.4/thesisAmber!80/4.5pt, 0.1/-0.5/thesisCrimson!70/4pt}{
+     -0.7/-0.5/thesisAmber!80/4.5pt, 0.2/-0.3/thesisCrimson!70/4pt}{
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
@@ -85,7 +85,7 @@
   \foreach \px/\py/\pc/\ps in
     {-0.7/0.5/thesisTeal/4pt, -0.1/0.8/thesisTeal/5.5pt,
      0.6/0.1/thesisTeal!70/4pt, 0.7/0.7/thesisAmber!80/6.5pt,
-     -0.6/-0.3/thesisAmber!80/5.5pt, 0.1/-0.5/thesisCrimson!70/6pt}{
+     -0.6/-0.3/thesisAmber!80/5.5pt, 0.2/-0.5/thesisCrimson!70/6pt}{
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
@@ -123,7 +123,7 @@
   \foreach \px/\py/\pc/\ps in
     {-0.6/0.6/thesisTeal/4pt, 0.0/0.8/thesisTeal/5pt,
      0.6/0.2/thesisTeal!60/3.5pt, 0.7/0.7/thesisAmber!80/7pt,
-     -0.5/-0.2/thesisAmber!80/5.5pt, 0.1/-0.5/thesisCrimson!70/5.5pt}{
+     -0.5/-0.2/thesisAmber!80/5.5pt, 0.2/-0.5/thesisCrimson!70/5.5pt}{
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
@@ -168,7 +168,7 @@
   \foreach \px/\py/\pc/\ps in
     {-0.6/0.4/thesisTeal/4pt, 0.0/0.6/thesisTeal/4.5pt,
      0.6/0.1/thesisTeal!60/3.5pt, 0.7/0.7/thesisAmber!80/8pt,
-     -0.6/-0.2/thesisAmber!80/6pt, 0.1/-0.4/thesisCrimson!80/6.5pt}{
+     -0.6/-0.2/thesisAmber!80/6pt, 0.2/-0.4/thesisCrimson!80/6.5pt}{
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}

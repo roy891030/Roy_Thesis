@@ -30,7 +30,7 @@
 \newcommand{\cluster}[9]{%
   \def\hg{1.15}  % half horizontal gap (col offset)
   \def\vg{2.10}  % vertical gap (row offset) — enough room for label + edge
-  \def\nr{0.55}  % node radius in cm (min size = 2*\nr = 11mm)
+  \def\nr{0.70}  % node radius in cm (min size = 2*\nr = 14mm)
   %
   % Compute 6 node coordinates (in absolute coords)
   \coordinate (cA) at ({#1-\hg}, { \vg});
@@ -95,7 +95,7 @@
 
 %% ── Global subtitle ──────────────────────────────────────
 \node[font=\footnotesize\itshape, thesisDark!60, align=center]
-     at (5.2, 4.0) {產業關係圖示（同產業完全連結與自迴圖結構）};
+     at (6.0, 4.2) {產業關係圖示（同產業完全連結與自迴圖結構）};
 
 \end{tikzpicture}
 \end{document}
