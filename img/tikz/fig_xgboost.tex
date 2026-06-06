@@ -19,14 +19,14 @@
                   minimum width=3.4cm, minimum height=2.2cm, thick},
   predbox/.style={draw=thesisBlue!60, fill=thesisBlue!10, rounded corners=4pt,
                   minimum width=3.4cm, minimum height=1.1cm, thick, align=center,
-                  font=\normalsize},
+                  font=\large},
   aggrbox/.style={draw=thesisCrimson!70, fill=thesisCrimson!10, rounded corners=5pt,
-                  minimum width=12.0cm, minimum height=1.1cm, thick, align=center,
-                  font=\normalsize},
-  arr/.style={-{Stealth[length=3mm,width=2.5mm]}, thick, thesisDark},
-  redarr/.style={-{Stealth[length=2.5mm,width=2mm]}, thick, thesisCrimson, dashed},
-  rowlabel/.style={font=\small\bfseries, thesisDark, align=right},
-  coltitle/.style={font=\normalsize, thesisDark, align=center},
+                  minimum width=12.0cm, minimum height=1.3cm, thick, align=center,
+                  font=\large},
+  arr/.style={-{Stealth[length=3.5mm,width=3mm]}, thick, thesisDark},
+  redarr/.style={-{Stealth[length=3mm,width=2.5mm]}, thick, thesisCrimson, dashed},
+  rowlabel/.style={font=\normalsize\bfseries, thesisDark, align=right},
+  coltitle/.style={font=\large, thesisDark, align=center},
 ]
 
 %% ── column x-centres ─────────────────────────────────────
@@ -39,18 +39,18 @@
 \def\ytree{4.5}    % CART tree row
 \def\yrdata{1.5}   % reweighted data row
 \def\ypred{-1.2}   % prediction row
-\def\yaggr{-3.3}   % aggregation row
+\def\yaggr{-3.5}   % aggregation row
 
 %%──────────────────────────────────────────────────────────
 %% TRAINING DATA HEADER
 %%──────────────────────────────────────────────────────────
 \node[draw=thesisDark!55, dashed, fill=thesisBlue!6, rounded corners=5pt,
-      minimum width=13.5cm, minimum height=1.0cm, thick,
-      font=\normalsize\bfseries] (hdr)
-     at ({(\cx+\cz)/2}, 9.5) {Training data};
+      minimum width=13.5cm, minimum height=1.1cm, thick,
+      font=\large\bfseries] (hdr)
+     at ({(\cx+\cz)/2}, 9.5) {訓練資料（Training Data）};
 
 %%──────────────────────────────────────────────────────────
-%% COLUMN 1  ( L_1 )
+%% COLUMN 1  ( h_1 )
 %%──────────────────────────────────────────────────────────
 % --- scatter data
 \node[databox=thesisTeal] (d1) at (\cx, \ydata) {};
@@ -62,7 +62,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=4pt] at (d1.north) {$f(L_1)$};
+\node[coltitle, above=5pt] at (d1.north) {$h_1(\cdot)$};
 
 % --- CART tree
 \node[treebox] (t1) at (\cx, \ytree) {};
@@ -91,7 +91,7 @@
 \end{scope}
 
 %%──────────────────────────────────────────────────────────
-%% COLUMN 2  ( L_2 )
+%% COLUMN 2  ( h_2 )
 %%──────────────────────────────────────────────────────────
 \node[databox=thesisAmber] (d2) at (\cy, \ydata) {};
 \begin{scope}[shift={(\cy,\ydata)}]
@@ -102,7 +102,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=4pt] at (d2.north) {$f(L_2)$};
+\node[coltitle, above=5pt] at (d2.north) {$h_2(\cdot)$};
 
 \node[treebox] (t2) at (\cy, \ytree) {};
 \begin{scope}[shift={(\cy,\ytree)}]
@@ -136,7 +136,7 @@
 \node[font=\LARGE, thesisDark!45] at ({(\cy+\cz)/2}, \yrdata) {$\cdots$};
 
 %%──────────────────────────────────────────────────────────
-%% COLUMN 3  ( L_n )
+%% COLUMN 3  ( h_N )
 %%──────────────────────────────────────────────────────────
 \node[databox=thesisCrimson] (dn) at (\cz, \ydata) {};
 \begin{scope}[shift={(\cz,\ydata)}]
@@ -147,7 +147,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=4pt] at (dn.north) {$f(L_n)$};
+\node[coltitle, above=5pt] at (dn.north) {$h_N(\cdot)$};
 
 \node[treebox] (tn) at (\cz, \ytree) {};
 \begin{scope}[shift={(\cz,\ytree)}]
@@ -187,28 +187,28 @@
 %% WEIGHTING FEEDBACK ARROW (col 1 → col 2)
 %%──────────────────────────────────────────────────────────
 \draw[redarr, bend left=20] (r1.east)
-      to node[midway, above=3pt, font=\small, thesisCrimson] {Weighting increase}
+      to node[midway, above=4pt, font=\normalsize, thesisCrimson] {殘差重加權}
          (r2.west);
 
 %%──────────────────────────────────────────────────────────
 %% DIVIDING LINE (Training / Testing)
 %%──────────────────────────────────────────────────────────
 \draw[thesisDark!30, dashed, line width=1.2pt]
-     (-2.6, {(\yrdata+\ypred)/2}) -- (10.8, {(\yrdata+\ypred)/2});
+     (-2.8, {(\yrdata+\ypred)/2}) -- (10.8, {(\yrdata+\ypred)/2});
 
 %%──────────────────────────────────────────────────────────
 %% PREDICTION ROW
 %%──────────────────────────────────────────────────────────
-\node[predbox] (p1) at (\cx, \ypred) {$\hat{y}_L^{(1)}$};
-\node[predbox] (p2) at (\cy, \ypred) {$\hat{y}_L^{(2)}$};
-\node[predbox] (pn) at (\cz, \ypred) {$\hat{y}_L^{(N)}$};
+\node[predbox] (p1) at (\cx, \ypred) {$\hat{y}^{(1)}$};
+\node[predbox] (p2) at (\cy, \ypred) {$\hat{y}^{(2)}$};
+\node[predbox] (pn) at (\cz, \ypred) {$\hat{y}^{(N)}$};
 \node[font=\LARGE, thesisDark!45] at ({(\cy+\cz)/2}, \ypred) {$\cdots$};
 
 %%──────────────────────────────────────────────────────────
 %% AGGREGATION BOX
 %%──────────────────────────────────────────────────────────
 \node[aggrbox] (aggr) at ({(\cx+\cz)/2}, \yaggr)
-      {Average aggregation of predictors};
+      {加法集成：$F_N(x) = \displaystyle\sum_{m=1}^{N}\,\eta\cdot h_m(x)$};
 
 \draw[arr, thesisCrimson!70] (p1.south) -- (aggr.north west);
 \draw[arr, thesisCrimson!70] (p2.south) -- (aggr.north);
@@ -217,19 +217,19 @@
 %%──────────────────────────────────────────────────────────
 %% LEFT ROW LABELS
 %%──────────────────────────────────────────────────────────
-\node[rowlabel, anchor=east] at (-2.4, \ytree)   {Building $T$\\CART trees};
-\node[rowlabel, anchor=east] at (-2.4, \yrdata)  {Weighting\\increase};
-\node[rowlabel, anchor=east] at (-2.4, \ypred)   {Prediction};
+\node[rowlabel, anchor=east] at (-2.6, \ytree)   {建立 CART 樹\\（第 $m$ 輪）};
+\node[rowlabel, anchor=east] at (-2.6, \yrdata)  {殘差\\重加權};
+\node[rowlabel, anchor=east] at (-2.6, \ypred)   {單輪預測};
 
 %%──────────────────────────────────────────────────────────
 %% RIGHT SIDE BRACKETS
 %%──────────────────────────────────────────────────────────
 \draw[decorate, decoration={brace,amplitude=7pt}, thesisDark!60]
      (10.5, {9.5+0.45}) -- (10.5, {\yrdata-1.1})
-     node[midway, right=7pt, font=\small\bfseries, thesisDark] {Training};
+     node[midway, right=8pt, font=\normalsize\bfseries, thesisDark] {訓練階段};
 \draw[decorate, decoration={brace,amplitude=7pt}, thesisDark!60]
-     (10.5, {\ypred+0.55}) -- (10.5, {\ypred-0.55})
-     node[midway, right=7pt, font=\small\bfseries, thesisDark] {Testing};
+     (10.5, {\ypred+0.55}) -- (10.5, {\yaggr-0.65})
+     node[midway, right=8pt, font=\normalsize\bfseries, thesisDark] {預測階段};
 
 \end{tikzpicture}
 \end{document}

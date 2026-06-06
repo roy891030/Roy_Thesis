@@ -15,20 +15,20 @@
 \begin{tikzpicture}[
   % ── generic node ─────────────────────────────────────────
   fnode/.style={circle, draw=#1!80!thesisDark, fill=#1!40, thick,
-                minimum size=14mm, font=\normalsize\bfseries, inner sep=0},
+                minimum size=15mm, font=\large\bfseries, inner sep=0},
   hnode/.style={circle, draw=thesisForest, fill=thesisForest!40, very thick,
-                minimum size=14mm, font=\normalsize, inner sep=0},
+                minimum size=15mm, font=\normalsize, inner sep=0},
   % ── arrows ───────────────────────────────────────────────
-  arr/.style={-{Stealth[length=3mm,width=2.5mm]}, thesisDark!55, line width=1.0pt},
+  arr/.style={-{Stealth[length=3.5mm,width=3mm]}, thesisDark!55, line width=1.2pt},
   laybox/.style={draw=thesisDark!40, dashed, rounded corners=4pt,
-                 inner sep=10pt, line width=0.8pt},
-  laylabel/.style={font=\small\itshape, thesisDark},
-  eqlabel/.style={font=\normalsize, thesisDark, align=center},
+                 inner sep=10pt, line width=0.9pt},
+  laylabel/.style={font=\normalsize\itshape, thesisDark},
+  eqlabel/.style={font=\large, thesisDark, align=center},
 ]
 
 %% ─── column positions & node y-spacing ──────────────────
-\def\colsep{5.0}   % horizontal distance between column centres
-\def\nodesep{2.2}  % vertical distance between nodes in a column
+\def\colsep{5.2}   % horizontal distance between column centres
+\def\nodesep{2.3}  % vertical distance between nodes in a column
 \def\N{5}          % nodes per column
 
 % Colour cycle for input / output columns
@@ -46,8 +46,8 @@
 \begin{pgfonlayer}{background}
   \node[laybox, fit=(x1)(x5)] (box0) {};
 \end{pgfonlayer}
-\node[laylabel, below=4pt] at (box0.south) {input layer};
-\node[eqlabel, below=16pt] at (box0.south) {$X$};
+\node[laylabel, below=5pt] at (box0.south) {輸入層};
+\node[eqlabel, below=17pt] at (box0.south) {$X$};
 
 %% ─── Column 1: Hidden H^1 ───────────────────────────────
 \foreach \row in {1,...,5}{
@@ -56,8 +56,8 @@
 \begin{pgfonlayer}{background}
   \node[laybox, fit=(h11)(h15)] (box1) {};
 \end{pgfonlayer}
-\node[laylabel, below=4pt]  at (box1.south) {hidden layer};
-\node[eqlabel, below=18pt] at (box1.south) {$H^1 = \delta(AXW^0)$};
+\node[laylabel, below=5pt]  at (box1.south) {隱藏層（訊息傳遞）};
+\node[eqlabel, below=20pt] at (box1.south) {$H^{(1)} = \sigma(AXW^{(0)})$};
 
 %% ─── Column 2: Hidden H^2 ───────────────────────────────
 \foreach \row in {1,...,5}{
@@ -66,8 +66,8 @@
 \begin{pgfonlayer}{background}
   \node[laybox, fit=(h21)(h25)] (box2) {};
 \end{pgfonlayer}
-\node[laylabel, below=4pt]  at (box2.south) {hidden layer};
-\node[eqlabel, below=18pt] at (box2.south) {$H^2 = \delta(AH^1W^1)$};
+\node[laylabel, below=5pt]  at (box2.south) {隱藏層（訊息傳遞）};
+\node[eqlabel, below=20pt] at (box2.south) {$H^{(2)} = \sigma(AH^{(1)}W^{(1)})$};
 
 %% ─── Column 3: Output Z ─────────────────────────────────
 \foreach \row/\col in {1/\colorB, 2/\colorE, 3/\colorC, 4/\colorA, 5/\colorD}{
@@ -77,8 +77,8 @@
 \begin{pgfonlayer}{background}
   \node[laybox, fit=(z1)(z5)] (box3) {};
 \end{pgfonlayer}
-\node[laylabel, below=4pt] at (box3.south) {output layer};
-\node[eqlabel, below=16pt] at (box3.south) {$Z$};
+\node[laylabel, below=5pt] at (box3.south) {輸出層};
+\node[eqlabel, below=17pt] at (box3.south) {$Z$};
 
 %% ─── Arrows: X → H^1 (sampled, representative) ─────────
 \foreach \fr/\to in {x1/h11, x1/h12, x2/h11, x3/h13, x4/h13,
@@ -97,6 +97,12 @@
                      h24/z4, h25/z5, h24/z1, h22/z3, h25/z5}{
   \draw[arr] (\fr.east) -- (\to.west);
 }
+
+%% ─── Layer annotation arrows ────────────────────────────
+\node[font=\normalsize\bfseries, thesisDark!60, above=8pt] at (box1.north)
+     {第 1 層（$l=1$）};
+\node[font=\normalsize\bfseries, thesisDark!60, above=8pt] at (box2.north)
+     {第 2 層（$l=2$）};
 
 \end{tikzpicture}
 \end{document}

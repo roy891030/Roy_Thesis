@@ -14,17 +14,17 @@
 \begin{document}
 \begin{tikzpicture}[
   bignode/.style={circle, draw=thesisDark, fill=thesisLight, very thick,
-                  minimum size=14mm, font=\normalsize\bfseries, inner sep=0},
+                  minimum size=15mm, font=\large\bfseries, inner sep=0},
   centernode/.style={circle, draw=thesisBlue, fill=thesisBlue!22, very thick,
-                     minimum size=16mm, font=\normalsize\bfseries, inner sep=0},
+                     minimum size=17mm, font=\large\bfseries, inner sep=0},
   outnode/.style={circle, draw=thesisDark, fill=thesisLight, thick,
-                  minimum size=14mm, font=\normalsize, inner sep=0},
+                  minimum size=15mm, font=\large, inner sep=0},
   actnode/.style={circle, draw=thesisDark!60, fill=white, thick,
-                  minimum size=13mm, font=\footnotesize, align=center, inner sep=0},
+                  minimum size=14mm, font=\normalsize, align=center, inner sep=0},
   featurenode/.style={circle, draw=#1!70!thesisDark, fill=#1!25, thick,
-                      minimum size=10mm, inner sep=0},
-  arr/.style={-{Stealth[length=3mm,width=2.5mm]}, thick, thesisDark},
-  alpharr/.style={-{Stealth[length=3mm,width=2.5mm]}, very thick},
+                      minimum size=11mm, inner sep=0},
+  arr/.style={-{Stealth[length=3.5mm,width=3mm]}, thick, thesisDark},
+  alpharr/.style={-{Stealth[length=3.5mm,width=3mm]}, very thick},
   divline/.style={thesisDark!25, dashed, thick},
 ]
 
@@ -33,11 +33,11 @@
 %%═══════════════════════════════════════════════════════════
 
 % α_ij result at top
-\node[font=\large\bfseries, thesisDark] (aij) at (0, 9.0) {$\alpha_{ij}$};
+\node[font=\LARGE\bfseries, thesisDark] (aij) at (0, 9.0) {$\alpha_{ij}$};
 
 % softmax arrow (with label)
 \draw[arr] (0, 7.8) -- (aij.south)
-      node[midway, right=4pt, font=\small\itshape, thesisDark!70]
+      node[midway, right=5pt, font=\normalsize\itshape, thesisDark!70]
            {softmax${}_j$};
 
 % Activation node
@@ -48,7 +48,7 @@
 \draw[arr] (act.north) -- (0, 7.8);
 
 % ā label (shared attention vector)
-\node[font=\normalsize, thesisDark] (avec) at (2.1, 5.5) {$\vec{\mathbf{a}}$};
+\node[font=\large, thesisDark] (avec) at (2.2, 5.5) {$\vec{\mathbf{a}}$};
 \draw[thesisDark!50, thin] (avec.west) -- (0.25, 5.8);
 
 % Fan-in: 7 arrows from below converging to a junction point
@@ -69,16 +69,20 @@
 
 % Braces + labels
 \draw[decorate, decoration={brace,amplitude=5pt,mirror}, thesisDark!55]
-     (-2.1, 3.5) -- (-0.2, 3.5)
-     node[midway, below=5pt, font=\small]{$\mathbf{W}\vec{h}_i$};
+     (-2.1, 3.4) -- (-0.2, 3.4)
+     node[midway, below=6pt, font=\large]{$\mathbf{W}\vec{h}_i$};
 \draw[decorate, decoration={brace,amplitude=5pt,mirror}, thesisDark!55]
-     (0.2, 3.5) -- (2.0, 3.5)
-     node[midway, below=5pt, font=\small]{$\mathbf{W}\vec{h}_j$};
+     (0.2, 3.4) -- (2.0, 3.4)
+     node[midway, below=6pt, font=\large]{$\mathbf{W}\vec{h}_j$};
+
+% Panel title
+\node[font=\normalsize\bfseries, thesisDark!60, align=center]
+     at (0, 1.8) {注意力係數計算};
 
 %%═══════════════════════════════════════════════════════════
 %% PANEL DIVIDER
 %%═══════════════════════════════════════════════════════════
-\draw[divline] (3.3, 2.5) -- (3.3, 9.5);
+\draw[divline] (3.3, 2.0) -- (3.3, 9.8);
 
 %%═══════════════════════════════════════════════════════════
 %% RIGHT PANEL — Neighbor attention aggregation
@@ -90,7 +94,7 @@
 % Central node h_1
 \node[centernode] (h1) at (\rx, \ry) {$\vec{h}_1$};
 
-% 6 neighbor nodes at angles: 100°, 150°, 210°, 270°, 330°, 20° (spread around h_1)
+% 5 neighbor nodes spread around h_1
 \node[bignode] (h2) at ({(\rx)+\R*cos(100)}, {(\ry)+\R*sin(100)}) {$\vec{h}_2$};
 \node[bignode] (h3) at ({(\rx)+\R*cos(155)}, {(\ry)+\R*sin(155)}) {$\vec{h}_3$};
 \node[bignode] (h4) at ({(\rx)+\R*cos(215)}, {(\ry)+\R*sin(215)}) {$\vec{h}_4$};
@@ -100,30 +104,34 @@
 % Self-loop: clean arc at the top of h1, label above
 \draw[alpharr, thesisBlue, looseness=7, in=160, out=20]
      (h1.north) to
-     node[pos=0.5, above=5pt, font=\small\bfseries, thesisBlue] {$\vec{\alpha}_{11}$}
+     node[pos=0.5, above=6pt, font=\normalsize\bfseries, thesisBlue] {$\alpha_{11}$}
      (h1.north);
 
 % Attention arrows: each from neighbor to h1, different colors
-\draw[alpharr, thesisBlue, line width=1.8pt] (h2) -- (h1)
-      node[pos=0.55, above left=1pt, font=\small\bfseries, thesisBlue]
-           {$\vec{\alpha}_{12}$};
-\draw[alpharr, thesisPurple, line width=1.8pt] (h3) -- (h1)
-      node[pos=0.5,  left=4pt, font=\small\bfseries, thesisPurple]
-           {$\vec{\alpha}_{13}$};
-\draw[alpharr, thesisForest, line width=1.8pt] (h4) -- (h1)
-      node[pos=0.5, below left=1pt, font=\small\bfseries, thesisForest]
-           {$\vec{\alpha}_{14}$};
-\draw[alpharr, thesisCrimson, line width=1.8pt] (h5) -- (h1)
-      node[pos=0.5, below=4pt, font=\small\bfseries, thesisCrimson]
-           {$\vec{\alpha}_{15}$};
-\draw[alpharr, thesisAmber, line width=1.8pt] (h6) -- (h1)
-      node[pos=0.55, right=4pt, font=\small\bfseries, thesisAmber]
-           {$\vec{\alpha}_{16}$};
+\draw[alpharr, thesisBlue, line width=2.0pt] (h2) -- (h1)
+      node[pos=0.55, above left=1pt, font=\normalsize\bfseries, thesisBlue]
+           {$\alpha_{12}$};
+\draw[alpharr, thesisPurple, line width=2.0pt] (h3) -- (h1)
+      node[pos=0.5,  left=5pt, font=\normalsize\bfseries, thesisPurple]
+           {$\alpha_{13}$};
+\draw[alpharr, thesisForest, line width=2.0pt] (h4) -- (h1)
+      node[pos=0.5, below left=1pt, font=\normalsize\bfseries, thesisForest]
+           {$\alpha_{14}$};
+\draw[alpharr, thesisCrimson, line width=2.0pt] (h5) -- (h1)
+      node[pos=0.5, below=5pt, font=\normalsize\bfseries, thesisCrimson]
+           {$\alpha_{15}$};
+\draw[alpharr, thesisAmber, line width=2.0pt] (h6) -- (h1)
+      node[pos=0.55, right=5pt, font=\normalsize\bfseries, thesisAmber]
+           {$\alpha_{16}$};
 
-% Output node h'_1 with concat/avg annotation
-\node[outnode] (h1p) at ({(\rx)+4.5}, \ry) {$\vec{h}^{\,\prime}_1$};
+% Output node h'_1 with aggregation annotation
+\node[outnode] (h1p) at ({(\rx)+4.6}, \ry) {$\vec{h}^{\,\prime}_1$};
 \draw[arr, very thick] (h1.east) -- (h1p.west)
-      node[midway, above=4pt, font=\small] {concat/avg};
+      node[midway, above=5pt, font=\normalsize] {加權聚合};
+
+% Panel title
+\node[font=\normalsize\bfseries, thesisDark!60, align=center]
+     at (\rx, 2.0) {鄰居加權聚合（節點 $i=1$）};
 
 \end{tikzpicture}
 \end{document}

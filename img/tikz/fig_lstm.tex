@@ -15,26 +15,27 @@
 \begin{tikzpicture}[
   % ── cell-state operation squares ──────────────────────────
   cellop/.style={draw=thesisDark, fill=thesisDark!14,
-                 rectangle, minimum size=12mm, thick, inner sep=0pt,
-                 font=\large\bfseries},
+                 rectangle, minimum size=13mm, thick, inner sep=0pt,
+                 font=\Large\bfseries},
   % ── small intermediate ×  ────────────────────────────────
   smallop/.style={draw=thesisDark, fill=thesisDark!14,
-                  rectangle, minimum size=9mm, thick, inner sep=0pt,
-                  font=\normalsize\bfseries},
+                  rectangle, minimum size=10mm, thick, inner sep=0pt,
+                  font=\large\bfseries},
   % ── gate circles (3 colours) ─────────────────────────────
   fgate/.style={circle, draw=thesisBlue, fill=thesisBlue!18,
-                very thick, minimum size=20mm, font=\LARGE\bfseries},
+                very thick, minimum size=22mm, font=\LARGE\bfseries},
   ugate/.style={circle, draw=thesisForest, fill=thesisForest!18,
-                very thick, minimum size=20mm, font=\LARGE\bfseries},
+                very thick, minimum size=22mm, font=\LARGE\bfseries},
   ogate/.style={circle, draw=thesisCrimson, fill=thesisCrimson!14,
-                very thick, minimum size=20mm, font=\LARGE\bfseries},
+                very thick, minimum size=22mm, font=\LARGE\bfseries},
   % ── arrows / wires ───────────────────────────────────────
-  arr/.style={-{Stealth[length=3.5mm,width=3mm]}, very thick, thesisDark},
+  arr/.style={-{Stealth[length=4mm,width=3.5mm]}, very thick, thesisDark},
   wire/.style={very thick, thesisDark},
-  jdot/.style={fill=thesisDark, circle, minimum size=6.5pt, inner sep=0pt},
+  jdot/.style={fill=thesisDark, circle, minimum size=7pt, inner sep=0pt},
   % ── labels ───────────────────────────────────────────────
-  iolabel/.style={font=\normalsize, thesisDark},
-  seclabel/.style={font=\normalsize\bfseries},
+  iolabel/.style={font=\large, thesisDark},
+  seclabel/.style={font=\large\bfseries},
+  eqlabel/.style={font=\normalsize\itshape, thesisDark!65},
 ]
 
 %% ─────────────────────────────────────────────────────────
@@ -69,16 +70,22 @@
 % h_t exit
 \draw[arr]  (Xo.east) -- (16.3, 5.2) node[right, iolabel]{$h_t$};
 % tanh label on the output bend
-\node[font=\small\itshape, thesisDark!70, above=3pt] at (13.0, 5.6) {tanh};
+\node[font=\normalsize\itshape, thesisDark!70, above=3pt] at (13.0, 5.6) {tanh};
 
 %% ── 3. g×i INTERMEDIATE MULTIPLY (below +_u) ────────────
 \node[smallop] (Xgi) at (8.5, 5.2) {$\times$};
 
 %% ── 4. GATE CIRCLES ──────────────────────────────────────
-\node[fgate] (f) at (3.0,  3.0) {$f$};
-\node[ugate] (g) at (7.0,  3.0) {$g$};
-\node[ugate] (i) at (10.0, 3.0) {$i$};
-\node[ogate] (o) at (14.5, 3.0) {$o$};
+\node[fgate] (f) at (3.0,  3.0) {$f_t$};
+\node[ugate] (g) at (7.0,  3.0) {$\tilde{c}_t$};
+\node[ugate] (i) at (10.0, 3.0) {$i_t$};
+\node[ogate] (o) at (14.5, 3.0) {$o_t$};
+
+%% ── Equation labels near each gate ──────────────────────
+\node[eqlabel, below=2pt] at (f.south) {(2.3)};
+\node[eqlabel, below=2pt] at (g.south) {(2.5)};
+\node[eqlabel, below=2pt] at (i.south) {(2.4)};
+\node[eqlabel, below=2pt] at (o.south) {(2.7)};
 
 %% ── 5. GATE → CELL STATE CONNECTIONS ────────────────────
 % f → ×_f  (vertical arrow, perfectly aligned)
@@ -105,7 +112,7 @@
 % Branch points on h_{t-1} wire going up to each gate
 \foreach \gx/\gnode in {3.0/f, 7.0/g, 10.0/i, 14.5/o}{
   \node[jdot] at (\gx, 1.2) {};
-  \draw[arr] (\gx, 1.2) -- (\gx, {3.0 - 1.0});
+  \draw[arr] (\gx, 1.2) -- (\gx, {3.0 - 1.1});
 }
 
 %% ── 7. SECTION BACKGROUNDS & LABELS ─────────────────────
@@ -118,23 +125,23 @@
 \end{pgfonlayer}
 
 \node[seclabel, thesisBlue!80!thesisDark]
-      at (3.0, 8.75) {Forget};
+      at (3.0, 8.85) {遺忘（Forget）};
 \node[seclabel, thesisForest!80!thesisDark]
-      at (8.5, 8.75) {Update};
+      at (8.5, 8.85) {更新（Update）};
 \node[seclabel, thesisCrimson!80!thesisDark]
-      at (14.0, 8.75) {Output};
+      at (14.0, 8.85) {輸出（Output）};
 
 %% ── 8. LEGEND BOX ────────────────────────────────────────
-\node[draw=thesisDark!45, rounded corners=4pt, fill=white,
-      inner sep=8pt, font=\small, align=left, anchor=north west]
-  at (17.5, 8.5)
-  {$X_t$\,: Input\\[2pt]
-   $h_t$\,: Hidden state\\[2pt]
-   $C_t$\,: Cell state\\[2pt]
-   $f$\,: Forget gate\\[2pt]
-   $g$\,: Memory cell\\[2pt]
-   $i$\,: Input gate\\[2pt]
-   $o$\,: Output gate};
+\node[draw=thesisDark!40, rounded corners=4pt, fill=white,
+      inner sep=10pt, font=\normalsize, align=left, anchor=north west]
+  at (17.2, 8.8)
+  {$x_t$\,：輸入特徵\\[3pt]
+   $h_t$\,：隱藏狀態\\[3pt]
+   $c_t$\,：記憶狀態\\[3pt]
+   $f_t$\,：遺忘閘（$\sigma$）\\[3pt]
+   $\tilde{c}_t$\,：候選記憶（tanh）\\[3pt]
+   $i_t$\,：輸入閘（$\sigma$）\\[3pt]
+   $o_t$\,：輸出閘（$\sigma$）};
 
 \end{tikzpicture}
 \end{document}

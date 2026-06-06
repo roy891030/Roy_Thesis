@@ -9,7 +9,7 @@
 
 股票預測任務可分為價格水準預測、方向預測與截面報酬排序。價格水準預測關注單一資產未來價格，較容易受到不同股票價格尺度、除權息與市場共同漲跌影響；截面報酬預測則在同一交易日比較多檔股票的相對強弱，目標是形成可用於股票選取的排序訊號。Fama 與 French \cite{fama1992cross_section,FAMA19933} 以規模、帳面市值比與共同風險因子說明平均報酬的截面差異；Jegadeesh 與 Titman \cite{jegadeesh1993returns} 則指出動能訊號可在截面上區分過去贏家與輸家。這些文獻奠定了以股票特徵解釋相對報酬差異的基礎。
 
-近年機器學習資產定價研究進一步強調，高維個股特徵與非線性模型可用於預測截面預期報酬。Gu、Kelly 與 Xiu \cite{gu2020empirical} 顯示樹模型與神經網路能捕捉傳統線性模型較難表示的特徵交互作用；Freyberger、Neuhierl 與 Weber \cite{freyberger2020dissecting} 亦指出部分特徵對截面預期報酬的影響具有非線性與條件性；Kozak、Nagel 與 Santosh \cite{kozak2020shrinking} 則從高維特徵與因子模型角度討論如何有效壓縮截面資訊。上述研究支持本文將模型定位為截面排序器，以產生可用於股票選取的相對強弱訊號。
+近年機器學習資產定價研究進一步強調，高維度個股特徵與非線性模型可用於預測截面預期報酬。Gu、Kelly 與 Xiu \cite{gu2020empirical} 顯示樹模型與神經網路能捕捉傳統線性模型較難表示的特徵交互作用；Freyberger、Neuhierl 與 Weber \cite{freyberger2020dissecting} 亦指出部分特徵對截面預期報酬的影響具有非線性與條件性；Kozak、Nagel 與 Santosh \cite{kozak2020shrinking} 則從高維度特徵與因子模型角度討論如何有效壓縮截面資訊。上述研究支持本文將模型定位為截面排序器，以產生可用於股票選取的相對強弱訊號。
 
 本文以未來五日報酬之每日截面去均值作為訓練標籤。採用未來報酬而非未來價格，係因投資決策關注可實現報酬而非價格水準；截面去均值則用以降低市場共同漲跌對標籤的支配，使模型著重同一交易日股票間的相對表現差異。五日預測期為短週期報酬預測與週頻再平衡之間的折衷，既可避免單日報酬受微結構噪音過度干擾，亦不將持有期拉長至排序訊號反應遲滯。Abe 與 Nakagawa \cite{abe2020cross_sectional_daily} 在實際投資管理情境中亦以相同之五日前瞻報酬作為截面預測目標，說明此類短週期報酬標籤可直接銜接投資組合建構流程。
 
@@ -19,7 +19,7 @@
 
 技術指標將價格、成交量與交易區間資訊轉換為可計算特徵，長期被用於交易規則與報酬預測。Brock、Lakonishok 與 LeBaron \cite{Brock1992SimpleTT} 顯示移動平均與區間突破規則在長期樣本中具有統計可辨識性；Lin \cite{LIN2018103} 則指出，技術指標經適當對齊與降噪後可改善樣本內與樣本外預測。Li 與 Bastos \cite{li2020stock}、Sezer 等人 \cite{sezer2019dl_fin_survey} 與 Sonkavde 等人 \cite{sonkavde2023review_ml_dl} 的整理亦顯示，技術指標常作為深度學習金融預測的結構化輸入。
 
-在文獻脈絡中，技術指標、公司特徵（firm characteristics）與學習因子三個概念應加以區分。技術指標係由價量資料衍生的趨勢、動能、波動或量能訊號，如相對強弱指數（RSI）、指數平滑異同移動平均線（MACD）、隨機指標（KD）或布林通道等；公司特徵則指資產定價文獻中用以說明截面報酬差異的個股層級變數，涵蓋規模、帳面市值比、獲利能力、槓桿與流動性等；學習因子則係模型由高維輸入中萃取的潛在表示，通常不對應特定可解釋維度。本文所稱多因子特徵，涵蓋技術指標、價量特徵與部分財務估值變數，屬廣義個股預測因子，與機器學習資產定價文獻以大量個股特徵預測截面預期報酬的做法一致 \cite{gu2020empirical,freyberger2020dissecting,kozak2020shrinking}。
+在文獻脈絡中，技術指標、公司特徵（firm characteristics）與學習因子三個概念應加以區分。技術指標係由價量資料衍生的趨勢、動能、波動或量能訊號，如相對強弱指數（RSI）、指數平滑異同移動平均線（MACD）、隨機指標（KD）或布林通道等；公司特徵則指資產定價文獻中用以說明截面報酬差異的個股層級變數，涵蓋規模、帳面市值比、獲利能力、槓桿與流動性等；學習因子則係模型由高維度輸入中萃取的潛在表示，通常不對應特定可解釋維度。本文所稱多因子特徵，涵蓋技術指標、價量特徵與部分財務估值變數，屬廣義個股預測因子，與機器學習資產定價文獻以大量個股特徵預測截面預期報酬的做法一致 \cite{gu2020empirical,freyberger2020dissecting,kozak2020shrinking}。
 
 % ============================================================
 \section{非圖比較基準模型}
@@ -89,7 +89,7 @@ h_t &= o_t \odot \tanh(c_t) \label{eq:lstm_hidden}
   \label{fig:lstm_cell_flow}
 \end{figure}
 
-如圖 \ref{fig:lstm_cell_flow} 所示，LSTM 單元可分為三個功能區段。左側的「遺忘區段（Forget）」由遺忘閘 \(f_t\)（式 \ref{eq:lstm_forget}）負責：\(f_t\) 以前一步隱狀態 \(h_{t-1}\) 與當步輸入 \(x_t\) 為輸入，輸出介於 0 至 1 之間的保留比例，決定前期記憶狀態 \(c_{t-1}\) 中哪些資訊應被遺忘。中間的「更新區段（Update）」由輸入閘 \(i_t\)（式 \ref{eq:lstm_input}）與候選記憶 \(\tilde{c}_t\)（式 \ref{eq:lstm_cell_candidate}）共同運作：前者控制新資訊的寫入比例，後者產生候選更新值，兩者共同決定寫入記憶狀態的新內容（式 \ref{eq:lstm_cell}）。右側的「輸出區段（Output）」由輸出閘 \(o_t\)（式 \ref{eq:lstm_output_gate}）決定記憶狀態中有多少資訊輸出至隱狀態 \(h_t\)（式 \ref{eq:lstm_hidden}）。記憶狀態 \(c_t\) 以直通路徑跨時步持續傳遞，使梯度在反向傳播時得以有效流動，緩解了傳統 RNN 的梯度消失問題 \cite{hochreiter1997lstm}。
+如圖 \ref{fig:lstm_cell_flow} 所示，LSTM 單元可分為三個功能區段。左側的「遺忘區段（Forget）」由遺忘閘 \(f_t\) 負責（式 \ref{eq:lstm_forget}）：以前一步隱狀態 \(h_{t-1}\) 與當步輸入 \(x_t\) 為輸入，輸出介於 0 至 1 之間的保留比例，決定前期記憶狀態 \(c_{t-1}\) 中哪些資訊應被遺忘。中間的「更新區段（Update）」由輸入閘 \(i_t\) 與候選記憶 \(\tilde{c}_t\) 共同運作（式 \ref{eq:lstm_input}--\ref{eq:lstm_cell}）：前者控制新資訊的寫入比例，後者以 tanh 函數產生候選更新值，兩者逐元素相乘後再與遺忘後的舊記憶相加，共同形成新記憶狀態 \(c_t\)。右側的「輸出區段（Output）」由輸出閘 \(o_t\) 決定記憶狀態中有多少資訊輸出至隱狀態 \(h_t\)（式 \ref{eq:lstm_output_gate}--\ref{eq:lstm_hidden}）。記憶狀態 \(c_t\) 以直通路徑跨時步持續傳遞，使梯度在反向傳播時得以有效流動，緩解了傳統 RNN 的梯度消失問題 \cite{hochreiter1997lstm}。
 
 在截面股票預測中，LSTM 以 sequence-to-one 形式接收單一股票連續 \(T\) 個交易日的特徵向量序列，以最後時步的隱狀態 \(h_T\) 作為當日個股特徵表示，供後續全連接層輸出截面排序分數。Qiu 等人 \cite{qiu2020forecasting} 以 LSTM 預測股票價格，Zaheer 等人 \cite{zaheer2023multi} 則將 LSTM 延伸至多維訊號預測，均顯示序列模型能有效吸收單一資產的短中期時間依賴。
 
@@ -103,7 +103,7 @@ h_t &= o_t \odot \tanh(c_t) \label{eq:lstm_hidden}
 
 產業圖（industry graph）將同一產業內股票連結，用以表示產業共同成分與同業間資訊傳遞。其優點是經濟意義清楚、結構穩定且可重現；限制是無法捕捉跨產業共動與同產業內關係強度變化。市場圖（market graph）若採全截面連結，則不應被解讀為用來預測整體市場方向。尤其在本文標籤已做每日截面去均值後，市場共同方向已被部分移除；因此，市場圖更合理的定位，是一種全截面資訊聚合機制，用以檢驗模型是否能透過全市場節點互動捕捉當日共同風格、流動性或資金輪動訊號。其限制是全連接結構接近 global pooling，可能混入大量弱關係與噪音邊。
 
-相關係數圖以滾動報酬相關建立時間變動邊，使邊的存在與權重可隨市場共動變化而更新。Mantegna \cite{mantegna1999hierarchical} 與 Onnela 等人 \cite{onnela2003dynamics} 說明相關係數網路可用於描述金融市場共動結構與其時間變化；Engle、Ledoit 與 Wolf \cite{engle2019large_dynamic_covariance} 則從大型動態共變異矩陣角度顯示，金融資產間的相關與共變異估計本身具有高維與時間變動挑戰。
+相關係數圖以滾動報酬相關建立時間變動邊，使邊的存在與權重可隨市場共動變化而更新。Mantegna \cite{mantegna1999hierarchical} 與 Onnela 等人 \cite{onnela2003dynamics} 說明相關係數網路可用於描述金融市場共動結構與其時間變化；Engle、Ledoit 與 Wolf \cite{engle2019large_dynamic_covariance} 則從大型動態共變異矩陣角度顯示，金融資產間的相關與共變異估計本身具有高維度與時間變動挑戰。
 
 因此，時間變動相關圖的價值與限制必須同時說明。滾動視窗太短時，相關係數估計較不穩定；滾動視窗太長時，圖結構反應市場狀態變化較慢。Top-\(k\) 稀疏化會改變 graph topology，使模型對鄰居選取規則敏感；使用 signed correlation 或 absolute correlation 也會導致不同經濟解讀。這些限制說明，時間變動關係圖需在相同資料切分、模型容量與評估設定下接受實證檢驗。
 
@@ -153,7 +153,7 @@ h'_i = \sigma\!\left(\sum_{j \in \mathcal{N}(i)} \alpha_{ij}\, W h_j\right)
 \section{多因子表示、中性化與消融實驗邏輯}
 \label{sec:multifactor_neutralization_ablation_logic}
 
-多因子模型的核心目標，是將大量原始特徵轉換為較高層次的投資訊號表示。傳統因子模型常以線性暴露解釋股票報酬差異；深度多因子模型則進一步讓模型從高維特徵中學習非線性因子表示。Wei、Dai 與 Lin \cite{wei2022factor} 提出的 Deep Multi-Factor Model 以深度表示、因子收益與注意力解釋模組結合，提供本文設計多因子表示架構的重要參考。
+多因子模型的核心目標，是將大量原始特徵轉換為較高層次的投資訊號表示。傳統因子模型常以線性暴露解釋股票報酬差異；深度多因子模型則進一步讓模型從高維度特徵中學習非線性因子表示。Wei、Dai 與 Lin \cite{wei2022factor} 提出的 Deep Multi-Factor Model 以深度表示、因子收益與注意力解釋模組結合，提供本文設計多因子表示架構的重要參考。
 
 在量化股票選取中，中性化的目的通常是降低策略對非目標風險來源的暴露，例如產業、規模、價值或市場 beta。Ehsani、Harvey 與 Li \cite{ehsani2023sector_neutrality} 討論 sector neutralization 在 factor investing 中的效果，指出中性化可能有助於分離 stock selection 與 sector bet，但其效果也會依投資組合型態而異。這提醒本文不能只宣稱「中性化必然更好」，而應把中性化視為一個需要實證檢驗的模型設計。
 

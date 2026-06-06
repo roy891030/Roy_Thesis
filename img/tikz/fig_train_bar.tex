@@ -1,4 +1,4 @@
-\documentclass[tikz,border=14pt]{standalone}
+\documentclass[tikz,border=16pt]{standalone}
 \usepackage[no-math]{fontspec}
 \usepackage{xeCJK}
 \usepackage[UTF8,fontset=none]{ctex}
@@ -14,74 +14,84 @@
 \begin{document}
 \begin{tikzpicture}[
   inlabel/.style={font=\normalsize\bfseries, white, align=center},
-  annlabel/.style={font=\small, thesisDark, align=center},
-  ylabel/.style={font=\normalsize\bfseries, thesisDark, anchor=east},
-  xlabel/.style={font=\small, thesisDark!70, anchor=north},
-  totlabel/.style={font=\small, thesisDark, anchor=west},
+  annlabel/.style={font=\normalsize, thesisDark, align=center},
+  ylabel/.style={font=\large\bfseries, thesisDark, anchor=east},
+  xlabel/.style={font=\normalsize, thesisDark!65, anchor=north},
+  totlabel/.style={font=\normalsize, thesisDark, anchor=west},
+  pctlabel/.style={font=\small, thesisDark!65, anchor=north, align=center},
 ]
 
 %% ── scale: total = 2782 days → 11cm ─────────────────────
 \def\sc{0.003954}   % cm per day  (11/2782)
-\def\rh{1.00}       % bar height (cm)
+\def\rh{1.20}       % bar height (cm) — 增大
 
 %% ── row y-positions ──────────────────────────────────────
 \def\ryL{0}
-\def\ryM{1.7}
-\def\ryS{3.4}
+\def\ryM{2.00}
+\def\ryS{4.00}
 
 %% ── helper macro ─────────────────────────────────────────
-%% \barrow{y-bot}{trainD}{valD}{testD}{total}
-\newcommand{\barrow}[5]{
+%% \barrow{y-bot}{trainD}{valD}{testD}{total}{pctTrain}{pctTest}
+\newcommand{\barrow}[7]{
   \pgfmathsetmacro{\xTr}{#2*\sc}
   \pgfmathsetmacro{\xVa}{(#2+#3)*\sc}
   \pgfmathsetmacro{\xTe}{(#2+#3+#4)*\sc}
-  % bars
-  \fill[thesisBlue]    (0,  {#1}) rectangle (\xTr, {#1+\rh});
-  \fill[thesisAmber]   (\xTr, {#1}) rectangle (\xVa, {#1+\rh});
-  \fill[thesisCrimson] (\xVa, {#1}) rectangle (\xTe, {#1+\rh});
+  % bars with rounded corners
+  \fill[thesisBlue!85, rounded corners=2pt]    (0,  {#1}) rectangle (\xTr, {#1+\rh});
+  \fill[thesisAmber!90, rounded corners=2pt]   (\xTr, {#1}) rectangle (\xVa, {#1+\rh});
+  \fill[thesisCrimson!85, rounded corners=2pt] (\xVa, {#1}) rectangle (\xTe, {#1+\rh});
+  % Thin white dividers
+  \draw[white, line width=1.2pt] (\xTr, {#1}) -- (\xTr, {#1+\rh});
+  \draw[white, line width=1.2pt] (\xVa, {#1}) -- (\xVa, {#1+\rh});
+  % Outer border
+  \draw[thesisDark!40, thick, rounded corners=2pt] (0, {#1}) rectangle (\xTe, {#1+\rh});
   % Train label inside
-  \node[inlabel] at ({(\xTr)/2}, {#1+\rh/2}) {#2};
-  % Val annotation: above bar (always narrow)
-  \node[annlabel, above=2pt] at ({(\xTr+\xVa)/2}, {#1+\rh}) {#3};
-  % Test label: inside if wide enough, else inside (force)
+  \node[inlabel] at ({(\xTr)/2}, {#1+\rh/2}) {#2 d\quad(#6\%)};
+  % Val annotation: above bar
+  \node[annlabel, above=3pt] at ({(\xTr+\xVa)/2}, {#1+\rh}) {#3 d};
+  % Test label: inside if wide enough
   \pgfmathsetmacro{\tw}{#4*\sc}
   \ifdim\tw cm > 0.8cm
-    \node[inlabel] at ({(\xVa+\xTe)/2}, {#1+\rh/2}) {#4};
+    \node[inlabel] at ({(\xVa+\xTe)/2}, {#1+\rh/2}) {#4 d\quad(#7\%)};
   \fi
   % Total label at right
-  \node[totlabel] at ({\xTe+0.18}, {#1+\rh/2}) {Total #5};
+  \node[totlabel] at ({\xTe+0.22}, {#1+\rh/2}) {合計 #5 d};
 }
 
 %% ── Draw rows ────────────────────────────────────────────
-\barrow{\ryL}{2003}{222}{557}{2782}
-\barrow{\ryM}{1118}{124}{311}{1553}
-\barrow{\ryS}{414}{46}{116}{576}
+\barrow{\ryL}{2003}{222}{557}{2782}{72}{20}
+\barrow{\ryM}{1118}{124}{311}{1553}{72}{20}
+\barrow{\ryS}{414}{46}{116}{576}{72}{20}
 
 %% ── Y-axis row labels ────────────────────────────────────
-\node[ylabel] at (-0.30, {\ryL+\rh/2}) {Long};
-\node[ylabel] at (-0.30, {\ryM+\rh/2}) {Medium};
-\node[ylabel] at (-0.30, {\ryS+\rh/2}) {Short};
+\node[ylabel] at (-0.35, {\ryL+\rh/2}) {Long};
+\node[ylabel] at (-0.35, {\ryM+\rh/2}) {Medium};
+\node[ylabel] at (-0.35, {\ryS+\rh/2}) {Short};
 
 %% ── X-axis ticks + grid ──────────────────────────────────
 \foreach \d in {0,500,1000,1500,2000,2500,3000}{
   \pgfmathsetmacro{\xp}{\d*\sc}
-  \draw[thesisDark!15, thin] (\xp, -0.10) -- (\xp, {3.4+\rh+0.10});
-  \node[xlabel] at (\xp, -0.18) {\d};
+  \draw[thesisDark!12, thin] (\xp, -0.15) -- (\xp, {4.0+\rh+0.15});
+  \node[xlabel] at (\xp, -0.25) {\d};
 }
 
+%% ── X-axis label ─────────────────────────────────────────
+\node[font=\normalsize, thesisDark!70]
+     at ({2782*\sc/2}, {-0.80}) {交易日數（Trading Days）};
+
 %% ── Title ────────────────────────────────────────────────
-\node[font=\normalsize\bfseries, thesisDark, anchor=south]
-     at ({2782*\sc/2}, {3.4+\rh+0.55})
-     {Train / Validation / Test Trading-Day Counts};
+\node[font=\large\bfseries, thesisDark, anchor=south]
+     at ({2782*\sc/2}, {4.0+\rh+0.75})
+     {三種樣本視窗之資料切分日數（Train / Validation / Test）};
 
 %% ── Legend ───────────────────────────────────────────────
-\def\legx{1.5}  \def\legy{-1.1}
-\fill[thesisBlue]    (\legx, \legy) rectangle ({\legx+0.5}, {\legy+0.32});
-\node[font=\small, thesisDark, anchor=west] at ({\legx+0.6},  {\legy+0.16}) {Train};
-\fill[thesisAmber]   ({\legx+2.2}, \legy) rectangle ({\legx+2.7}, {\legy+0.32});
-\node[font=\small, thesisDark, anchor=west] at ({\legx+2.8},  {\legy+0.16}) {Validation};
-\fill[thesisCrimson] ({\legx+4.8}, \legy) rectangle ({\legx+5.3}, {\legy+0.32});
-\node[font=\small, thesisDark, anchor=west] at ({\legx+5.4},  {\legy+0.16}) {Test};
+\def\legx{0.8}  \def\legy{-1.55}
+\fill[thesisBlue!85]    (\legx, \legy) rectangle ({\legx+0.55}, {\legy+0.36});
+\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+0.68},  {\legy+0.18}) {訓練集（Train，72\%）};
+\fill[thesisAmber!90]   ({\legx+3.6}, \legy) rectangle ({\legx+4.15}, {\legy+0.36});
+\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+4.28},  {\legy+0.18}) {驗證集（Validation，8\%）};
+\fill[thesisCrimson!85] ({\legx+7.8}, \legy) rectangle ({\legx+8.35}, {\legy+0.36});
+\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+8.48},  {\legy+0.18}) {測試集（Test，20\%）};
 
 \end{tikzpicture}
 \end{document}
