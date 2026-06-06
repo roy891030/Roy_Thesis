@@ -1,7 +1,7 @@
 \chapter{文獻回顧}
 \label{ch:relatedwork}
 
-本章依本文之研究問題整理文獻脈絡。本文在統一資料切分與評估框架下，依序檢驗技術與多因子特徵、非圖比較基準、股票關係圖、訊息傳遞設計與中性化設計，分別對截面報酬排序與投資組合績效的增量貢獻。因此，本章依序回顧截面報酬預測與股票選取問題、技術特徵與多因子表示、非圖比較基準模型（嶺迴歸、梯度提升樹集成與長短期記憶網路）、股票關係圖建構、圖神經網路與 GAT 訊息傳遞機制、多因子中性化與消融實驗邏輯，以及 IC / ICIR 與投資組合績效驗證。
+本章依本文之研究問題整理文獻脈絡。本文在統一資料切分與評估框架下，依序檢驗技術與多因子特徵、非圖比較基準、股票關係圖、訊息傳遞設計與中性化設計，分別對截面報酬排序與投資組合績效的增量貢獻。因此，本章依序回顧截面報酬預測與股票選取問題、技術特徵與多因子表示、非圖比較基準模型（線性迴歸、梯度提升樹集成與長短期記憶網路）、股票關係圖建構、圖神經網路與 GAT 訊息傳遞機制、多因子中性化與消融實驗邏輯，以及 IC / ICIR 與投資組合績效驗證。
 
 % ============================================================
 \section{截面報酬預測與股票選取問題}
@@ -25,25 +25,25 @@
 \section{非圖比較基準模型}
 \label{sec:non_graph_baselines}
 
-本文在引入圖神經網路架構前，先建立三類不使用股票關係圖的比較基準：嶺迴歸、梯度提升樹集成與長短期記憶網路。三者分別代表截面預測任務中的線性下限、非線性表格型建模能力與時間序列記憶能力，可在受控條件下衡量圖結構引入後的增量效益。若圖模型在特定視窗或指標上無法穩定超越上述基準，則圖結構的有效性便需回溯至拓樸設計、訊息傳遞機制與中性化設計本身加以解釋。
+本文在引入圖神經網路架構前，先建立三類不使用股票關係圖的比較基準：線性迴歸、梯度提升樹集成與長短期記憶網路。三者分別代表截面預測任務中的線性下限、非線性表格型建模能力與時間序列記憶能力，可在受控條件下衡量圖結構引入後的增量效益。若圖模型在特定視窗或指標上無法穩定超越上述基準，則圖結構的有效性便需回溯至拓樸設計、訊息傳遞機制與中性化設計本身加以解釋。
 
 % ------------------------------------------------------------
-\subsection{嶺迴歸：線性基準與正則化}
-\label{subsec:ridge_baseline}
+\subsection{線性迴歸：截面排序的線性基準}
+\label{subsec:linear_baseline}
 
-嶺迴歸（Ridge regression）在線性迴歸的最小平方目標函數上加入 \(L_2\) 正則化項，以下式定義損失：
+線性迴歸以最小化預測值與真實報酬標籤的平方差為目標，透過普通最小平方法（Ordinary Least Squares, OLS）估計各特徵的線性係數。設特徵矩陣為 \(X \in \mathbb{R}^{N \times F}\)、報酬標籤為 \(y \in \mathbb{R}^{N}\)，目標函數為：
 \begin{equation}
-\mathcal{L}(w) = \|y - Xw\|_2^2 + \lambda\|w\|_2^2
-\label{eq:ridge_loss}
+\mathcal{L}(w) = \|y - Xw\|_2^2
+\label{eq:ols_loss}
 \end{equation}
-其中 \(X \in \mathbb{R}^{N \times F}\) 為特徵矩陣，\(y \in \mathbb{R}^{N}\) 為報酬標籤，\(\lambda > 0\) 為正則化強度。此目標函數具封閉解：
+在 \(X^\top X\) 可逆的條件下，此目標函數具封閉解：
 \begin{equation}
-\hat{w} = (X^\top X + \lambda I)^{-1} X^\top y
-\label{eq:ridge_solution}
+\hat{w} = (X^\top X)^{-1} X^\top y
+\label{eq:ols_solution}
 \end{equation}
-Hoerl 與 Kennard \cite{hoerl1970ridge} 指出，\(L_2\) 懲罰透過向特徵矩陣加入正定偏移 \(\lambda I\)，能緩解 \(X^\top X\) 近奇異（ill-conditioned）時的係數不穩定，並使高維情境下的解具備數值可行性。
+預測值 \(\hat{y} = X\hat{w}\) 可直接作為截面排序訊號。由於每個係數 \(\hat{w}_j\) 直接反映第 \(j\) 個特徵對報酬標籤的線性邊際貢獻，線性迴歸具備完整的係數可解釋性，可用於驗證各技術與估值特徵的方向性與量級 \cite{gu2020empirical}。
 
-在截面報酬預測任務中，嶺迴歸擔任最低容量的線性預測下限。當技術與估值特徵的維度較高且相互高度相關時，普通最小平方估計的方差會顯著放大；嶺迴歸的正則化使係數收縮，以容許的估計偏差換取方差的降低，進而改善樣本外預測穩健性。若非線性模型無法在截面排序指標上明顯超越嶺迴歸，即意味著特徵集合的線性預測力已構成重要下限；若嶺迴歸顯著落後，則說明截面訊號中確實存在非線性或關係結構，值得進一步以更複雜的模型捕捉。
+在截面報酬預測任務中，線性迴歸作為最低容量的比較基準，其意義在於提供一個僅依賴特徵線性加總所能達到的預測下限。若技術與估值特徵本身已攜帶充分的截面訊號，線性迴歸的 IC / ICIR 應顯著優於隨機排序；若更複雜的非線性模型無法超越線性基準，即意味著特徵工程本身的有效性值得重新審視。反之，若線性基準顯著落後於非線性模型，則說明截面訊號中確實存在非線性交互與關係結構，值得以更複雜的架構加以捕捉。
 
 % ------------------------------------------------------------
 \subsection{梯度提升樹集成：XGBoost 的非線性建模}
@@ -56,14 +56,16 @@ F_m(x) = F_{m-1}(x) + \eta \cdot h_m(x)
 \end{equation}
 其中 \(h_m\) 為以第 \(m-1\) 輪殘差之負梯度為目標訓練的決策樹，\(\eta\) 為學習率。Chen 與 Guestrin \cite{Chen2016XGBoost} 在此基礎上引入二階泰勒展開的精確目標函數，並加入葉節點 \(L_1 / L_2\) 正則化、欄位子抽樣與稀疏資料處理，使 XGBoost 在結構化資料建模上具備強泛化能力，同時保有特徵重要性的可解釋性。
 
-在截面股票預測中，決策樹的分叉條件可隱式捕捉特徵間的非線性交互作用，例如「高動能且低波動」或「估值偏低且近期成交量放大」等複合條件，毋需顯式構造特徵組合。集成模型的學習目標以排序損失或 MSE 均可適用；當訓練樣本跨越不同市場環境時，梯度提升的逐輪殘差修正機制能使後續樹專注於較難預測的樣本，從而改善整體覆蓋能力。如圖 \ref{fig:xgboost_concept} 所示，XGBoost 以多輪建樹、權重調整與預測聚合的方式整合弱學習器，最終輸出截面排序分數。金融預測研究亦廣泛以決策樹、隨機森林、AdaBoost 或 XGBoost 作為非線性比較基準 \cite{ampomah2020tree_direction,ampomah2020tree_ensemble_stock,nti2020ensemble_comprehensive,saifan2020ensemble_trading,WU2006270}。
-
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.72\textwidth]{img/tikz/fig_xgboost.pdf}
-  \caption{XGBoost 訓練與測試流程示意：多輪 CART 樹建模、權重調整與預測聚合。}
+  \caption{XGBoost 訓練與測試流程示意：多輪 CART 樹建模、殘差學習與預測聚合。}
   \label{fig:xgboost_concept}
 \end{figure}
+
+如圖 \ref{fig:xgboost_concept} 所示，XGBoost 的訓練流程分為三個層次：第一層為單棵 CART 迴歸樹（Regression Tree），以訓練集建立初始預測；第二層在每一輪迭代中，新樹以前輪模型殘差的負梯度為學習目標，專注於修正既有預測的偏差集中區；第三層將所有輪次的樹乘以學習率後加總，形成最終的截面排序預測。此逐輪殘差修正機制使模型能以決策樹的分叉條件隱式捕捉特徵間的非線性交互作用，例如「高動能且低波動」或「估值偏低且近期成交量放大」等複合條件，毋需顯式構造特徵組合。
+
+在股票截面預測的應用文獻中，Wu 等人 \cite{WU2006270} 早期即展示決策樹在股票交易決策中的可行性；Ampomah 等人 \cite{ampomah2020tree_direction} 以樹狀集成模型評估股票價格方向預測，並在後續研究 \cite{ampomah2020tree_ensemble_stock} 中以 AdaBoost 集成建構股市決策支援系統；Nti 等人 \cite{nti2020ensemble_comprehensive} 則對集成學習方法在股市預測上的廣泛應用進行全面性評估；Saifan 等人 \cite{saifan2020ensemble_trading} 進一步驗證集成方法在演算法交易中的實務可行性。上述研究一致表明，在不引入序列記憶或圖結構的條件下，梯度提升樹集成已能建立具競爭力的截面預測基準，因此本文將其納入作為評估圖模型增量效益的非線性比較參照。
 
 % ------------------------------------------------------------
 \subsection{長短期記憶網路：時間序列記憶能力}
@@ -78,7 +80,7 @@ c_t &= f_t \odot c_{t-1} + i_t \odot \tilde{c}_t \label{eq:lstm_cell} \\
 o_t &= \sigma(W_o [h_{t-1}, x_t] + b_o) \label{eq:lstm_output_gate} \\
 h_t &= o_t \odot \tanh(c_t) \label{eq:lstm_hidden}
 \end{align}
-其中 \(\sigma\) 為 Sigmoid 函數，\(\odot\) 為逐元素乘積。如圖 \ref{fig:lstm_cell_flow} 所示，遺忘閘 \(f_t\) 決定保留多少前期記憶狀態，輸入閘 \(i_t\) 控制新資訊寫入記憶的比例，輸出閘 \(o_t\) 則決定從記憶狀態輸出至隱狀態的部分；記憶狀態 \(c_t\) 作為資訊高速公路跨時步傳遞，緩解了長序列中梯度消失的問題。
+其中 \(\sigma\) 為 Sigmoid 函數，\(\odot\) 為逐元素乘積。
 
 \begin{figure}[htbp]
   \centering
@@ -87,7 +89,9 @@ h_t &= o_t \odot \tanh(c_t) \label{eq:lstm_hidden}
   \label{fig:lstm_cell_flow}
 \end{figure}
 
-在截面股票預測中，LSTM 以 sequence-to-one 形式接收單一股票連續 \(T\) 個交易日的特徵向量序列，並以最後時步的隱狀態 \(h_T\) 作為當日個股特徵表示，供後續全連接層輸出截面排序分數。Qiu 等人 \cite{qiu2020forecasting} 與 Zaheer 等人 \cite{zaheer2023multi} 將 LSTM 或其變形應用於股票價格與多維訊號預測，顯示序列模型能有效吸收單一資產的短中期時間依賴。
+如圖 \ref{fig:lstm_cell_flow} 所示，LSTM 單元可分為三個功能區段。左側的「遺忘區段（Forget）」由遺忘閘 \(f_t\)（式 \ref{eq:lstm_forget}）負責：\(f_t\) 以前一步隱狀態 \(h_{t-1}\) 與當步輸入 \(x_t\) 為輸入，輸出介於 0 至 1 之間的保留比例，決定前期記憶狀態 \(c_{t-1}\) 中哪些資訊應被遺忘。中間的「更新區段（Update）」由輸入閘 \(i_t\)（式 \ref{eq:lstm_input}）與候選記憶 \(\tilde{c}_t\)（式 \ref{eq:lstm_cell_candidate}）共同運作：前者控制新資訊的寫入比例，後者產生候選更新值，兩者共同決定寫入記憶狀態的新內容（式 \ref{eq:lstm_cell}）。右側的「輸出區段（Output）」由輸出閘 \(o_t\)（式 \ref{eq:lstm_output_gate}）決定記憶狀態中有多少資訊輸出至隱狀態 \(h_t\)（式 \ref{eq:lstm_hidden}）。記憶狀態 \(c_t\) 以直通路徑跨時步持續傳遞，使梯度在反向傳播時得以有效流動，緩解了傳統 RNN 的梯度消失問題 \cite{hochreiter1997lstm}。
+
+在截面股票預測中，LSTM 以 sequence-to-one 形式接收單一股票連續 \(T\) 個交易日的特徵向量序列，以最後時步的隱狀態 \(h_T\) 作為當日個股特徵表示，供後續全連接層輸出截面排序分數。Qiu 等人 \cite{qiu2020forecasting} 以 LSTM 預測股票價格，Zaheer 等人 \cite{zaheer2023multi} 則將 LSTM 延伸至多維訊號預測，均顯示序列模型能有效吸收單一資產的短中期時間依賴。
 
 然而，LSTM 的根本限制在於以單股歷史路徑為唯一訊號來源：它主要處理同一股票內部的時間依賴，不直接刻畫同一交易日其他股票對目標股票表示的影響。當市場存在產業共振、全市場風格切換或流動性輪動等截面結構時，單股序列模型只能透過手工特徵間接吸收這些訊號。正是這一不足，驅動了後續以股票關係圖顯式建模截面相依性的研究方向。
 
@@ -95,7 +99,7 @@ h_t &= o_t \odot \tanh(c_t) \label{eq:lstm_hidden}
 \section{股票關係圖：產業圖、市場圖、相關係數圖}
 \label{sec:stock_relation_graph_industry_market_corr}
 
-金融市場中的股票具有明顯的截面相依性。個股報酬可能共同受到產業景氣、風格因子、總體市場風險偏好、資金流向與價格共動結構影響。股票關係圖提供一種將股票視為節點、將股票間關係視為邊的資料結構，使模型能在同一交易日聚合其他股票資訊。既有研究常以產業關係、供應鏈、價格相似性、知識圖譜或動態關係建立股票圖，並觀察其對報酬預測或股票排序的影響 \cite{song2023stock,xiang2022dynamic_gat,su2024hetero_gat,huang2022mlgat,wei2025fstgat}。
+金融市場中的股票具有明顯的截面相依性。個股報酬可能共同受到產業景氣、風格因子、總體市場風險偏好、資金流向與價格共動結構影響。股票關係圖提供一種將股票視為節點、將股票間關係視為邊的資料結構，使模型能在同一交易日聚合其他股票資訊。在以靜態結構關係建立圖的研究中，Song 等人 \cite{song2023stock} 結合股票價格與股票關係資訊建構圖聚合網路，用於截面排序預測；Huang 等人 \cite{huang2022mlgat} 則提出多層 GAT，捕捉不同層級的股票相依結構。在動態關係圖方面，Zhang 等人 \cite{xiang2022dynamic_gat} 引入動態屬性驅動的 GAT 建模行為金融場景中的時變股票關係；Wei 等人 \cite{wei2025fstgat} 以金融時空圖注意力網路處理報酬序列的非平穩性；Liu 等人 \cite{su2024hetero_gat} 則以異質雙動態注意力機制建模股票間的相互影響。上述研究共同指出，圖建構方式對模型效益具有直接影響。
 
 產業圖（industry graph）將同一產業內股票連結，用以表示產業共同成分與同業間資訊傳遞。其優點是經濟意義清楚、結構穩定且可重現；限制是無法捕捉跨產業共動與同產業內關係強度變化。市場圖（market graph）若採全截面連結，則不應被解讀為用來預測整體市場方向。尤其在本文標籤已做每日截面去均值後，市場共同方向已被部分移除；因此，市場圖更合理的定位，是一種全截面資訊聚合機制，用以檢驗模型是否能透過全市場節點互動捕捉當日共同風格、流動性或資金輪動訊號。其限制是全連接結構接近 global pooling，可能混入大量弱關係與噪音邊。
 
@@ -107,27 +111,43 @@ h_t &= o_t \odot \tanh(c_t) \label{eq:lstm_hidden}
 \section{圖神經網路與 GAT 訊息傳遞機制於股票網路中的角色}
 \label{sec:gnn_gat_message_passing_stock_network}
 
-圖神經網路（Graph Neural Networks, GNNs）以圖作為基本資料結構，透過節點與邊描述實體及其關係，並以訊息傳遞機制聚合鄰居資訊。Scarselli 等人 \cite{scarselli2009gnn} 提出早期 GNN 架構；Wu 等人 \cite{wu2020comprehensive} 則系統整理後續圖卷積與訊息傳遞模型。PyTorch Geometric 所提供的圖資料表示與圖層實作，亦使大規模股票圖建模具備可操作性 \cite{fey2019pyg}。
+圖神經網路（Graph Neural Networks, GNNs）以圖作為基本資料結構，透過節點與邊描述實體及其關係，由 Scarselli 等人 \cite{scarselli2009gnn} 最早提出系統化的計算框架。訊息傳遞機制的核心在於每一層的節點更新：
+\begin{equation}
+h_i^{(l+1)} = \mathrm{AGG}\!\left(\bigl\{h_j^{(l)} : j \in \mathcal{N}(i)\bigr\}\right), \quad h_i^{(0)} = x_i
+\label{eq:gnn_message_passing}
+\end{equation}
+其中 \(\mathcal{N}(i)\) 為節點 \(i\) 的鄰居集合，\(\mathrm{AGG}(\cdot)\) 為聚合函數（可為平均、加總或注意力加權），\(h_i^{(l)}\) 為第 \(l\) 層的節點表示。Wu 等人 \cite{wu2020comprehensive} 系統整理圖卷積與訊息傳遞的後續發展，表明多層訊息傳遞能使每個節點逐步整合更大範圍鄰域的資訊；Fey 與 Lenssen \cite{fey2019pyg} 則以 PyTorch Geometric 提供標準化的圖資料表示與圖層實作，使大規模股票圖建模具備可操作性。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.96\textwidth]{img/tikz/fig_gnn_arch.pdf}
-  \caption{GNN 架構示意：由輸入層 $X$ 經過多層圖卷積/訊息傳遞後得到輸出層表示 $Z$。}
+  \caption{GNN 架構示意：節點初始表示 \(X\) 依序通過多層訊息傳遞，每層聚合鄰居節點資訊並更新自身表示，最終產生輸出表示矩陣 \(Z\) 供下游預測任務使用。}
   \label{fig:gnn_architecture}
 \end{figure}
 
-在股票網路中，訊息傳遞機制可解讀為每檔股票根據自身特徵形成節點表示後，再從其鄰居股票吸收關係訊號。若圖為產業圖，鄰居聚合主要反映同業共同成分；若圖為市場圖，鄰居聚合偏向全截面共同資訊；若圖為相關係數圖，鄰居集合與關係強度會隨近期價格共動更新。此流程使模型能將「個股特徵」與「股票間關係」同時納入表示學習。
+如圖 \ref{fig:gnn_architecture} 所示，GNN 以各節點的初始特徵向量 \(x_i\) 作為 \(h_i^{(0)}\)，經過逐層訊息傳遞後，每個節點的表示逐步融入其一跳、兩跳乃至更高跳距鄰居的資訊，最終產生輸出表示矩陣 \(Z\)，供截面排序或分類任務使用。在股票網路中，此機制可解讀為：每檔股票根據自身特徵形成初始節點表示後，再從鄰居股票（同產業、全市場或相關係數鄰居）聚合關係訊號，使模型能同時整合「個股特徵」與「股票間結構資訊」兩類輸入。
 
-圖注意力網路（Graph Attention Network, GAT）在鄰居聚合過程中加入 attention mechanism，使目標節點可對不同鄰居分配不同權重 \cite{velickovic2018gat}。相較於固定平均聚合，GAT 更適合處理金融圖中的異質關係，因為股票之間的影響強度可能隨產業、流動性、市場狀態與共同波動而不同。
+圖注意力網路（Graph Attention Network, GAT）由 Veličković 等人 \cite{velickovic2018gat} 提出，在訊息傳遞的聚合步驟中引入注意力機制，使目標節點對不同鄰居分配不同的影響權重。GAT 的注意力係數計算分兩步：
+\begin{align}
+e_{ij} &= \mathrm{LeakyReLU}\!\left(a^\top [W h_i \,\|\, W h_j]\right) \label{eq:gat_score} \\
+\alpha_{ij} &= \frac{\exp(e_{ij})}{\displaystyle\sum_{k \in \mathcal{N}(i)} \exp(e_{ik})} \label{eq:gat_softmax}
+\end{align}
+其中 \(W\) 為線性變換矩陣，\(a\) 為注意力向量，\(\|\) 表示向量拼接，式 \eqref{eq:gat_softmax} 對節點 \(i\) 的全體鄰居做 Softmax 正規化，確保權重之和為 1。節點更新為：
+\begin{equation}
+h'_i = \sigma\!\left(\sum_{j \in \mathcal{N}(i)} \alpha_{ij}\, W h_j\right)
+\label{eq:gat_update}
+\end{equation}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.95\textwidth]{img/tikz/fig_gat_attention.pdf}
-  \caption{GAT 的鄰居注意力機制示意。左圖呈現注意力係數 $\alpha_{ij}$ 的計算流程；右圖示意節點 $i$ 對其鄰居集合 $\mathcal{N}(i)$ 分配不同權重後進行聚合。}
+  \caption{GAT 鄰居注意力機制示意。左圖呈現注意力係數 \(\alpha_{ij}\) 的計算流程：節點 \(i\) 與鄰居 \(j\) 的特徵向量先經線性變換後拼接，再通過 LeakyReLU 與 Softmax 正規化產生最終注意力權重。右圖示意節點 \(i\) 以計算所得的 \(\alpha_{ij}\) 對鄰居集合 \(\mathcal{N}(i)\) 進行加權聚合，影響力較大的鄰居被賦予較高的聚合比例。}
   \label{fig:gat_attention_mechanism}
 \end{figure}
 
-需要注意的是，GAT attention 的解釋對象主要是 node-to-node aggregation weight，也就是哪些鄰居股票在表示更新時被賦予較高權重。若模型另設 feature attention 或 factor attention，其解釋對象則是特徵或 latent factor 層級，兩者不應混用。Jain 與 Wallace \cite{jain2019attention_not_explanation} 以及 Serrano 與 Smith \cite{serrano2019attention_interpretable} 均提醒，attention weights 可作為模型行為的描述性線索，但不必然等同嚴格解釋或因果效果。因此，本文後續若分析 attention，應定位為模型診斷與輔助觀察，而非單獨支持經濟因果結論。
+如圖 \ref{fig:gat_attention_mechanism} 所示，左圖描繪式 \eqref{eq:gat_score}–\eqref{eq:gat_softmax} 的計算流程：節點 \(i\) 與鄰居 \(j\) 的特徵向量先各自通過共享線性變換 \(W\) 後進行拼接，再輸入 LeakyReLU 激活函數計算未正規化的注意力分數 \(e_{ij}\)，並對所有鄰居做 Softmax 正規化得到 \(\alpha_{ij}\)。右圖則示意式 \eqref{eq:gat_update} 的聚合結果：節點 \(i\) 對鄰居集合 \(\mathcal{N}(i)\) 中的每個節點 \(j\) 分配不同的 \(\alpha_{ij}\)，影響力較強的鄰居在聚合時佔有較大比例，最終更新節點 \(i\) 的表示。在金融股票圖中，股票之間的影響強度可能隨產業、流動性與市場狀態而不同，GAT 的動態注意力機制因此比固定平均聚合更能適應此類異質關係。
+
+需要注意的是，GAT 的注意力係數 \(\alpha_{ij}\) 反映的是節點間的聚合權重，而非特徵層級或因子層級的重要性。Jain 與 Wallace \cite{jain2019attention_not_explanation} 以及 Serrano 與 Smith \cite{serrano2019attention_interpretable} 均指出，注意力權重可作為模型行為的描述性線索，但不必然等同嚴格的因果解釋。因此，本文後續若分析注意力輸出，應定位為模型診斷與輔助觀察，而非獨立的經濟因果依據。
 
 % ============================================================
 \section{多因子表示、中性化與消融實驗邏輯}

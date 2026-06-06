@@ -382,9 +382,9 @@ E_I, \quad E_U.
 \subsection{非圖基準模型}
 \label{subsec:baseline_models}
 
-本文設置三類不使用股票關係資訊的基準模型，分別對應線性截面模型、非線性截面模型與單股時間序列模型。Ridge 線性模型用於衡量 56 維特徵在加總線性關係下可解釋的截面訊號；XGBoost 以加法樹模型描述非線性門檻與特徵交互作用；LSTM 則沿用單一股票自身過去數日的特徵路徑，以檢驗時間序列記憶本身的預測能力。三者皆採用相同的時間切分與標籤定義，使其結果可作為後續模型比較的基準。
+本文設置三類不使用股票關係資訊的基準模型，分別對應線性截面模型、非線性截面模型與單股時間序列模型。線性迴歸基準用於衡量 56 維特徵在加總線性關係下可解釋的截面訊號；XGBoost 以加法樹模型描述非線性門檻與特徵交互作用；LSTM 則沿用單一股票自身過去數日的特徵路徑，以檢驗時間序列記憶本身的預測能力。三者皆採用相同的時間切分與標籤定義，使其結果可作為後續模型比較的基準。
 
-\textbf{共同資料處理：}對 Ridge 與 XGBoost，本文將每一個具有效標籤的「交易日--股票」觀測整理為一筆截面樣本：
+\textbf{共同資料處理：}對線性迴歸與 XGBoost，本文將每一個具有效標籤的「交易日--股票」觀測整理為一筆截面樣本：
 \begin{equation}
 \mathcal{D}_{\mathrm{B}}=\{(x_m,y_m)\}_{m=1}^{M}, \qquad x_m\in\mathbb{R}^{56}.
 \end{equation}
@@ -398,21 +398,20 @@ E_I, \quad E_U.
 \end{equation}
 其中 \(j\) 表示第 \(j\) 個特徵，\(\widehat{\mu}^{(\mathrm{tr})}_{j}\) 與 \(\widehat{\sigma}^{(\mathrm{tr})}_{j}\) 分別為訓練集估計值。此設定避免使用驗證或測試期間資訊估計標準化參數。
 
-\textbf{Ridge 線性模型：}令 \(\widetilde{X}\in\mathbb{R}^{M_{\mathrm{tr}}\times 56}\) 為訓練集標準化後的特徵矩陣，\(y\in\mathbb{R}^{M_{\mathrm{tr}}}\) 為對應標籤。Ridge 估計式可寫為
+\textbf{線性迴歸基準：}令 \(\widetilde{X}\in\mathbb{R}^{M_{\mathrm{tr}}\times 56}\) 為訓練集標準化後的特徵矩陣，\(y\in\mathbb{R}^{M_{\mathrm{tr}}}\) 為對應標籤。普通最小平方估計式為
 \begin{equation}
 (\widehat{\beta}_0,\widehat{\beta})
 =\arg\min_{\beta_0,\beta}
 \sum_{m\in\mathcal{T}_{\mathrm{tr}}}
-\left(y_m-\beta_0-\widetilde{x}_m^{\top}\beta\right)^2
-+\lambda\|\beta\|_2^2 ,
+\left(y_m-\beta_0-\widetilde{x}_m^{\top}\beta\right)^2 ,
 \end{equation}
 其預測值為
 \begin{equation}
 \widehat{y}_m=\widehat{\beta}_0+\widetilde{x}_m^{\top}\widehat{\beta}.
 \end{equation}
-相較於普通最小平方法，\(L_2\) 懲罰項會收縮係數估計，在技術指標高度相關時降低係數變異並改善樣本外穩定性 \cite{hoerl1970ridge}。因此，本文將 Ridge 定位為低容量且可直接檢視係數方向的線性基準，用以衡量 56 維技術特徵在不引入非線性轉換時的基本截面預測力。
+係數向量 \(\widehat{\beta}\) 可直接解釋為各技術特徵對截面報酬的線性邊際貢獻方向，因此本文將線性迴歸定位為低容量且可直接檢視係數方向的線性基準，用以衡量 56 維技術特徵在不引入非線性轉換時的基本截面預測力。
 
-\textbf{XGBoost 加法樹模型：}XGBoost 使用與 Ridge 相同的截面樣本與標準化處理，但以多棵迴歸樹的加總近似未知函數：
+\textbf{XGBoost 加法樹模型：}XGBoost 使用與線性迴歸相同的截面樣本與標準化處理，但以多棵迴歸樹的加總近似未知函數：
 \begin{equation}
 \widehat{y}_m^{(Q)}=\sum_{q=1}^{Q} f_q(\widetilde{x}_m), \qquad f_q\in\mathcal{F}_{\mathrm{tree}} .
 \end{equation}
@@ -445,8 +444,8 @@ LSTM 透過門控機制控制資訊保留與遺忘，可減輕傳統循環神經
 \toprule
 模型 & 資料形式 & 比較目的 \\
 \midrule
-Ridge & 有效股票--交易日觀測攤平成 \(M\times 56\) 截面樣本，並以訓練集統計量標準化。 & 衡量技術特徵在線性加總關係下的基本截面預測力。 \\
-XGBoost & 使用與 Ridge 相同的截面樣本，透過多棵迴歸樹逐步逼近預測函數。 & 衡量技術特徵在非線性門檻與交互作用下的截面預測力。 \\
+線性迴歸 & 有效股票--交易日觀測攤平成 \(M\times 56\) 截面樣本，並以訓練集統計量標準化。 & 衡量技術特徵在線性加總關係下的基本截面預測力。 \\
+XGBoost & 使用與線性迴歸相同的截面樣本，透過多棵迴歸樹逐步逼近預測函數。 & 衡量技術特徵在非線性門檻與交互作用下的截面預測力。 \\
 LSTM & 對每檔股票建立 \(L\times 56\) 的自身歷史序列樣本。 & 衡量單股歷史技術特徵路徑所能提供的時間序列預測力。 \\
 \bottomrule
 \end{tabular}
@@ -463,7 +462,7 @@ LSTM & 對每檔股票建立 \(L\times 56\) 的自身歷史序列樣本。 & 衡
 \toprule
 模型 & 超參數設定 & 說明 \\
 \midrule
-Ridge & \(\alpha=1.0\)，隨機種子為 42。 & 特徵先以訓練集統計量標準化，再估計線性係數。 \\
+線性迴歸 & 隨機種子為 42。 & 特徵先以訓練集統計量標準化，再以普通最小平方法估計線性係數。 \\
 XGBoost & 樹數 300、最大深度 6、學習率 0.05、樣本抽樣比例 0.8、欄位抽樣比例 0.8，目標函數為平方誤差，隨機種子為 42。 & 以直方圖樹演算法訓練；若運算環境支援 GPU 則使用 GPU，否則使用 CPU。 \\
 LSTM & 歷史序列長度 \(L=10\)、訓練週期 30、批次大小 512、隱藏維度 64、dropout 比例 0.1、學習率 \(10^{-3}\)、早停耐心值 5。 & 使用 Adam 優化器與均方誤差損失；模型取最後一步隱藏狀態輸出預測值。 \\
 \bottomrule
