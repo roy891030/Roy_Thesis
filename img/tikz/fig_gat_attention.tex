@@ -101,11 +101,11 @@
 \node[bignode] (h5) at ({(\rx)+\R*cos(270)}, {(\ry)+\R*sin(270)}) {$\vec{h}_5$};
 \node[bignode] (h6) at ({(\rx)+\R*cos(325)}, {(\ry)+\R*sin(325)}) {$\vec{h}_6$};
 
-% Self-loop: compact upward arc above h1
-\draw[alpharr, thesisBlue, looseness=5, in=115, out=65]
-     (h1.north) to
+% Self-loop: upward arc above h1 (market-graph style, from node center)
+\draw[alpharr, thesisBlue, looseness=6, out=105, in=75]
+     (h1) to
      node[pos=0.5, above=8pt, font=\normalsize\bfseries, thesisBlue] {$\alpha_{11}$}
-     (h1.north);
+     (h1);
 
 % Attention arrows: each from neighbor to h1, different colors
 \draw[alpharr, thesisBlue, line width=2.0pt] (h2) -- (h1)

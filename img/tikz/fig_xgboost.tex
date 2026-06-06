@@ -26,7 +26,9 @@
   arr/.style={-{Stealth[length=3.5mm,width=3mm]}, thick, thesisDark},
   redarr/.style={-{Stealth[length=3mm,width=2.5mm]}, thick, thesisCrimson, dashed},
   rowlabel/.style={font=\normalsize\bfseries, thesisDark, align=right},
-  coltitle/.style={font=\large, thesisDark, align=center},
+  coltitle/.style={font=\large, thesisDark, align=center,
+                  fill=white, fill opacity=0.88, text opacity=1,
+                  inner sep=3pt, rounded corners=2pt},
 ]
 
 %% ── column x-centres ─────────────────────────────────────
@@ -42,6 +44,14 @@
 \def\yaggr{-3.5}   % aggregation row
 
 %%──────────────────────────────────────────────────────────
+%% TRAINING DATA HEADER
+%%──────────────────────────────────────────────────────────
+\node[draw=thesisDark!55, dashed, fill=thesisBlue!6, rounded corners=5pt,
+      minimum width=13.5cm, minimum height=1.1cm, thick,
+      font=\large\bfseries] (hdr)
+     at ({(\cx+\cz)/2}, 9.5) {訓練資料（Training Data）};
+
+%%──────────────────────────────────────────────────────────
 %% COLUMN 1  ( h_1 )
 %%──────────────────────────────────────────────────────────
 % --- scatter data
@@ -54,7 +64,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=5pt] at (d1.north) {$h_1(\cdot)$};
+\node[coltitle, anchor=north, yshift=-6pt] at (d1.north) {$h_1(\cdot)$};
 
 % --- CART tree
 \node[treebox] (t1) at (\cx, \ytree) {};
@@ -94,7 +104,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=5pt] at (d2.north) {$h_2(\cdot)$};
+\node[coltitle, anchor=north, yshift=-6pt] at (d2.north) {$h_2(\cdot)$};
 
 \node[treebox] (t2) at (\cy, \ytree) {};
 \begin{scope}[shift={(\cy,\ytree)}]
@@ -139,7 +149,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=5pt] at (dn.north) {$h_N(\cdot)$};
+\node[coltitle, anchor=north, yshift=-6pt] at (dn.north) {$h_N(\cdot)$};
 
 \node[treebox] (tn) at (\cz, \ytree) {};
 \begin{scope}[shift={(\cz,\ytree)}]

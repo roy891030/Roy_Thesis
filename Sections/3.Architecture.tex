@@ -28,18 +28,18 @@
   ]
 
   \node[chbox] (s31) {%
-    {\small\bfseries §\,3.1\quad 資料來源與預處理}\\[3pt]%
-    \rule{\linewidth}{0.3pt}\\[3pt]%
-    資料來源（§\,3.1.1）：TEJ 台灣股票市場日頻資料；主實驗樣本 2014-01-02 至 2025-05-29，共 2782 交易日\\[2pt]%
-    資料預處理（§\,3.1.2）：欄位格式統一、技術特徵計算（RSI、MACD、KD 等）、標籤計算、缺失值處理\\[2pt]%
-    資料集劃分（§\,3.1.3）：時序三段切分（72\% 訓練 / 8\% 驗證 / 20\% 測試）；Short、Medium、Long 三組樣本視窗%
+    {\small\bfseries §\,3.1\quad 資料來源與預處理}\\[4pt]%
+    \rule{\linewidth}{0.3pt}\\[4pt]%
+    $\bullet$\enspace 資料來源（§\,3.1.1）：TEJ 台灣股票市場日頻資料；主實驗樣本 2014-01-02 至 2025-05-29，共 2782 交易日\\[3pt]%
+    $\bullet$\enspace 資料預處理（§\,3.1.2）：欄位格式統一、技術特徵計算（RSI、MACD、KD 等）、標籤計算、缺失值處理\\[3pt]%
+    $\bullet$\enspace 資料集劃分（§\,3.1.3）：時序三段切分（72\% 訓練 / 8\% 驗證 / 20\% 測試）；Short、Medium、Long 三組樣本視窗%
   };
 
   \node[chbox, below=5mm of s31] (s32) {%
-    {\small\bfseries §\,3.2\quad 特徵工程與圖結構建構}\\[3pt]%
-    \rule{\linewidth}{0.3pt}\\[3pt]%
-    特徵選取（§\,3.2.1）：56 項輸入特徵，涵蓋報酬、動能、波動、量能、估值等類別；截面 z-score 標準化\\[2pt]%
-    圖結構建構（§\,3.2.2）：產業圖（同產業完全連結）與全市場圖（全截面完全連結）；以 PyG \texttt{edge\_index} 封存%
+    {\small\bfseries §\,3.2\quad 特徵工程與圖結構建構}\\[4pt]%
+    \rule{\linewidth}{0.3pt}\\[4pt]%
+    $\bullet$\enspace 特徵選取（§\,3.2.1）：56 項輸入特徵，涵蓋報酬、動能、波動、量能、估值等類別；截面 z-score 標準化\\[3pt]%
+    $\bullet$\enspace 圖結構建構（§\,3.2.2）：產業圖（同產業完全連結）與全市場圖（全截面完全連結）；以 PyG \texttt{edge\_index} 封存%
   };
 
   \draw[flowarrow] (s31.south) -- (s32.north);
@@ -66,25 +66,25 @@
   ]
 
   \node[chbox] (s33) {%
-    {\small\bfseries §\,3.3\quad 模型設計}\\[3pt]%
-    \rule{\linewidth}{0.3pt}\\[3pt]%
-    非圖基準（§\,3.3.1）：線性迴歸、梯度提升樹（XGBoost）、長短期記憶網路（LSTM）\\[2pt]%
-    圖與因子消融模型（§\,3.3.2）：DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral、GAT-full%
+    {\small\bfseries §\,3.3\quad 模型設計}\\[4pt]%
+    \rule{\linewidth}{0.3pt}\\[4pt]%
+    $\bullet$\enspace 非圖基準（§\,3.3.1）：線性迴歸、梯度提升樹（XGBoost）、長短期記憶網路（LSTM）\\[3pt]%
+    $\bullet$\enspace 圖與因子消融模型（§\,3.3.2）：DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral、GAT-full%
   };
 
   \node[chbox, below=5mm of s33] (s34) {%
-    {\small\bfseries §\,3.4\quad 損失函數設計}\\[3pt]%
-    \rule{\linewidth}{0.3pt}\\[3pt]%
-    截面 IC 相關項（主訓練目標）\quad\textbullet\quad 注意力一致性項\quad\textbullet\quad 因子收益獎勵項\\[2pt]%
-    AdamW 優化器搭配 weight decay；依驗證集 ICIR 早停%
+    {\small\bfseries §\,3.4\quad 損失函數設計}\\[4pt]%
+    \rule{\linewidth}{0.3pt}\\[4pt]%
+    $\bullet$\enspace 截面 IC 相關項（主訓練目標）、注意力一致性項、因子收益獎勵項\\[3pt]%
+    $\bullet$\enspace AdamW 優化器搭配 weight decay；依驗證集 ICIR 早停%
   };
 
   \node[chbox, below=5mm of s34] (s35) {%
-    {\small\bfseries §\,3.5\quad 評估指標與基準比較}\\[3pt]%
-    \rule{\linewidth}{0.3pt}\\[3pt]%
-    預測品質（§\,3.5.1）：MSE、RMSE、MAE；Daily IC、ICIR、產業中性 IC\\[2pt]%
-    投資組合績效（§\,3.5.2）：年化報酬率、Sharpe ratio、勝率、最大跌幅\\[2pt]%
-    基準比較（§\,3.5.3）：台灣 50 ETF（0050）為市場基準；多模型統一比較%
+    {\small\bfseries §\,3.5\quad 評估指標與基準比較}\\[4pt]%
+    \rule{\linewidth}{0.3pt}\\[4pt]%
+    $\bullet$\enspace 預測品質（§\,3.5.1）：MSE、RMSE、MAE；Daily IC、ICIR、產業中性 IC\\[3pt]%
+    $\bullet$\enspace 投資組合績效（§\,3.5.2）：年化報酬率、Sharpe ratio、勝率、最大跌幅\\[3pt]%
+    $\bullet$\enspace 基準比較（§\,3.5.3）：台灣 50 ETF（0050）為市場基準；多模型統一比較%
   };
 
   \draw[flowarrow] (s33.south) -- (s34.north);
@@ -329,9 +329,9 @@ E_I, \quad E_U.
 
 圖結構建構流程如下。首先，依交易日整理有效股票集合，並對應其特徵張量與標籤張量；其次，依圖類型界定節點間候選關係，產業圖僅連結同產業股票，全市場圖則連結同一交易日有效股票集合內之所有股票；接著，將連結關係與自環整理為 PyTorch Geometric 所需之 \texttt{edge\_index}；最後，將特徵張量、標籤張量與兩類圖結構一併保存，使後續模型能在相同資料切分下比較產業圖、全市場圖與雙圖設計。
 
-\textbf{表示方式（Representation）：}
+\textbf{表示方式：}
 圖結構以 PyTorch Geometric（PyG）之 \texttt{edge\_index} 表示 \cite{fey2019pyg}，其為一個形狀為 $[2, E]$ 的整數張量，
-其中 $E$ 為邊（edges）數量。具體而言，\texttt{edge\_index} 的每一欄對應一條邊，
+其中 $E$ 為邊的數量。具體而言，\texttt{edge\_index} 的每一欄對應一條邊，
 第一列為起點節點（source / start node），第二列為終點節點（target / end node）。
 \begin{figure}[H]
     \centering
@@ -821,11 +821,11 @@ IC^{\text{ind-neutral}}_t = \text{Corr}\left(\tilde{\hat{y}}_{\cdot,t}, \tilde{y
 本文同樣彙整其逐日平均與資訊係數比率，作為補充檢視圖模型在排除產業共同成分後，是否仍能保留具經濟意義的個股相對強弱訊號。
 
 \subsection{投資組合績效指標}
-\textbf{年化報酬率（Annualized return）：}以每次再平衡選取預測分數最高之 \texttt{top\_pct}=0.10 股票等權做多，計算截面平均報酬作為策略報酬，並依再平衡頻率年化。本文預設每 5 個交易日再平衡一次（\texttt{rebalance\_days}=5），故策略統計所依據者為 5 日持有期報酬序列。
+\textbf{年化報酬率：}以每次再平衡選取預測分數最高之 \texttt{top\_pct}=0.10 股票等權做多，計算截面平均報酬作為策略報酬，並依再平衡頻率年化。本文預設每 5 個交易日再平衡一次（\texttt{rebalance\_days}=5），故策略統計所依據者為 5 日持有期報酬序列。
 
 \textbf{Sharpe Ratio：}以平均報酬除以波動後再乘年化因子，衡量風險調整後報酬 \cite{sharpe1994ratio}。
 
-\textbf{勝率（Hit ratio）：}正報酬期間比例，用以衡量策略穩定性。若策略在第 \(t\) 次再平衡後之單期報酬為 \(r^{p}_t\)，則勝率定義為
+\textbf{勝率：}正報酬期間比例，用以衡量策略穩定性。若策略在第 \(t\) 次再平衡後之單期報酬為 \(r^{p}_t\)，則勝率定義為
 \begin{equation}
 Hit\ Ratio = \frac{1}{T}\sum_{t=1}^{T} \mathbf{1}(r^{p}_t > 0),
 \end{equation}
