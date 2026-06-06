@@ -10,7 +10,7 @@
 
 另一方面，金融市場由具結構相依性的資產共同構成。台灣股票之間普遍存在產業層級與市場層級的共同因子影響，使個股報酬在截面上呈現結構性相依。傳統時間序列模型（如 LSTM）多以單一資產的歷史序列為主要訊號來源，較難直接刻畫股票之間的關係拓撲；因此近年研究開始引入圖神經網路（Graph Neural Networks, GNNs），以「節點（股票）—邊（關係）」的方式建模產業或市場連結，並透過訊息傳遞與注意力機制（attention mechanism）聚合鄰居資訊，以提升截面預測與排序任務的表現與可解釋性。
 
-在上述脈絡下，結合多因子表示與圖注意力的模型架構，特別是能分離產業與全市場共同影響的設計，提供了一條兼顧「特徵可學習性」與「關係結構建模」的路徑。不過，圖模型的有效性不只取決於是否使用 GAT，也取決於圖拓樸是否具有經濟意義、模型是否只是放大既有市場曝險，以及訓練視窗是否足以支撐穩定泛化。本文因此採用統一實驗流程，比較傳統基準模型、DNN、GAT 類模型與 GAT neutralization / factor-attention 類模型，並以 short、medium、long 三種訓練視窗檢驗模型在台灣日頻資料中的 out-of-sample 可用性。
+在上述脈絡下，結合多因子表示與圖注意力的模型架構，特別是能分離產業與全市場共同影響的設計，提供了一條兼顧「特徵可學習性」與「關係結構建模」的路徑。不過，圖模型的有效性不只取決於是否使用 GAT，也取決於圖拓樸是否具有經濟意義、模型是否只是放大既有市場曝險，以及訓練視窗是否足以支撐穩定泛化。本文因此採用統一實驗框架，以 Linear、XGBoost、LSTM 等非圖基準模型為對照組，並在相同資料切分與評估設定下，系統性比較 DNN、具產業拓樸之圖注意力模型，以及加入中性化與因子注意力機制之延伸模型，進而以短期、中期與長期三種訓練樣本視窗，實證檢驗各模型在台灣股票日頻資料中的樣本外排序能力與投資組合可用性。
 
 \section{研究問題}
 \label{sec:problem}
@@ -21,24 +21,24 @@
 
 第二，股票之間存在產業共通訊號與市場共同波動，僅依賴單一股票的時間序列特徵，可能無法充分利用截面關係資訊；因此需要能顯式建模股票關係的學習架構，使模型同時吸收「個股特徵」與「關係拓撲」兩類訊號。
 
-第三，即便引入圖結構，模型表現仍高度仰賴圖的構建方式與關係品質；若全市場圖近似 all-to-all message passing，模型可能產生 over-smoothing，使個股差異被共同因子抹平。因而本文特別關注兩個層面：其一，具有經濟意義的產業圖是否優於 naive universe graph；其二，產業中性化與 factor-attention 是否能在相同 encoder 與 decoder 設定下提升 signal robustness。
+第三，即便引入圖結構，模型表現仍高度仰賴圖的建構方式與關係品質。當全市場圖採用全截面完全連結時，訊息傳遞趨近於全域聚合，模型可能吸收過多市場共同成分，削弱個股截面差異的辨識能力。因此本文特別關注兩個層面：其一，以產業分類為基礎的局部拓樸圖是否能提供比全市場完全連結拓樸更具區辨力的截面訊號；其二，在相同的特徵編碼與預測輸出架構下，加入分層中性化與特徵注意力機制是否能提升截面排序訊號的穩健性。
 
-第四，在金融預測情境下，模型品質不宜僅以單一誤差指標衡量；更關鍵的是模型在截面排序上的有效性與穩定性。因此本文採用資訊係數（Information Coefficient, IC）與其穩健性指標 ICIR（Information Coefficient Information Ratio, ICIR）作為主要評估基礎，並輔以投資組合績效指標進行整體驗證。
+第四，在金融預測情境下，模型品質不宜僅以單一誤差指標衡量；更關鍵的是模型在截面排序上的有效性與穩定性。因此本文採用資訊係數（Information Coefficient, IC）與其穩健性指標 ICIR（IC Information Ratio）作為主要評估基礎，並輔以投資組合績效指標進行整體驗證。
 
 \section{研究方法與貢獻}
 \label{sec:contribution}
 
-本文採用台灣股票日頻資料進行實證。資料主要來源為 TEJ 台灣經濟新報，並匯出為 CSV 作為後續處理之輸入。以「交易日\(\times\)股票」為觀測單位，保留日期、股票代碼、OHLC、成交量／成交值、市值與產業分類等欄位；技術特徵則由價格與量能序列計算而得，其中 RSI、MACD、KD 等指標透過 \texttt{TA-Lib} 套件產生，並納入 PB、PS 等估值欄位，最終形成固定的 56 維特徵集合供模型輸入（詳見第三章的變數表格與附錄清單）。
+本文採用台灣股票日頻資料進行實證。資料主要來源為 TEJ 台灣經濟新報，並匯出為 CSV 作為後續處理之輸入。以「交易日\(\times\)股票」為觀測單位，保留日期、股票代碼、開高低收價格、成交量／成交值、市值與產業分類等欄位；技術特徵則由價格與量能序列計算而得，其中 RSI、MACD、KD 等指標透過 \texttt{TA-Lib} 套件產生，並納入 PB、PS 等估值欄位，最終形成固定的 56 維特徵集合供模型輸入（詳見第三章的變數表格與附錄清單）。
 
-在關係建模方面，本文依第三章之設計建構兩類圖結構：（1）產業圖（Industry Graph），以同產業股票完全連結並加入自環；（2）全市場圖（Market Graph），以完全圖表示整體市場共同因子影響。圖結構以 PyTorch Geometric（PyG）的 \texttt{edge\_index} 形式保存，並與特徵張量共同形成可重複使用的訓練產物（artifacts）。
+在關係建模方面，本文依第三章之設計建構兩類圖結構：（1）產業圖（Industry Graph），以同產業股票完全連結並加入自環；（2）全市場圖（Market Graph），以完全圖表示整體市場共同因子影響。圖結構以 PyTorch Geometric（PyG）的 \texttt{edge\_index} 形式表示，並與特徵張量共同封存，以確保後續模型訓練時使用相同的資料切分與圖結構。
 
-模型設計採統一的 factor ablation family。除 Linear、XGBoost 與 LSTM 三個非圖基準外，本文以共同的 BatchNorm + DNN encoder 產生個股語境表示，並比較 DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral 與 GAT-full。此設計可在相同輸入、切分與訓練設定下，逐步檢驗單純特徵編碼、產業圖聚合、全市場圖聚合、雙圖聚合與 factor-attention / neutralization 流程的差異。評估上以 IC、Daily IC 與 ICIR 作為核心預測指標，並對具產業圖與產業標籤之圖／因子模型額外回報產業中性 IC；策略層級則再以投資組合回測指標（總報酬、年化報酬率、Sharpe ratio、勝率與最大跌幅等）檢驗其投資可用性。資料切分採時間序列切分以避免資訊洩漏，並設計短期、中期與長期三種樣本視窗檢驗穩健性。
+模型設計採統一的消融實驗架構。除 Linear、XGBoost 與 LSTM 三個非圖基準外，本文以共同的批次正規化與前饋神經網路編碼器產生個股語境表示，並比較 DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral 與 GAT-full。此設計可在相同輸入、切分與訓練設定下，逐步檢驗單純特徵編碼、產業圖聚合、全市場圖聚合、雙圖聚合與因子注意力及分層中性化機制的增量效益。評估上以 IC、Daily IC 與 ICIR 作為核心預測指標，並對具產業圖與產業標籤之圖／因子模型額外回報產業中性 IC；策略層級則再以投資組合回測指標（總報酬、年化報酬率、Sharpe ratio、勝率與最大跌幅等）檢驗其投資可用性。資料切分採時間序列切分以避免資訊洩漏，並設計短期、中期與長期三種樣本視窗檢驗穩健性。
 
 基於上述方法設計，本文的主要貢獻歸納如下：
 \begin{itemize}
-    \item \textbf{資料與特徵流程的可重現性：}以 TEJ 日頻資料為基礎，建立從原始欄位到 56 維技術特徵（含 TA-Lib 指標與估值欄位）的完整特徵建置與張量化流程，並以 artifacts 形式保存，便於重複訓練與評估。
+    \item \textbf{資料與特徵流程的可重現性：}以 TEJ 日頻資料為基礎，建立從原始欄位到 56 維技術特徵（含 TA-Lib 指標與估值欄位）的完整特徵建置與張量化流程，並以統一格式封存，以支援後續模型之重複訓練與評估。
     \item \textbf{關係結構的分層建模與圖拓樸比較：}同時建構產業圖與全市場圖，檢驗具經濟意義的局部關係是否優於全市場完全連結，並討論 naive universe graph 可能造成的 over-smoothing 問題。
-    \item \textbf{以消融實驗辨識模型增益來源：}以六種 factor ablation models 區分單純 DNN、單一圖聚合、雙圖聚合與 GAT neutralization / factor-attention 設計，避免僅以單一模型結果推論所有圖注意力設計皆有效。
+    \item \textbf{以消融實驗辨識模型增益來源：}以六種系統性消融模型區分單純 DNN、單一圖聚合、雙圖聚合與圖注意力中性化等不同設計，避免僅以單一模型結果推論所有圖注意力設計皆有效。
     \item \textbf{以排序導向指標為核心的實證驗證：}以 IC / Daily IC / ICIR 作為主要評估基礎，並對圖／因子模型補充檢視產業中性 IC，再搭配投資組合績效指標，提供模型在台灣市場情境下的多面向驗證結果。
 \end{itemize}
 
@@ -50,90 +50,60 @@
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}[
-        node distance=8mm,
-        chapterbox/.style={
+        node distance=5mm,
+        chbox/.style={
             draw,
-            rounded corners=3pt,
-            align=left,
-            font=\small,
-            inner sep=7pt,
-            minimum height=11mm,
-            text width=14.0cm
-        },
-        component/.style={
-            draw,
-            rounded corners=2pt,
-            align=left,
-            font=\small,
-            inner sep=5pt,
-            minimum height=11mm,
-            text width=6.4cm
-        },
-        componentwide/.style={
-            draw,
-            rounded corners=2pt,
-            align=left,
-            font=\small,
-            inner sep=5pt,
-            minimum height=11mm,
-            text width=14.0cm
-        },
-        groupbox/.style={
-            draw,
-            dashed,
             rounded corners=4pt,
-            inner sep=10pt
+            align=left,
+            font=\small,
+            inner sep=10pt,
+            text width=13cm,
+            line width=0.7pt,
         },
-        grouptitle/.style={
-            font=\footnotesize\bfseries,
-            fill=white,
-            inner sep=1pt
-        },
-        flowarrow/.style={-{Stealth[length=2.8mm]}, thick}
+        flowarrow/.style={-{Stealth[length=3.2mm,width=2.8mm]}, line width=1.2pt}
     ]
-        \node[chapterbox] (ch1) {\textbf{第一章 緒論}\\
-        研究背景與動機\\
-        研究問題\\
-        研究方法與研究貢獻\\
-        論文架構};
 
-        \node[component, below=10mm of ch1, xshift=-3.7cm] (b1) {線性迴歸在報酬預測中的\\典型定位與限制};
-        \node[component, right=10mm of b1] (b2) {樹狀結構模型在非線性預測與\\特徵工程中的典型定位與限制};
-        \node[component, below=7mm of b1] (b3) {技術指標如何轉化為深度學習\\可用之特徵表示};
-        \node[component, below=7mm of b2] (b4) {LSTM 等時間序列模型在\\金融預測中的典型做法與限制};
-        \node[component, below=7mm of b3] (b5) {圖神經網路如何建模\\股票之間的結構性關係};
-        \node[component, below=7mm of b4] (b6) {GAT 及其變形在股票預測／排序\\任務上的應用與限制};
-        \node[componentwide, below=7mm of b5, xshift=3.7cm] (b7) {因子投資情境下常用的訊號評估指標\\IC ／ ICIR};
-        \node[groupbox, fit=(b1)(b7)] (groupb) {};
-        \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupb.north west) {第二章 文獻回顧};
+    \node[chbox] (ch1) {%
+        {\small\bfseries 第一章\quad 緒論}\\[3pt]%
+        \rule{\linewidth}{0.3pt}\\[3pt]%
+        研究背景與動機\quad\textbullet\quad 研究問題\quad\textbullet\quad 研究方法與貢獻\quad\textbullet\quad 論文架構%
+    };
 
-        \node[component, below=10mm of groupb, xshift=-3.7cm] (c1) {資料來源與預處理};
-        \node[component, right=10mm of c1] (c2) {特徵工程與圖結構};
-        \node[component, below=7mm of c2] (c3) {模型設計};
-        \node[component, below=7mm of c1] (c4) {損失函數};
-        \node[component, below=7mm of c4] (c5) {評估指標\\（預測品質指標、投資組合績效指標）};
-        \node[component, below=7mm of c3] (c6) {基準比較與流程摘要};
-        \node[groupbox, fit=(c1)(c6)] (groupc) {};
-        \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupc.north west) {第三章 實驗設計};
+    \node[chbox, below=5mm of ch1] (ch2) {%
+        {\small\bfseries 第二章\quad 文獻回顧}\\[3pt]%
+        \rule{\linewidth}{0.3pt}\\[3pt]%
+        線性迴歸與樹狀結構模型\quad\textbullet\quad 技術指標之特徵表示\\[2pt]%
+        LSTM 等時間序列模型\quad\textbullet\quad 圖神經網路（GNN）與 GAT\\[2pt]%
+        因子投資訊號評估指標（IC / ICIR）%
+    };
 
-        \node[component, below=10mm of groupc, xshift=-3.7cm] (d1) {統一實驗比較\\（baseline／DNN／GAT／GAT 中性化）};
-        \node[component, right=10mm of d1] (d2) {投資組合績效驗證\\（與 0050 比較）};
-        \node[componentwide, below=7mm of d1, xshift=3.7cm] (d3) {訓練視窗、圖拓樸與注意力特徵分析};
-        \node[groupbox, fit=(d1)(d3)] (groupd) {};
-        \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupd.north west) {第四章 實驗結果};
+    \node[chbox, below=5mm of ch2] (ch3) {%
+        {\small\bfseries 第三章\quad 實驗設計}\\[3pt]%
+        \rule{\linewidth}{0.3pt}\\[3pt]%
+        資料來源與預處理\quad\textbullet\quad 特徵工程與圖結構建構\\[2pt]%
+        模型設計（DNN 與 GAT 系列六種消融架構）\\[2pt]%
+        損失函數\quad\textbullet\quad 評估指標\quad\textbullet\quad 基準比較%
+    };
 
-        \node[chapterbox, below=10mm of groupd] (ch5) {\textbf{第五章 結論與未來工作}};
+    \node[chbox, below=5mm of ch3] (ch4) {%
+        {\small\bfseries 第四章\quad 實驗結果}\\[3pt]%
+        \rule{\linewidth}{0.3pt}\\[3pt]%
+        統一實驗比較（基準模型 / DNN / GAT / GAT 中性化）\\[2pt]%
+        投資組合績效驗證（與 0050 比較）\\[2pt]%
+        訓練視窗長度、圖拓樸與注意力特徵之影響分析%
+    };
 
-        \coordinate (b2c) at ($(groupb.south |- groupc.north)$);
-        \draw[flowarrow] (ch1.south) -- (groupb.north);
-        \draw[flowarrow] (groupb.south) -- (b2c);
-        \draw[flowarrow] (groupc.south) -- (groupd.north);
-        \draw[flowarrow] (groupd.south) -- (ch5.north);
-        \draw[flowarrow] (c1.east) -- (c2.west);
-        \draw[flowarrow] (c2.south) -- (c3.north);
-        \draw[flowarrow] (c3.west) -- (c4.east);
-        \draw[flowarrow] (c4.south) -- (c5.north);
-        \draw[flowarrow] (c5.east) -- (c6.west);
+    \node[chbox, below=5mm of ch4] (ch5) {%
+        {\small\bfseries 第五章\quad 結論與未來工作}\\[3pt]%
+        \rule{\linewidth}{0.3pt}\\[3pt]%
+        主要發現摘要\quad\textbullet\quad 研究限制與未來研究方向%
+    };
+
+    \draw[flowarrow] (ch1.south) -- (ch2.north);
+    \draw[flowarrow] (ch2.south) -- (ch3.north);
+    \draw[flowarrow] (ch3.south) -- (ch4.north);
+    \draw[flowarrow] (ch4.south) -- (ch5.north);
+
     \end{tikzpicture}
     \caption{論文整體架構流程圖}
     \label{fig:thesis-organization-flow}

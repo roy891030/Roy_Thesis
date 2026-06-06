@@ -1,7 +1,7 @@
 \chapter{實驗結果}
 \label{ch:results}
 
-本章根據正式實驗結果，回答本文的核心研究問題：在台股橫斷面報酬預測中，模型結構、圖拓樸與訓練視窗長度如何影響 rank signal 與投資組合表現。完整實驗共 27 組，包含 short、medium、long 三種訓練視窗，以及 Linear、XGBoost、LSTM、DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral 與 GAT-full 九類模型。Baseline 模型不使用圖結構；GAT 與 GAT 中性化類模型則使用相同 artifacts，以避免不同資料切分或圖重估方式干擾模型比較。
+本章根據正式實驗結果，回答本文的核心研究問題：在台股橫斷面報酬預測中，模型結構、圖拓樸與訓練視窗長度如何影響 rank signal 與投資組合表現。完整實驗共 27 組，包含 short、medium、long 三種訓練視窗，以及 Linear、XGBoost、LSTM、DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral 與 GAT-full 九類模型。Baseline 模型不使用圖結構；GAT 與 GAT 中性化類模型則使用相同封存資料，以避免不同資料切分或圖重估方式干擾模型比較。
 
 本文以 Daily IC 與 ICIR 作為主要 signal quality 指標，因本研究任務為橫斷面排序而非單純數值迴歸。投資組合績效則用以檢驗排序訊號是否能轉化為 top 10\% 等權做多策略的可用報酬。為避免單一指標的選擇偏誤，以下分析同時考量訓練視窗、圖拓樸、train-test gap 與投組風險，並於各小節分別討論。
 
