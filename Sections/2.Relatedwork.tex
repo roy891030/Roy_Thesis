@@ -1,7 +1,7 @@
 \chapter{文獻回顧}
 \label{ch:relatedwork}
 
-本章依本文之研究問題整理文獻脈絡。本文在統一資料切分與評估框架下，檢驗技術與多因子特徵、時間序列資訊、股票關係圖、訊息傳遞設計與中性化設計，分別對截面報酬排序與投資組合績效的增量貢獻。因此，本章依序回顧截面報酬預測、特徵來源、非圖與序列基準、股票關係圖、GNN / GAT 訊息傳遞、多因子中性化與消融實驗，以及 IC / ICIR 與投資組合驗證。
+本章依本文之研究問題整理文獻脈絡。本文在統一資料切分與評估框架下，依序檢驗技術與多因子特徵、非圖比較基準、股票關係圖、訊息傳遞設計與中性化設計，分別對截面報酬排序與投資組合績效的增量貢獻。因此，本章依序回顧截面報酬預測與股票選取問題、技術特徵與多因子表示、非圖比較基準模型（嶺迴歸、梯度提升樹集成與長短期記憶網路）、股票關係圖建構、圖神經網路與 GAT 訊息傳遞機制、多因子中性化與消融實驗邏輯，以及 IC / ICIR 與投資組合績效驗證。
 
 % ============================================================
 \section{截面報酬預測與股票選取問題}
@@ -14,16 +14,49 @@
 本文以未來五日報酬之每日截面去均值作為訓練標籤。採用未來報酬而非未來價格，係因投資決策關注可實現報酬而非價格水準；截面去均值則用以降低市場共同漲跌對標籤的支配，使模型著重同一交易日股票間的相對表現差異。五日預測期為短週期報酬預測與週頻再平衡之間的折衷，既可避免單日報酬受微結構噪音過度干擾，亦不將持有期拉長至排序訊號反應遲滯。Abe 與 Nakagawa \cite{abe2020cross_sectional_daily} 在實際投資管理情境中亦以相同之五日前瞻報酬作為截面預測目標，說明此類短週期報酬標籤可直接銜接投資組合建構流程。
 
 % ============================================================
-\section{技術特徵、多因子表示與非圖比較基準}
-\label{sec:technical_multifactor_non_graph_baselines}
+\section{技術特徵與多因子表示}
+\label{sec:technical_multifactor_features}
 
 技術指標將價格、成交量與交易區間資訊轉換為可計算特徵，長期被用於交易規則與報酬預測。Brock、Lakonishok 與 LeBaron \cite{Brock1992SimpleTT} 顯示移動平均與區間突破規則在長期樣本中具有統計可辨識性；Lin \cite{LIN2018103} 則指出，技術指標經適當對齊與降噪後可改善樣本內與樣本外預測。Li 與 Bastos \cite{li2020stock}、Sezer 等人 \cite{sezer2019dl_fin_survey} 與 Sonkavde 等人 \cite{sonkavde2023review_ml_dl} 的整理亦顯示，技術指標常作為深度學習金融預測的結構化輸入。
 
 在文獻脈絡中，技術指標、公司特徵（firm characteristics）與學習因子三個概念應加以區分。技術指標係由價量資料衍生的趨勢、動能、波動或量能訊號，如相對強弱指數（RSI）、指數平滑異同移動平均線（MACD）、隨機指標（KD）或布林通道等；公司特徵則指資產定價文獻中用以說明截面報酬差異的個股層級變數，涵蓋規模、帳面市值比、獲利能力、槓桿與流動性等；學習因子則係模型由高維輸入中萃取的潛在表示，通常不對應特定可解釋維度。本文所稱多因子特徵，涵蓋技術指標、價量特徵與部分財務估值變數，屬廣義個股預測因子，與機器學習資產定價文獻以大量個股特徵預測截面預期報酬的做法一致 \cite{gu2020empirical,freyberger2020dissecting,kozak2020shrinking}。
 
-非圖比較基準的用途，在於不引入股票關係圖的條件下建立預測下限。嶺迴歸（Ridge regression）提供低容量、可解釋且具正則化的線性基準；Hoerl 與 Kennard \cite{hoerl1970ridge} 指出，嶺迴歸透過 \(L_2\) 懲罰能緩解高維特徵共線性造成的係數不穩定。由於技術與多因子特徵常具高度相關與資訊重疊，嶺迴歸適合用於評估特徵集合的基本線性預測力下限。
+% ============================================================
+\section{非圖比較基準模型}
+\label{sec:non_graph_baselines}
 
-梯度提升樹集成模型則提供非線性表格型比較基準。Chen 與 Guestrin \cite{Chen2016XGBoost} 提出的 XGBoost 透過梯度提升、正則化、特徵抽樣與稀疏結構處理提升結構化資料建模能力；金融預測研究亦廣泛以決策樹、隨機森林、AdaBoost 或 XGBoost 作為非線性比較基準 \cite{ampomah2020tree_direction,ampomah2020tree_ensemble_stock,nti2020ensemble_comprehensive,saifan2020ensemble_trading,WU2006270}。因此，若圖模型無法穩定超越強樹集成基準，其圖結構的增量效益便無法僅以「深度模型較複雜」解釋，而必須回溯至關係圖拓樸、訊息傳遞機制與中性化設計本身加以驗證。
+本文在引入圖神經網路架構前，先建立三類不使用股票關係圖的比較基準：嶺迴歸、梯度提升樹集成與長短期記憶網路。三者分別代表截面預測任務中的線性下限、非線性表格型建模能力與時間序列記憶能力，可在受控條件下衡量圖結構引入後的增量效益。若圖模型在特定視窗或指標上無法穩定超越上述基準，則圖結構的有效性便需回溯至拓樸設計、訊息傳遞機制與中性化設計本身加以解釋。
+
+% ------------------------------------------------------------
+\subsection{嶺迴歸：線性基準與正則化}
+\label{subsec:ridge_baseline}
+
+嶺迴歸（Ridge regression）在線性迴歸的最小平方目標函數上加入 \(L_2\) 正則化項，以下式定義損失：
+\begin{equation}
+\mathcal{L}(w) = \|y - Xw\|_2^2 + \lambda\|w\|_2^2
+\label{eq:ridge_loss}
+\end{equation}
+其中 \(X \in \mathbb{R}^{N \times F}\) 為特徵矩陣，\(y \in \mathbb{R}^{N}\) 為報酬標籤，\(\lambda > 0\) 為正則化強度。此目標函數具封閉解：
+\begin{equation}
+\hat{w} = (X^\top X + \lambda I)^{-1} X^\top y
+\label{eq:ridge_solution}
+\end{equation}
+Hoerl 與 Kennard \cite{hoerl1970ridge} 指出，\(L_2\) 懲罰透過向特徵矩陣加入正定偏移 \(\lambda I\)，能緩解 \(X^\top X\) 近奇異（ill-conditioned）時的係數不穩定，並使高維情境下的解具備數值可行性。
+
+在截面報酬預測任務中，嶺迴歸擔任最低容量的線性預測下限。當技術與估值特徵的維度較高且相互高度相關時，普通最小平方估計的方差會顯著放大；嶺迴歸的正則化使係數收縮，以容許的估計偏差換取方差的降低，進而改善樣本外預測穩健性。若非線性模型無法在截面排序指標上明顯超越嶺迴歸，即意味著特徵集合的線性預測力已構成重要下限；若嶺迴歸顯著落後，則說明截面訊號中確實存在非線性或關係結構，值得進一步以更複雜的模型捕捉。
+
+% ------------------------------------------------------------
+\subsection{梯度提升樹集成：XGBoost 的非線性建模}
+\label{subsec:xgboost_baseline}
+
+梯度提升（gradient boosting）以加法集成形式逐輪建立弱學習器，使第 \(m\) 輪的模型預測為：
+\begin{equation}
+F_m(x) = F_{m-1}(x) + \eta \cdot h_m(x)
+\label{eq:boosting_additive}
+\end{equation}
+其中 \(h_m\) 為以第 \(m-1\) 輪殘差之負梯度為目標訓練的決策樹，\(\eta\) 為學習率。Chen 與 Guestrin \cite{Chen2016XGBoost} 在此基礎上引入二階泰勒展開的精確目標函數，並加入葉節點 \(L_1 / L_2\) 正則化、欄位子抽樣與稀疏資料處理，使 XGBoost 在結構化資料建模上具備強泛化能力，同時保有特徵重要性的可解釋性。
+
+在截面股票預測中，決策樹的分叉條件可隱式捕捉特徵間的非線性交互作用，例如「高動能且低波動」或「估值偏低且近期成交量放大」等複合條件，毋需顯式構造特徵組合。集成模型的學習目標以排序損失或 MSE 均可適用；當訓練樣本跨越不同市場環境時，梯度提升的逐輪殘差修正機制能使後續樹專注於較難預測的樣本，從而改善整體覆蓋能力。如圖 \ref{fig:xgboost_concept} 所示，XGBoost 以多輪建樹、權重調整與預測聚合的方式整合弱學習器，最終輸出截面排序分數。金融預測研究亦廣泛以決策樹、隨機森林、AdaBoost 或 XGBoost 作為非線性比較基準 \cite{ampomah2020tree_direction,ampomah2020tree_ensemble_stock,nti2020ensemble_comprehensive,saifan2020ensemble_trading,WU2006270}。
 
 \begin{figure}[htbp]
   \centering
@@ -32,20 +65,31 @@
   \label{fig:xgboost_concept}
 \end{figure}
 
-% ============================================================
-\section{時間序列模型與單股歷史訊號限制}
-\label{sec:time_series_single_stock_limit}
+% ------------------------------------------------------------
+\subsection{長短期記憶網路：時間序列記憶能力}
+\label{subsec:lstm_baseline}
 
-時間序列模型用於檢查單股歷史路徑是否足以提供增量訊號。長短期記憶網路（Long Short-Term Memory, LSTM）透過 forget、input 與 output gates 控制長短期資訊流，能緩解傳統 RNN 的長序列梯度消失問題 \cite{hochreiter1997lstm}。在股票預測文獻中，Qiu 等人 \cite{qiu2020forecasting} 與 Zaheer 等人 \cite{zaheer2023multi} 將 LSTM 或其變形應用於股票價格與多維價格訊號預測，顯示序列模型能吸收單一資產的時間依賴。
+長短期記憶網路（Long Short-Term Memory, LSTM）由 Hochreiter 與 Schmidhuber \cite{hochreiter1997lstm} 提出，透過遺忘閘（forget gate）、輸入閘（input gate）與輸出閘（output gate）控制資訊在時間步之間的傳遞，解決傳統遞迴神經網路在長序列上的梯度消失問題。設第 \(t\) 步輸入為 \(x_t\)、前一步隱狀態為 \(h_{t-1}\)、記憶狀態為 \(c_{t-1}\)，則各閘與狀態更新為：
+\begin{align}
+f_t &= \sigma(W_f [h_{t-1}, x_t] + b_f) \label{eq:lstm_forget} \\
+i_t &= \sigma(W_i [h_{t-1}, x_t] + b_i) \label{eq:lstm_input} \\
+\tilde{c}_t &= \tanh(W_c [h_{t-1}, x_t] + b_c) \label{eq:lstm_cell_candidate} \\
+c_t &= f_t \odot c_{t-1} + i_t \odot \tilde{c}_t \label{eq:lstm_cell} \\
+o_t &= \sigma(W_o [h_{t-1}, x_t] + b_o) \label{eq:lstm_output_gate} \\
+h_t &= o_t \odot \tanh(c_t) \label{eq:lstm_hidden}
+\end{align}
+其中 \(\sigma\) 為 Sigmoid 函數，\(\odot\) 為逐元素乘積。如圖 \ref{fig:lstm_cell_flow} 所示，遺忘閘 \(f_t\) 決定保留多少前期記憶狀態，輸入閘 \(i_t\) 控制新資訊寫入記憶的比例，輸出閘 \(o_t\) 則決定從記憶狀態輸出至隱狀態的部分；記憶狀態 \(c_t\) 作為資訊高速公路跨時步傳遞，緩解了長序列中梯度消失的問題。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.92\textwidth]{img/tikz/fig_lstm.pdf}
-  \caption{LSTM 單元的資訊流（Forget / Update / Output）。其中 $x_t$ 為當期輸入，$h_{t-1}$ 為前一期隱狀態（hidden state），$c_{t-1}$ 為前一期記憶狀態（cell state）。}
+  \caption{LSTM 單元資訊流示意（Forget / Update / Output 三區段）。\(x_t\) 為當期輸入，\(h_{t-1}\) 為前一步隱狀態，\(c_{t-1}\) 為前一步記憶狀態；各閘控制資訊寫入與傳遞比例，記憶狀態 \(c_t\) 跨時步持續累積。}
   \label{fig:lstm_cell_flow}
 \end{figure}
 
-LSTM 的優勢在於能以 sequence-to-one 的方式吸收單股過去價格、成交量與技術特徵路徑。然而，若研究任務是每日股票排序，單股序列模型的限制也很明顯：它主要處理同一股票內部的時間依賴，不直接刻畫同一交易日其他股票對目標股票表示的影響。當市場存在產業共振、全市場風格切換、流動性輪動或短期共動結構時，單股序列模型只能透過人工特徵間接吸收這些訊號。這也是後續股票關係圖與 GNN 方法被引入截面股票預測的主要理由。
+在截面股票預測中，LSTM 以 sequence-to-one 形式接收單一股票連續 \(T\) 個交易日的特徵向量序列，並以最後時步的隱狀態 \(h_T\) 作為當日個股特徵表示，供後續全連接層輸出截面排序分數。Qiu 等人 \cite{qiu2020forecasting} 與 Zaheer 等人 \cite{zaheer2023multi} 將 LSTM 或其變形應用於股票價格與多維訊號預測，顯示序列模型能有效吸收單一資產的短中期時間依賴。
+
+然而，LSTM 的根本限制在於以單股歷史路徑為唯一訊號來源：它主要處理同一股票內部的時間依賴，不直接刻畫同一交易日其他股票對目標股票表示的影響。當市場存在產業共振、全市場風格切換或流動性輪動等截面結構時，單股序列模型只能透過手工特徵間接吸收這些訊號。正是這一不足，驅動了後續以股票關係圖顯式建模截面相依性的研究方向。
 
 % ============================================================
 \section{股票關係圖：產業圖、市場圖、相關係數圖}
