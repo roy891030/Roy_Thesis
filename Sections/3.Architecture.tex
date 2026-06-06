@@ -14,88 +14,38 @@
 \begin{figure}[!htbp]
   \centering
   \begin{tikzpicture}[
-    bluebox/.style={
-      draw=thesisBlue!45, thick, rounded corners=5pt,
-      fill=thesisBlue!7, text width=13.0cm,
-      inner sep=10pt, align=left, font=\small
+    node distance=5mm,
+    chbox/.style={
+      draw,
+      rounded corners=4pt,
+      align=left,
+      font=\small,
+      inner sep=10pt,
+      text width=13cm,
+      line width=0.7pt,
     },
-    tealbox/.style={
-      draw=thesisTeal!50, thick, rounded corners=5pt,
-      fill=thesisTeal!7, text width=13.0cm,
-      inner sep=10pt, align=left, font=\small
-    },
-    phaselabel/.style={
-      draw=thesisDark!20, rounded corners=3pt,
-      fill=thesisDark!5, font=\small\bfseries,
-      thesisDark!70, inner sep=4pt, text width=13.0cm,
-      align=center
-    },
-    flowarrow/.style={
-      -{Stealth[length=3.5mm,width=3mm]},
-      line width=1.3pt, thesisDark!50
-    },
-    node distance=6mm
+    flowarrow/.style={-{Stealth[length=3.2mm,width=2.8mm]}, line width=1.2pt}
   ]
-    % ── Phase A header ───────────────────────────────────────
-    \node[phaselabel] (ph1)
-          {Phase A\quad 資料取得與前處理（§\,3.1）};
 
-    % ── Step 1: 資料來源 ──────────────────────────────────────
-    \node[bluebox, below=5mm of ph1] (s311) {%
-      \color{thesisBlue!85!thesisDark}\textbf{\S\,3.1.1\enspace 資料來源}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace TEJ 台灣股票市場日頻資料（CSV 匯出）\\
-      $\bullet$\enspace 主實驗樣本：2014-01-02 至 2025-05-29，共 2782 交易日，最多 1060 檔股票%
-    };
+  \node[chbox] (s31) {%
+    {\small\bfseries §\,3.1\quad 資料來源與預處理}\\[3pt]%
+    \rule{\linewidth}{0.3pt}\\[3pt]%
+    資料來源（§\,3.1.1）：TEJ 台灣股票市場日頻資料；主實驗樣本 2014-01-02 至 2025-05-29，共 2782 交易日\\[2pt]%
+    資料預處理（§\,3.1.2）：欄位格式統一、技術特徵計算（RSI、MACD、KD 等）、標籤計算、缺失值處理\\[2pt]%
+    資料集劃分（§\,3.1.3）：時序三段切分（72\% 訓練 / 8\% 驗證 / 20\% 測試）；Short、Medium、Long 三組樣本視窗%
+  };
 
-    % ── Step 2: 資料預處理 ────────────────────────────────────
-    \node[bluebox, below=6mm of s311] (s312) {%
-      \color{thesisBlue!85!thesisDark}\textbf{\S\,3.1.2\enspace 資料預處理}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace 欄位格式統一、日期排序與數值型態轉換\\
-      $\bullet$\enspace 技術特徵計算（TA-Lib 指標：RSI、MACD、KD 等）\\
-      $\bullet$\enspace 標籤計算：未來 5 日報酬率 $y^{raw}$，再做每日截面去均值得訓練標籤 $y$\\
-      $\bullet$\enspace 特徵缺失值以 0 填補，標籤缺失以遮罩（mask）於損失與評估時排除%
-    };
+  \node[chbox, below=5mm of s31] (s32) {%
+    {\small\bfseries §\,3.2\quad 特徵工程與圖結構建構}\\[3pt]%
+    \rule{\linewidth}{0.3pt}\\[3pt]%
+    特徵選取（§\,3.2.1）：56 項輸入特徵，涵蓋報酬、動能、波動、量能、估值等類別；截面 z-score 標準化\\[2pt]%
+    圖結構建構（§\,3.2.2）：產業圖（同產業完全連結）與全市場圖（全截面完全連結）；以 PyG \texttt{edge\_index} 封存%
+  };
 
-    % ── Step 3: 資料集劃分 ────────────────────────────────────
-    \node[bluebox, below=6mm of s312] (s313) {%
-      \color{thesisBlue!85!thesisDark}\textbf{\S\,3.1.3\enspace 資料集劃分}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace 時間序列切分：72\% 訓練 / 8\% 驗證 / 20\% 測試（確保不產生未來資訊滲漏）\\
-      $\bullet$\enspace 三組樣本視窗：Short（2023--2025）、Medium（2019--2025）、Long（2014--2025）%
-    };
+  \draw[flowarrow] (s31.south) -- (s32.north);
 
-    % ── Phase B header ───────────────────────────────────────
-    \node[phaselabel, below=8mm of s313] (ph2)
-          {Phase B\quad 特徵工程與圖結構建構（§\,3.2）};
-
-    % ── Step 4: 特徵選取 ──────────────────────────────────────
-    \node[tealbox, below=5mm of ph2] (s321) {%
-      \color{thesisTeal!80!thesisDark}\textbf{\S\,3.2.1\enspace 特徵選取與分類}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace 56 項輸入特徵，涵蓋：報酬、反轉、趨勢、動能差、波動、分配、量能、流動性、估值、技術指標、風險、區間極值等類別\\
-      $\bullet$\enspace 多視窗設計（1/5/10/20/60 日）捕捉不同時間尺度市場訊號；截面 z-score 標準化%
-    };
-
-    % ── Step 5: 圖結構建構 ───────────────────────────────────
-    \node[tealbox, below=6mm of s321] (s322) {%
-      \color{thesisTeal!80!thesisDark}\textbf{\S\,3.2.2\enspace 圖結構設計與建構流程}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace 產業圖（$E_I$）：同產業股票完全連結並加入自環，表示產業內共通訊號傳遞\\
-      $\bullet$\enspace 全市場圖（$E_U$）：全截面完全連結並加入自環，作為全市場資訊聚合機制\\
-      $\bullet$\enspace 以 PyG \texttt{edge\_index}（$[2, E]$ 整數張量）封存，與特徵張量統一供模型訓練使用%
-    };
-
-    % ── Arrows ────────────────────────────────────────────────
-    \draw[flowarrow] (ph1.south) -- (s311.north);
-    \draw[flowarrow] (s311.south) -- (s312.north);
-    \draw[flowarrow] (s312.south) -- (s313.north);
-    \draw[flowarrow] (s313.south) -- (ph2.north);
-    \draw[flowarrow] (ph2.south) -- (s321.north);
-    \draw[flowarrow] (s321.south) -- (s322.north);
   \end{tikzpicture}
-  \caption{實驗設計流程（Phase A：資料取得與前處理；Phase B：特徵工程與圖結構建構；對應 §\,3.1--3.2）}
+  \caption{實驗設計流程（對應 §\,3.1--3.2）}
   \label{fig:exp-flow-data}
 \end{figure}
 
@@ -271,16 +221,9 @@ Long & 2014-01-02 至 2025-05-29 & 2003 & 222 & 557 & 2782 & 2023-02-09 至 2025
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{img/tikz/fig_train_timeline.pdf}
-    \caption{三種樣本視窗之時間序列三段切分（Train / Validation / Test）}
+    \includegraphics[width=0.88\linewidth]{img/tikz/fig_train_timeline.pdf}
+    \caption{三種樣本視窗之時間序列三段切分}
     \label{fig:train_test_split}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.82\linewidth]{img/tikz/fig_train_bar.pdf}
-    \caption{三種樣本視窗之資料切分日數與比例（Train / Validation / Test）}
-    \label{fig:train_val_test_split_bar}
 \end{figure}
 
 \FloatBarrier

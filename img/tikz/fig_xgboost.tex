@@ -42,14 +42,6 @@
 \def\yaggr{-3.5}   % aggregation row
 
 %%──────────────────────────────────────────────────────────
-%% TRAINING DATA HEADER
-%%──────────────────────────────────────────────────────────
-\node[draw=thesisDark!55, dashed, fill=thesisBlue!6, rounded corners=5pt,
-      minimum width=13.5cm, minimum height=1.1cm, thick,
-      font=\large\bfseries] (hdr)
-     at ({(\cx+\cz)/2}, 9.5) {訓練資料（Training Data）};
-
-%%──────────────────────────────────────────────────────────
 %% COLUMN 1  ( h_1 )
 %%──────────────────────────────────────────────────────────
 % --- scatter data
@@ -62,7 +54,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=12pt] at (d1.north) {$h_1(\cdot)$};
+\node[coltitle, above=5pt] at (d1.north) {$h_1(\cdot)$};
 
 % --- CART tree
 \node[treebox] (t1) at (\cx, \ytree) {};
@@ -102,7 +94,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=12pt] at (d2.north) {$h_2(\cdot)$};
+\node[coltitle, above=5pt] at (d2.north) {$h_2(\cdot)$};
 
 \node[treebox] (t2) at (\cy, \ytree) {};
 \begin{scope}[shift={(\cy,\ytree)}]
@@ -147,7 +139,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=12pt] at (dn.north) {$h_N(\cdot)$};
+\node[coltitle, above=5pt] at (dn.north) {$h_N(\cdot)$};
 
 \node[treebox] (tn) at (\cz, \ytree) {};
 \begin{scope}[shift={(\cz,\ytree)}]

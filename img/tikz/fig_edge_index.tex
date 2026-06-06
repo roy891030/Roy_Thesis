@@ -54,7 +54,7 @@
 \begin{scope}[xshift=6.2cm, yshift=0.3cm]
 
   % Header row — spans all 6 data columns + label column
-  \node[hcell, minimum width=97mm] (hdr) at (3.82, 1.8) {edge\_index};
+  \node[hcell, minimum width=90mm] (hdr) at (3.6, 1.8) {edge\_index};
 
   % Row label: start
   \node[lcell] (lstart) at (0, 0.9) {start};
@@ -63,11 +63,11 @@
 
   % Data cells — start row: A A B B C C
   \foreach \col/\v in {1/A, 2/A, 3/B, 4/B, 5/C, 6/C}{
-    \node[dcell] at ({1.22*\col + 0.61}, 0.9) {\v};
+    \node[dcell] at ({0.3 + 1.2*\col}, 0.9) {\v};
   }
   % Data cells — end row:  B C A C A B
   \foreach \col/\v in {1/B, 2/C, 3/A, 4/C, 5/A, 6/B}{
-    \node[dcell] at ({1.22*\col + 0.61}, 0.0) {\v};
+    \node[dcell] at ({0.3 + 1.2*\col}, 0.0) {\v};
   }
 
 \end{scope}

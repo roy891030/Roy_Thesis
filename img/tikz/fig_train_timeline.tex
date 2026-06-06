@@ -50,8 +50,13 @@
   \draw[thesisDark!40, thick, rounded corners=2pt] (#2, {#1}) rectangle (#5, {#1+\rh});
   % Train label (inside bar)
   \node[inlabel] at ({(#2+#3)/2}, {#1+\rh/2}) {#6};
-  % Val annotation (above bar, since narrow)
-  \node[annlabel, above=3pt] at ({(#3+#4)/2}, {#1+\rh}) {#7};
+  % Val annotation (above bar if narrow)
+  \pgfmathsetmacro{\valwidth}{(#4-#3)}
+  \ifdim\valwidth cm > 0.6cm
+    \node[inlabel] at ({(#3+#4)/2}, {#1+\rh/2}) {#7};
+  \else
+    \node[annlabel, above=3pt] at ({(#3+#4)/2}, {#1+\rh}) {#7};
+  \fi
   % Test label
   \pgfmathsetmacro{\testwidth}{(#5-#4)}
   \ifdim\testwidth cm > 1.2cm
@@ -63,13 +68,13 @@
 
 %% ── Draw rows ────────────────────────────────────────────
 \ganttrow{\ryL}{\LgX}{\LgTrE}{\LgVaE}{\LgEnd}
-         {訓練集 2003d}{驗證 222d}{測試集 557d}
+         {2003d}{222d}{557d}
 
 \ganttrow{\ryM}{\MeX}{\MeTrE}{\MeVaE}{\MeEnd}
-         {訓練集 1118d}{驗證 124d}{測試集 311d}
+         {1118d}{124d}{311d}
 
 \ganttrow{\ryS}{\ShX}{\ShTrE}{\ShVaE}{\ShEnd}
-         {訓練集 414d}{驗證 46d}{測試集 116d}
+         {414d}{46d}{116d}
 
 %% ── Y-axis row labels ────────────────────────────────────
 \node[ylabel] at (-0.4, {\ryL+\rh/2}) {Long};

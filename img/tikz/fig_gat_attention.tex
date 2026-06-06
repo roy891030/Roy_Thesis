@@ -101,10 +101,10 @@
 \node[bignode] (h5) at ({(\rx)+\R*cos(270)}, {(\ry)+\R*sin(270)}) {$\vec{h}_5$};
 \node[bignode] (h6) at ({(\rx)+\R*cos(325)}, {(\ry)+\R*sin(325)}) {$\vec{h}_6$};
 
-% Self-loop: clean arc at the top of h1, label above
-\draw[alpharr, thesisBlue, looseness=7, in=160, out=20]
+% Self-loop: compact upward arc above h1
+\draw[alpharr, thesisBlue, looseness=5, in=115, out=65]
      (h1.north) to
-     node[pos=0.5, above=6pt, font=\normalsize\bfseries, thesisBlue] {$\alpha_{11}$}
+     node[pos=0.5, above=8pt, font=\normalsize\bfseries, thesisBlue] {$\alpha_{11}$}
      (h1.north);
 
 % Attention arrows: each from neighbor to h1, different colors
