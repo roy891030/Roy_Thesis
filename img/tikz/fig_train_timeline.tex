@@ -13,8 +13,8 @@
 
 \begin{document}
 \begin{tikzpicture}[
-  inlabel/.style={font=\normalsize\bfseries, white, align=center},
-  annlabel/.style={font=\normalsize, thesisDark, align=center},
+  inlabel/.style={font=\small\bfseries, thesisDark, align=center},
+  annlabel/.style={font=\small, thesisDark, align=center},
   ylabel/.style={font=\large\bfseries, thesisDark, anchor=east},
   xlabel/.style={font=\normalsize, thesisDark!65, anchor=north},
   timelabel/.style={font=\small, thesisDark!70, align=center},
@@ -22,12 +22,12 @@
 
 %% ── scale: 1 cm = 1 calendar year, origin = year 2014 ───
 %% ── row height & y positions (bottom of each bar) ────────
-\def\rh{1.20}     % bar height (增大)
+\def\rh{1.20}     % bar height
 \def\ryS{0}       % Short  row y-bottom
 \def\ryM{2.00}    % Medium row y-bottom
 \def\ryL{4.00}    % Long   row y-bottom
 
-%% ── x endpoints (same ratios as before) ──────────────────
+%% ── x endpoints ──────────────────────────────────────────
 \def\ShX{9.01}
 \def\ShTrE{10.742}  \def\ShVaE{10.934}  \def\ShEnd{11.419}
 
@@ -39,15 +39,13 @@
 
 %% ── helper: draw one Gantt row ───────────────────────────
 \newcommand{\ganttrow}[8]{
-  % Train bar (with rounded right end via slight overlap trick)
-  \fill[thesisBlue!85, rounded corners=2pt]    (#2, {#1})   rectangle (#3, {#1+\rh});
-  % Val bar
-  \fill[thesisAmber!90, rounded corners=2pt]   (#3, {#1})   rectangle (#4, {#1+\rh});
-  % Test bar
-  \fill[thesisCrimson!85, rounded corners=2pt] (#4, {#1})   rectangle (#5, {#1+\rh});
-  % Thin dividers between segments
-  \draw[white, line width=1.2pt] (#3, {#1}) -- (#3, {#1+\rh});
-  \draw[white, line width=1.2pt] (#4, {#1}) -- (#4, {#1+\rh});
+  % Light fills
+  \fill[thesisBlue!16, rounded corners=2pt]    (#2, {#1}) rectangle (#3, {#1+\rh});
+  \fill[thesisAmber!20, rounded corners=2pt]   (#3, {#1}) rectangle (#4, {#1+\rh});
+  \fill[thesisCrimson!14, rounded corners=2pt] (#4, {#1}) rectangle (#5, {#1+\rh});
+  % Thin dividers
+  \draw[thesisDark!30, thin] (#3, {#1}) -- (#3, {#1+\rh});
+  \draw[thesisDark!30, thin] (#4, {#1}) -- (#4, {#1+\rh});
   % Outer border
   \draw[thesisDark!40, thick, rounded corners=2pt] (#2, {#1}) rectangle (#5, {#1+\rh});
   % Train label (inside bar)
@@ -90,20 +88,18 @@
 \node[timelabel, above=3pt] at ({\MeX}, {\ryM+\rh}) {\small 2019-01};
 \node[timelabel, above=3pt] at ({\ShX}, {\ryS+\rh}) {\small 2023-01};
 
-%% ── Title ────────────────────────────────────────────────
-\node[font=\large\bfseries, thesisDark, anchor=south]
-     at ({11.42/2}, {4.0+\rh+0.75})
-     {三種樣本視窗之時間序列切分（Train / Validation / Test）};
-
 %% ── Legend ───────────────────────────────────────────────
-\def\legx{2.2}
-\def\legy{-1.30}
-\fill[thesisBlue!85]   (\legx, \legy) rectangle ({\legx+0.55}, {\legy+0.36});
-\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+0.68}, {\legy+0.18}) {訓練集（Train）};
-\fill[thesisAmber!90]  ({\legx+3.2}, \legy) rectangle ({\legx+3.75}, {\legy+0.36});
-\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+3.88}, {\legy+0.18}) {驗證集（Validation）};
-\fill[thesisCrimson!85]({\legx+7.2}, \legy) rectangle ({\legx+7.75}, {\legy+0.36});
-\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+7.88}, {\legy+0.18}) {測試集（Test）};
+\def\legx{2.8}
+\def\legy{-1.10}
+\fill[thesisBlue!16]   (\legx, \legy) rectangle ({\legx+0.55}, {\legy+0.36});
+\draw[thesisDark!40]   (\legx, \legy) rectangle ({\legx+0.55}, {\legy+0.36});
+\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+0.68}, {\legy+0.18}) {訓練集};
+\fill[thesisAmber!20]  ({\legx+2.3}, \legy) rectangle ({\legx+2.85}, {\legy+0.36});
+\draw[thesisDark!40]   ({\legx+2.3}, \legy) rectangle ({\legx+2.85}, {\legy+0.36});
+\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+2.98}, {\legy+0.18}) {驗證集};
+\fill[thesisCrimson!14]({\legx+4.8}, \legy) rectangle ({\legx+5.35}, {\legy+0.36});
+\draw[thesisDark!40]   ({\legx+4.8}, \legy) rectangle ({\legx+5.35}, {\legy+0.36});
+\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+5.48}, {\legy+0.18}) {測試集};
 
 \end{tikzpicture}
 \end{document}

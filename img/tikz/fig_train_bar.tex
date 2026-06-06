@@ -13,7 +13,7 @@
 
 \begin{document}
 \begin{tikzpicture}[
-  inlabel/.style={font=\normalsize\bfseries, white, align=center},
+  inlabel/.style={font=\small\bfseries, thesisDark, align=center},
   annlabel/.style={font=\normalsize, thesisDark, align=center},
   ylabel/.style={font=\large\bfseries, thesisDark, anchor=east},
   xlabel/.style={font=\normalsize, thesisDark!65, anchor=north},
@@ -23,7 +23,7 @@
 
 %% ── scale: total = 2782 days → 11cm ─────────────────────
 \def\sc{0.003954}   % cm per day  (11/2782)
-\def\rh{1.20}       % bar height (cm) — 增大
+\def\rh{1.20}       % bar height (cm)
 
 %% ── row y-positions ──────────────────────────────────────
 \def\ryL{0}
@@ -36,13 +36,13 @@
   \pgfmathsetmacro{\xTr}{#2*\sc}
   \pgfmathsetmacro{\xVa}{(#2+#3)*\sc}
   \pgfmathsetmacro{\xTe}{(#2+#3+#4)*\sc}
-  % bars with rounded corners
-  \fill[thesisBlue!85, rounded corners=2pt]    (0,  {#1}) rectangle (\xTr, {#1+\rh});
-  \fill[thesisAmber!90, rounded corners=2pt]   (\xTr, {#1}) rectangle (\xVa, {#1+\rh});
-  \fill[thesisCrimson!85, rounded corners=2pt] (\xVa, {#1}) rectangle (\xTe, {#1+\rh});
-  % Thin white dividers
-  \draw[white, line width=1.2pt] (\xTr, {#1}) -- (\xTr, {#1+\rh});
-  \draw[white, line width=1.2pt] (\xVa, {#1}) -- (\xVa, {#1+\rh});
+  % Light fills
+  \fill[thesisBlue!16, rounded corners=2pt]    (0,  {#1}) rectangle (\xTr, {#1+\rh});
+  \fill[thesisAmber!20, rounded corners=2pt]   (\xTr, {#1}) rectangle (\xVa, {#1+\rh});
+  \fill[thesisCrimson!14, rounded corners=2pt] (\xVa, {#1}) rectangle (\xTe, {#1+\rh});
+  % Thin dark dividers
+  \draw[thesisDark!30, thin] (\xTr, {#1}) -- (\xTr, {#1+\rh});
+  \draw[thesisDark!30, thin] (\xVa, {#1}) -- (\xVa, {#1+\rh});
   % Outer border
   \draw[thesisDark!40, thick, rounded corners=2pt] (0, {#1}) rectangle (\xTe, {#1+\rh});
   % Train label inside
@@ -77,21 +77,19 @@
 
 %% ── X-axis label ─────────────────────────────────────────
 \node[font=\normalsize, thesisDark!70]
-     at ({2782*\sc/2}, {-0.80}) {交易日數（Trading Days）};
-
-%% ── Title ────────────────────────────────────────────────
-\node[font=\large\bfseries, thesisDark, anchor=south]
-     at ({2782*\sc/2}, {4.0+\rh+0.75})
-     {三種樣本視窗之資料切分日數（Train / Validation / Test）};
+     at ({2782*\sc/2}, {-0.75}) {交易日數};
 
 %% ── Legend ───────────────────────────────────────────────
-\def\legx{0.8}  \def\legy{-1.55}
-\fill[thesisBlue!85]    (\legx, \legy) rectangle ({\legx+0.55}, {\legy+0.36});
-\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+0.68},  {\legy+0.18}) {訓練集（Train，72\%）};
-\fill[thesisAmber!90]   ({\legx+3.6}, \legy) rectangle ({\legx+4.15}, {\legy+0.36});
-\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+4.28},  {\legy+0.18}) {驗證集（Validation，8\%）};
-\fill[thesisCrimson!85] ({\legx+7.8}, \legy) rectangle ({\legx+8.35}, {\legy+0.36});
-\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+8.48},  {\legy+0.18}) {測試集（Test，20\%）};
+\def\legx{0.8}  \def\legy{-1.45}
+\fill[thesisBlue!16]    (\legx, \legy) rectangle ({\legx+0.55}, {\legy+0.36});
+\draw[thesisDark!40]    (\legx, \legy) rectangle ({\legx+0.55}, {\legy+0.36});
+\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+0.68},  {\legy+0.18}) {訓練集（72\%）};
+\fill[thesisAmber!20]   ({\legx+3.6}, \legy) rectangle ({\legx+4.15}, {\legy+0.36});
+\draw[thesisDark!40]    ({\legx+3.6}, \legy) rectangle ({\legx+4.15}, {\legy+0.36});
+\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+4.28},  {\legy+0.18}) {驗證集（8\%）};
+\fill[thesisCrimson!14] ({\legx+7.4}, \legy) rectangle ({\legx+7.95}, {\legy+0.36});
+\draw[thesisDark!40]    ({\legx+7.4}, \legy) rectangle ({\legx+7.95}, {\legy+0.36});
+\node[font=\normalsize, thesisDark, anchor=west] at ({\legx+8.08},  {\legy+0.18}) {測試集（20\%）};
 
 \end{tikzpicture}
 \end{document}

@@ -9,7 +9,7 @@
 \chapter{實驗設計}
 \label{ch:experiment_design}
 
-本章旨在說明本文之整體實驗設計與實作流程，內容涵蓋資料來源與預處理、特徵工程與圖結構建構、模型架構與訓練設定、損失函數設計，以及評估指標與策略驗證方法。本文以台灣股票市場日頻資料為研究對象，重點檢驗模型結構、圖拓樸、多因子表示與分層中性化在截面報酬排序任務上的效果；實驗設計採用統一 pipeline 比較三個非圖 baseline、DNN、三種 GAT topology variants，以及兩種 GAT neutralization / factor-attention variants。為使讀者能快速掌握各小節之方法銜接與處理順序，圖 \ref{fig:exp-flow-data} 與圖 \ref{fig:exp-flow-model} 分別呈現資料特徵流程與模型評估流程，後續將依據該流程逐步展開說明。
+本章說明本文之整體實驗設計與實作流程，涵蓋資料來源與預處理、特徵工程與圖結構建構、模型架構與訓練設定、損失函數設計，以及評估指標與策略驗證方法。本文以台灣股票市場日頻資料為研究對象，重點檢驗模型結構、圖拓樸設計、多因子表示與分層中性化機制在截面報酬排序任務上的效果，並採統一實驗框架比較非圖基準模型（線性迴歸、XGBoost、LSTM）、DNN、三種圖拓樸架構，以及加入中性化與因子注意力機制之延伸模型。為使讀者能快速掌握各小節之方法銜接與處理順序，圖 \ref{fig:exp-flow-data} 與圖 \ref{fig:exp-flow-model} 分別呈現資料前處理暨特徵工程流程與模型設計暨評估流程，後續將依據該流程逐步展開說明。
 
 \begin{figure}[!htbp]
   \centering
@@ -102,116 +102,46 @@
 \begin{figure}[!htbp]
   \centering
   \begin{tikzpicture}[
-    narrowbox/.style={
-      draw=thesisAmber!50, thick, rounded corners=5pt,
-      fill=thesisAmber!7, text width=6.1cm,
-      inner sep=9pt, align=left, font=\small
+    node distance=5mm,
+    chbox/.style={
+      draw,
+      rounded corners=4pt,
+      align=left,
+      font=\small,
+      inner sep=10pt,
+      text width=13cm,
+      line width=0.7pt,
     },
-    forestbox/.style={
-      draw=thesisForest!50, thick, rounded corners=5pt,
-      fill=thesisForest!7, text width=13.0cm,
-      inner sep=10pt, align=left, font=\small
-    },
-    bluebox/.style={
-      draw=thesisBlue!45, thick, rounded corners=5pt,
-      fill=thesisBlue!7, text width=13.0cm,
-      inner sep=10pt, align=left, font=\small
-    },
-    crimsonbox/.style={
-      draw=thesisCrimson!45, thick, rounded corners=5pt,
-      fill=thesisCrimson!7, text width=13.0cm,
-      inner sep=10pt, align=left, font=\small
-    },
-    phaselabel/.style={
-      draw=thesisDark!20, rounded corners=3pt,
-      fill=thesisDark!5, font=\small\bfseries,
-      thesisDark!70, inner sep=4pt, text width=13.0cm,
-      align=center
-    },
-    flowarrow/.style={
-      -{Stealth[length=3.5mm,width=3mm]},
-      line width=1.3pt, thesisDark!50
-    },
-    node distance=6mm and 12mm
+    flowarrow/.style={-{Stealth[length=3.2mm,width=2.8mm]}, line width=1.2pt}
   ]
-    % ── Phase C header ────────────────────────────────────────
-    \node[phaselabel] (ph3)
-          {Phase C\quad 模型設計（§\,3.3）};
 
-    % ── Step 6 & 7: 兩個並排模型欄 ───────────────────────────
-    \node[narrowbox, below=5mm of ph3] (s331) {%
-      \color{thesisAmber!85!thesisDark}\textbf{\S\,3.3.1\enspace 非圖基準模型}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace 線性迴歸（Linear）\\
-      $\bullet$\enspace 梯度提升樹（XGBoost）\\
-      $\bullet$\enspace 長短期記憶網路（LSTM）\\[2pt]
-      \color{thesisDark!60}\footnotesize 不使用股票關係圖%
-    };
-    \node[narrowbox, right=12mm of s331] (s332) {%
-      \color{thesisAmber!85!thesisDark}\textbf{\S\,3.3.2\enspace 圖與因子消融模型}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace DNN、GAT-industry、GAT-universe\\
-      $\bullet$\enspace GAT-TwoGraph、GAT-IndNeutral\\
-      $\bullet$\enspace GAT-full（完整分層中性化模型）\\[2pt]
-      \color{thesisDark!60}\footnotesize 因子注意力解釋模組%
-    };
+  \node[chbox] (s33) {%
+    {\small\bfseries §\,3.3\quad 模型設計}\\[3pt]%
+    \rule{\linewidth}{0.3pt}\\[3pt]%
+    非圖基準（§\,3.3.1）：線性迴歸、梯度提升樹（XGBoost）、長短期記憶網路（LSTM）\\[2pt]%
+    圖與因子消融模型（§\,3.3.2）：DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral、GAT-full%
+  };
 
-    % ── Phase D header ────────────────────────────────────────
-    \node[phaselabel, below=12mm of s331.south |- s331.south] (ph4)
-          {Phase D\quad 損失函數設計（§\,3.4）};
+  \node[chbox, below=5mm of s33] (s34) {%
+    {\small\bfseries §\,3.4\quad 損失函數設計}\\[3pt]%
+    \rule{\linewidth}{0.3pt}\\[3pt]%
+    截面 IC 相關項（主訓練目標）\quad\textbullet\quad 注意力一致性項\quad\textbullet\quad 因子收益獎勵項\\[2pt]%
+    AdamW 優化器搭配 weight decay；依驗證集 ICIR 早停%
+  };
 
-    % ── Step 8: 損失函數 ──────────────────────────────────────
-    \node[forestbox, below=5mm of ph4] (s341) {%
-      \color{thesisForest!80!thesisDark}\textbf{\S\,3.4.1\enspace 總損失函數設計}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace 截面 IC 相關項（$\lambda_{IC}$）：最大化當日排序相關性，為主要訓練目標\\
-      $\bullet$\enspace 注意力一致性項（$\lambda_{attn}$）：維持輔助路徑與主預測因子排序形狀一致\\
-      $\bullet$\enspace 因子收益獎勵項（$\lambda_b$）：引導訊號方向為正向可投資訊號\\
-      $\bullet$\enspace AdamW 優化器搭配 weight decay；依驗證集 ICIR 進行早停%
-    };
+  \node[chbox, below=5mm of s34] (s35) {%
+    {\small\bfseries §\,3.5\quad 評估指標與基準比較}\\[3pt]%
+    \rule{\linewidth}{0.3pt}\\[3pt]%
+    預測品質（§\,3.5.1）：MSE、RMSE、MAE；Daily IC、ICIR、產業中性 IC\\[2pt]%
+    投資組合績效（§\,3.5.2）：年化報酬率、Sharpe ratio、勝率、最大跌幅\\[2pt]%
+    基準比較（§\,3.5.3）：台灣 50 ETF（0050）為市場基準；多模型統一比較%
+  };
 
-    % ── Phase E header ────────────────────────────────────────
-    \node[phaselabel, below=8mm of s341] (ph5)
-          {Phase E\quad 評估指標與基準比較（§\,3.5）};
+  \draw[flowarrow] (s33.south) -- (s34.north);
+  \draw[flowarrow] (s34.south) -- (s35.north);
 
-    % ── Step 9: 預測品質指標 ──────────────────────────────────
-    \node[bluebox, below=5mm of ph5] (s351) {%
-      \color{thesisBlue}\textbf{\S\,3.5.1\enspace 預測品質指標}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace 誤差指標：MSE、RMSE、MAE（衡量數值貼近程度）\\
-      $\bullet$\enspace 排序指標：Daily IC、ICIR（主要評估基礎）、產業中性 IC（圖模型補充）%
-    };
-
-    % ── Step 10: 投資組合績效 ─────────────────────────────────
-    \node[bluebox, below=6mm of s351] (s352) {%
-      \color{thesisBlue}\textbf{\S\,3.5.2\enspace 投資組合績效指標}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace 每 5 個交易日再平衡，選取預測分數前 10\% 股票等權做多\\
-      $\bullet$\enspace 計算年化報酬率、Sharpe Ratio、勝率（Hit Ratio）%
-    };
-
-    % ── Step 11: 基準比較 ─────────────────────────────────────
-    \node[crimsonbox, below=6mm of s352] (s353) {%
-      \color{thesisCrimson!80!thesisDark}\textbf{\S\,3.5.3\enspace 基準比較與驗證流程}\\[3pt]
-      \color{thesisDark!80}%
-      $\bullet$\enspace 以台灣 50 ETF（0050）未來 $k$ 日報酬作為市場基準\\
-      $\bullet$\enspace 輸出 IC 分佈、逐日 IC 時序、累積報酬走勢與多模型統一比較表\\
-      $\bullet$\enspace 彙整圖模型注意力權重與圖拓樸差異，提供診斷性觀察%
-    };
-
-    % ── Arrows ────────────────────────────────────────────────
-    \draw[flowarrow] (ph3.south) -- (s331.north);
-    \coordinate (bend331) at ($(s331.south)+(0,-6mm)$);
-    \coordinate (bend332) at ($(s332.south)+(0,-6mm)$);
-    \draw[flowarrow] (s331.south) -- (bend331) -| (ph4.north west);
-    \draw[flowarrow] (s332.south) -- (bend332) -| (ph4.north east);
-    \draw[flowarrow] (ph4.south) -- (s341.north);
-    \draw[flowarrow] (s341.south) -- (ph5.north);
-    \draw[flowarrow] (ph5.south) -- (s351.north);
-    \draw[flowarrow] (s351.south) -- (s352.north);
-    \draw[flowarrow] (s352.south) -- (s353.north);
   \end{tikzpicture}
-  \caption{實驗設計流程（Phase C：模型設計；Phase D：損失函數；Phase E：評估指標與基準比較；對應 §\,3.3--3.5）}
+  \caption{實驗設計流程（對應 §\,3.3--3.5）}
   \label{fig:exp-flow-model}
 \end{figure}
 
@@ -299,7 +229,7 @@ x_{normalized} = \frac{x - \mu_{batch}}{\sqrt{\sigma^2_{batch} + \epsilon}}
 其中 $\mu_{batch}$ 與 $\sigma^2_{batch}$ 為 mini-batch 統計量，$\epsilon$ 為數值穩定項（預設 $10^{-5}$）。
 非圖基準模型則依模型特性使用訓練集標準化或原始序列輸入，不使用上述 BatchNorm 層。
 
-\textbf{標籤定義（Label definition）：}原始標籤先定義為未來 $k$ 日報酬率（forward-$k$ return）：
+\textbf{標籤定義：}原始標籤先定義為未來 $k$ 日報酬率（forward-$k$ return）：
 \begin{equation}
 y^{raw}_t = \frac{P_{t+k} - P_t}{P_t}
 \label{eq:return_raw}

@@ -62,7 +62,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=5pt] at (d1.north) {$h_1(\cdot)$};
+\node[coltitle, above=12pt] at (d1.north) {$h_1(\cdot)$};
 
 % --- CART tree
 \node[treebox] (t1) at (\cx, \ytree) {};
@@ -102,7 +102,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=5pt] at (d2.north) {$h_2(\cdot)$};
+\node[coltitle, above=12pt] at (d2.north) {$h_2(\cdot)$};
 
 \node[treebox] (t2) at (\cy, \ytree) {};
 \begin{scope}[shift={(\cy,\ytree)}]
@@ -147,7 +147,7 @@
     \fill[\pc] (\px*0.65, \py*0.65) circle(\ps);
   }
 \end{scope}
-\node[coltitle, above=5pt] at (dn.north) {$h_N(\cdot)$};
+\node[coltitle, above=12pt] at (dn.north) {$h_N(\cdot)$};
 
 \node[treebox] (tn) at (\cz, \ytree) {};
 \begin{scope}[shift={(\cz,\ytree)}]
@@ -177,7 +177,6 @@
 %% VERTICAL ARROWS (training-phase flow)
 %%──────────────────────────────────────────────────────────
 \foreach \col in {\cx, \cy, \cz}{
-  \draw[arr] (\col, 8.8) -- (\col, {\ydata+1.1});
   \draw[arr] (\col, {\ydata-1.1}) -- (\col, {\ytree+1.1});
   \draw[arr] (\col, {\ytree-1.1}) -- (\col, {\yrdata+1.1});
   \draw[arr] (\col, {\yrdata-1.1}) -- (\col, {\ypred+0.6});
