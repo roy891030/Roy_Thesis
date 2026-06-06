@@ -1,82 +1,155 @@
 \chapter{實驗結果}
 \label{ch:results}
 
-本章根據正式實驗結果，回答本文的核心研究問題：在台股橫斷面報酬預測中，模型結構、圖拓樸與訓練視窗長度如何影響 rank signal 與投資組合表現。完整實驗共 27 組，包含 short、medium、long 三種訓練視窗，以及 Linear、XGBoost、LSTM、DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral 與 GAT-full 九類模型。Baseline 模型不使用圖結構；GAT 與 GAT 中性化類模型則使用相同封存資料，以避免不同資料切分或圖重估方式干擾模型比較。
+本章根據正式實驗結果，系統性地回答本文的核心研究問題：在台灣股票市場橫斷面報酬預測任務中，模型結構、圖拓樸設計與訓練視窗長度如何共同影響截面排序訊號品質與投資組合表現。完整實驗共 27 組，涵蓋短期、中期、長期三種訓練視窗，以及線性迴歸、XGBoost、LSTM、DNN、GAT-industry、GAT-universe、GAT-TwoGraph、GAT-IndNeutral 與 GAT-full 九類模型。非圖基準模型不使用圖結構；GAT 系列與中性化延伸模型均採用相同封存資料與圖結構，以確保比較結果不受資料切分差異或圖重估方式干擾。
 
-本文以 Daily IC 與 ICIR 作為主要 signal quality 指標，因本研究任務為橫斷面排序而非單純數值迴歸。投資組合績效則用以檢驗排序訊號是否能轉化為 top 10\% 等權做多策略的可用報酬。為避免單一指標的選擇偏誤，以下分析同時考量訓練視窗、圖拓樸、train-test gap 與投組風險，並於各小節分別討論。
+本章以日頻資訊係數（Daily IC）與 IC 資訊比率（ICIR）作為主要評估指標，因本研究任務為橫斷面排序而非單純數值迴歸，排序訊號的跨期穩健性比均方誤差更直接反映模型在截面投資策略中的可用性。投資組合績效則用以驗證排序訊號是否能轉化為前 10\% 等權做多策略的實質報酬。各節依序以非圖基準模型、圖拓樸比較、因子中性化機制為主軸展開分析，最後以訓練視窗長度的橫向比較統整各模型家族的跨期表現。
 
-\section{市場基準與勝出模型摘要}
-\label{sec:static_overview}
+% =========================================================
+\section{實驗概述與市場背景}
+\label{sec:overview}
+% =========================================================
 
-表 \ref{tab:results_benchmark_0050} 先列出三個測試視窗中 0050 基準的市場背景。Short 測試期為 2024-12-03 至 2025-05-29，0050 年化報酬為 -5.12\%、Sharpe 為 -0.150，且最大跌幅達 -27.37\%；Medium 與 Long 測試期則分別呈現 25.52\% 與 24.12\% 的 0050 年化報酬。三個測試視窗對應不同市場環境，因此不宜直接將 short window 的結果外推為長期結論。
+本章所有結果均在統一實驗框架下計算，各訓練視窗的測試期對應不同市場環境，解讀時需一併考慮背景差異。表 \ref{tab:results_benchmark_0050} 列出三個測試視窗的台灣 50 ETF（0050）基準績效。短期視窗測試期為 2024-12-03 至 2025-05-29，0050 年化報酬為 -5.12\%、Sharpe 比率為 -0.150，最大跌幅達 -27.37\%；中期視窗測試期對應 0050 年化報酬 25.52\%，長期視窗測試期則為 24.12\%。三個測試視窗分別覆蓋下行、溫和上行與持續多頭等不同市場情境，因此不宜直接跨視窗比較絕對報酬數字，亦不宜以短期視窗結果外推長期結論。
 
 \input{Sections/tables/results_benchmark_0050.tex}
 
-表 \ref{tab:results_pred_metrics} 彙整各視窗的勝出模型。Short window 中，DNN 取得最高 Daily IC（0.0396）與 ICIR（0.408），但最佳 Sharpe 仍僅為 GAT-industry 的 0.057，且所有模型的總報酬皆為負。Medium window 開始出現較可用的投組表現：GAT-full 取得最高 Daily IC（0.0596）與 ICIR（0.628），DNN 則取得最高 Sharpe（0.980）與最高總報酬（39.13\%）。Long window 是結果最穩定的設定，GAT-IndNeutral 取得最高 Daily IC（0.0590）與 ICIR（0.786），GAT-full 取得最高 Sharpe（1.849），XGBoost 則取得最高總報酬（143.08\%）。整體而言，GAT 類模型未呈現全面勝出；模型表現高度取決於訓練視窗、圖拓樸與評估層級。
-
-\input{Sections/tables/results_pred_metrics.tex}
-
 \FloatBarrier
 
-\section{訓練視窗長度對 out-of-sample 可用性之影響}
-\label{sec:window_length_results}
+% =========================================================
+\section{非圖基準模型之實證分析}
+\label{sec:baseline_results}
+% =========================================================
 
-表 \ref{tab:results_portfolio_metrics} 以模型家族為單位比較三個訓練視窗。結果顯示，訓練資料長度對所有模型皆有明顯影響，但對圖模型與 GAT 中性化類模型尤其關鍵。Short window 的訓練樣本相對有限，雖然多數模型的 Daily IC 已轉正，但投組年化報酬多數接近 0 或為負；例如 DNN 的 Daily IC 為 0.0396，Sharpe 卻為 -0.098，GAT neutralization family 的平均 Daily IC 為 0.0278，平均 Sharpe 也僅 -0.084。換言之，短樣本下的弱正向排序訊號尚不足以穩定轉化為可投資報酬。
+本節依序分析線性迴歸、XGBoost、LSTM 與 DNN 四類非圖基準模型。此四類模型均不使用圖結構，其結果一方面作為後續圖注意力模型的比較基準，另一方面直接揭示特徵工程在截面排序任務中的有效程度。
 
-\input{Sections/tables/results_portfolio_metrics.tex}
+\subsection{線性迴歸：線性映射的侷限}
+\label{subsec:linear_results}
 
-Medium window 擴大訓練樣本後，模型表現明顯改善。GAT neutralization family 的平均 Daily IC 提升至 0.0548，平均 Sharpe 提升至 0.873；DNN 亦達到 0.980 Sharpe。Long window 的改善更穩定：GAT neutralization family 平均 Daily IC 為 0.0587、平均 ICIR 為 0.760、平均 Sharpe 為 1.826；GAT family 平均 Daily IC 為 0.0502、平均 Sharpe 為 1.704；DNN 則為 Daily IC 0.0535、Sharpe 1.564。這表示，在本資料中，long window 比 short/medium 更能覆蓋不同市場 regime，使模型學到的 rank signal 在 out-of-sample 投組層級較穩定。
+線性迴歸在本文所有模型中整體表現最弱。三個訓練視窗的平均 Daily IC 僅 0.0168，短期視窗 Sharpe 比率為 -0.423，顯示 56 維技術與估值特徵之間存在難以透過線性映射捕捉的非線性交互作用。即便在訓練樣本最充足的長期視窗下，線性迴歸的截面排序能力仍明顯落後於其他非圖模型。此結果確認橫斷面報酬預測任務的非線性本質，印證以非線性模型作為主要實驗架構的必要性。
 
-此結果亦揭示一項方法論考量：若僅以 short window 進行模型比較，易低估 GAT 與 GAT 中性化類模型的潛在效益；若僅觀察 long window 的投組報酬，則可能高估 XGBoost 等高容量 tabular 模型的泛化穩健性。較完整的評估方式應同時報告三個視窗，並以 IC / ICIR 與投組績效共同衡量。
+\subsection{梯度提升樹（XGBoost）：高容量模型的過擬合診斷}
+\label{subsec:xgboost_results}
 
-\FloatBarrier
-
-\section{圖拓樸設計對模型排序效益之影響}
-\label{sec:topology_results}
-
-表 \ref{tab:results_static_long_topology} 進一步比較 long window 下的模型結構與圖拓樸。最直接的觀察是，GAT-universe 並未優於 DNN：GAT-universe 的 Daily IC 為 0.0452、Sharpe 為 1.506，低於 DNN 的 Daily IC 0.0535 與 Sharpe 1.564。這表示全市場完全連結並不必然提供有效增量；若每檔股票都與所有股票交換訊息，模型可能過度吸收市場共同成分，反而降低個股截面差異。
-
-\input{Sections/tables/results_static_long_topology.tex}
-
-相對地，GAT-industry 在 long window 的 Daily IC 為 0.0543、Sharpe 為 1.779，皆高於 GAT-universe；在 medium window 中亦有相同方向，GAT-industry 的 Daily IC 為 0.0445、Sharpe 為 0.900，高於 GAT-universe 的 0.0377 與 0.755。這支持「經濟意義圖拓樸有效」的論點：產業圖提供的是相對穩定的局部關係，使模型能比較同業內的相對強弱；universe graph 則近似全連接，容易把市場共同波動與風格共動混入個股訊號。
-
-GAT-TwoGraph 的結果呈現另一種 trade-off。Long window 下，其 Daily IC 為 0.0512，低於 GAT-industry 的 0.0543，但 Sharpe 提升至 1.827，且最大跌幅為 -19.23\%，是表中最低。這代表雙圖訊息在較長樣本下可改善投組風險報酬，但不一定同步提升平均 Daily IC。換言之，圖拓樸的價值不應只用「是否使用 GAT」判斷，而應拆成 industry graph、universe graph 與 dual graph 三種不同資訊結構。
-
-\FloatBarrier
-
-\section{GAT 中性化與 factor attention 之預測品質分析}
-\label{sec:dmfm_results}
-
-GAT 中性化類模型在 medium 與 long window 的 IC / ICIR 表現最為突出。Medium window 中，GAT-full 取得全模型最高 Daily IC（0.0596）與 ICIR（0.628）；Long window 中，GAT-IndNeutral 取得最高 Daily IC（0.0590）與 ICIR（0.786），GAT-full 亦有 Daily IC 0.0583 與 Sharpe 1.849。這比只看年化報酬更符合橫斷面 alpha 模型的評估邏輯，因為 IC / ICIR 直接衡量模型是否穩定把相對強勢股票排在前段。
-
-\input{Sections/tables/results_dmfm_tradeoff.tex}
-
-表 \ref{tab:results_dmfm_tradeoff} 顯示，GAT-full 與 GAT-IndNeutral 的差異可解讀為 signal stability 與 portfolio return 的權衡。GAT-IndNeutral 的 ICIR（0.786）與產業中性 ICIR（0.753）較高，最大跌幅也較小（-20.11\%）；GAT-full 則有較高 Test IC（0.0602）、Sharpe（1.849）、年化報酬（42.02\%）與勝率（68.75\%）。這表示 GAT-IndNeutral 較像純 alpha rank signal，GAT-full 則保留較多產業或市場 exposure，在有利市場環境下能轉化為較高投組報酬。
-
-注意力特徵亦提供補充證據。表 \ref{tab:results_dmfm_attention} 顯示，Short window 較常出現 \texttt{down\_vol\_20}、\texttt{roll\_max\_10}、\texttt{roll\_min\_60}、\texttt{roll\_max\_5} 與 \texttt{pct\_to\_low\_20}，集中於近期價格位置、下行波動與短期技術訊號；Medium window 則以 \texttt{atr\_14}、\texttt{roll\_min\_5}、\texttt{roll\_max\_20}、\texttt{macd} 與 \texttt{std\_ret\_20} 為主；Long window 中，\texttt{ps} 與 \texttt{macd\_signal} 開始進入高頻特徵，並搭配 rolling min/max 與 \texttt{atr\_14}。這與金融直覺一致：短樣本較依賴近期價格位置與波動訊號，長樣本才較能穩定吸收估值與較長週期風險特徵。不過，attention weight 仍只能作為描述性解釋，不能直接視為因果效果。
-
-\input{Sections/tables/results_dmfm_attention.tex}
-
-\FloatBarrier
-
-\section{Baseline 模型表現診斷}
-\label{sec:baseline_diagnostics}
-
-Baseline 模型的結果提供本文主張的重要對照基準。Linear 的整體表現最弱，三個視窗平均 Daily IC 僅 0.0168，且 short window Sharpe 為 -0.423，顯示 56 維特徵中存在非線性與交互作用，單純線性映射不足以穩定轉化為投組報酬。LSTM 在 long window Sharpe 達 1.336，較 Linear 有所改善，但仍低於 DNN、GAT family 與 GAT neutralization family，顯示單股時間序列記憶並不足以取代橫斷面非線性特徵與關係結構。
-
-DNN 在本文所有非圖基準中最具參考價值。儘管不使用任何圖結構，其在 short window 取得最高 Daily IC（0.0396）與 ICIR（0.408），在 medium window 取得最高 Sharpe（0.980）與總報酬（39.13\%），在 long window 亦達 Daily IC 0.0535 與 Sharpe 1.564。此結果說明特徵工程本身已提供相當程度的排序訊號；圖模型的增益應被定位為在較長樣本下的穩定性、拓樸可解釋性與增量貢獻，而非對非圖模型的全面性主導優勢。
+XGBoost 在長期視窗的投資組合總報酬達 143.08\%，為本文所有模型中最高。然而，表 \ref{tab:results_xgboost_gap} 揭示，其訓練集資訊係數（0.7824）與測試集資訊係數（0.0205）之間存在高達 38.1 倍的差距，顯示在投資組合層級的高報酬背後隱含顯著的過擬合風險。
 
 \input{Sections/tables/results_xgboost_gap.tex}
 
-XGBoost 呈現高總報酬但伴隨明顯 train-test 差距。表 \ref{tab:results_xgboost_gap} 顯示，其 long window 總報酬達 143.08\%，為所有模型最高，但 Train IC 為 0.7824 而 Test IC 僅 0.0205，train/test 比達 38.1 倍，顯示在投組層級表現背後存在顯著的過擬合風險。本文將 XGBoost 定位為強 tabular baseline，但其 signal robustness 與泛化能力需一併揭露，不宜以單一總報酬指標作為最終評判依據。
+此訓練-測試差距提示，XGBoost 的長期視窗高報酬可能部分源自訓練集的記憶效應，而非具有跨期穩健性的截面排序訊號。本文將 XGBoost 定位為高容量模型的代表性基準，但其訊號穩健性需一併揭露，不宜以單一總報酬指標作為模型品質的最終評判依據。
+
+\subsection{長短期記憶網路（LSTM）：時間序列記憶的邊際效益}
+\label{subsec:lstm_results}
+
+LSTM 在長期視窗的 Sharpe 比率達 1.336，較線性迴歸有所改善，顯示個股時間序列的歷史記憶機制具有一定程度的排序效益。然而，LSTM 在三個視窗的 Daily IC 與 Sharpe 比率均低於 DNN 及後續 GAT 系列，顯示以逐股時序方式建模在截面排序任務中的邊際貢獻有限。
+
+截面排序的核心在於比較同一時點不同股票的相對強弱，而 LSTM 以逐股時序方式獨立建模，無法直接利用截面內各股票之間的關係資訊。相對地，DNN 透過跨股截面批次正規化與全連接層，較 LSTM 更適合從多股共同特徵中萃取截面排序訊號，此點亦在下一小節得到驗證。
+
+\subsection{深度神經網路（DNN）：非圖模型的截面排序效益}
+\label{subsec:dnn_results}
+
+DNN 是本文非圖基準模型中最具參考價值的對照組。儘管不使用任何圖結構，DNN 在短期視窗取得全模型最高 Daily IC（0.0396）與 ICIR（0.408）；在中期視窗取得最高 Sharpe 比率（0.980）與最高總報酬（39.13\%）；在長期視窗亦達 Daily IC 0.0535 與 Sharpe 比率 1.564，與 GAT 系列具有競爭性。
+
+此結果具有重要的方法論意義：56 維技術與估值特徵搭配截面標準化的特徵工程設計，已在本資料集中提供相當程度的截面排序能力。後續第 \ref{sec:topology_results} 節與第 \ref{sec:neutralization_results} 節所討論的圖注意力模型增益，均應以 DNN 作為非圖對照基準進行評估，而非以更弱的線性或 LSTM 基準作為比較起點。
 
 \FloatBarrier
 
-\section{評估指標與限制}
-\label{sec:evaluation_limits}
+% =========================================================
+\section{圖拓樸結構之排序效益比較}
+\label{sec:topology_results}
+% =========================================================
 
-本實驗也顯示，MSE / RMSE 不適合作為跨架構的唯一比較指標。Long window 中，Linear、LSTM 與 GAT-industry 的 RMSE 約 0.0484--0.0485，但 DNN、GAT-IndNeutral 與 GAT-full 的 RMSE 分別為 0.1336、0.1160 與 0.1817；然而後三者在 Daily IC、ICIR 或 Sharpe 上並不差。原因在於本文模型的主要用途是截面排序，且部分 factor-attention / neutralization 模型的輸出尺度與原始報酬空間不完全一致。只要排序能穩定把相對強勢股票放在前段，較高 RMSE 不必然代表較差投組表現。
+本節在建立非圖基準後，進一步比較不同圖拓樸設計的截面排序效益。分析以長期視窗為主要討論情境，因長期視窗的訓練樣本最充足，能較清楚地區分圖拓樸設計的差異效果；中期視窗結果作為輔助參照。
 
-本實驗存在若干重要限制，應於解讀結果時一併考慮。其一，現階段回測尚未納入交易成本、滑價、容量限制與換手率控制，現有績效數字應視為無摩擦假設下的上限估計。其二，尚未進行分年度、分市場 regime、paired $t$-test 或 bootstrap 穩健性檢定，模型優劣的跨樣本一致性有待進一步驗證。其三，圖建構所使用之產業分類資訊屬穩定外生資訊，但若邊或權重引入全樣本資訊，則需重新以訓練期資料建立圖並進行 look-ahead bias 檢查。基於上述考量，本文較穩健的結論為：訓練視窗長度與圖拓樸設計是台股橫斷面 rank signal 的關鍵影響因素；在 medium 與 long window 下，GAT 中性化系列與 industry-aware GAT 類模型展現較穩定的排序效益；naive universe graph 與線性 baseline 表現相對較弱；DNN 與 XGBoost 的結果則說明，圖模型的增益主要體現在穩定性與可解釋性的提升。
+\subsection{產業圖與全市場圖之對比}
+\label{subsec:industry_vs_universe}
+
+表 \ref{tab:results_static_long_topology} 列出長期視窗下各模型的截面排序指標與投資組合績效。最直接的觀察是，GAT-universe 的 Daily IC（0.0452）與 Sharpe 比率（1.506）均低於不使用圖結構的 DNN（Daily IC 0.0535，Sharpe 比率 1.564）。這表示全截面完全連結並不必然提供有效的增量資訊：當每一檔股票都與全市場所有股票交換訊息時，模型容易過度吸收市場共同成分，反而削弱個股截面差異的辨識能力，即文獻所指之過度平滑化效應。
+
+\input{Sections/tables/results_static_long_topology.tex}
+
+相對地，GAT-industry 在長期視窗的 Daily IC 為 0.0543、Sharpe 比率為 1.779，均優於 GAT-universe 與 DNN。中期視窗的結果方向一致：GAT-industry 的 Daily IC（0.0445）與 Sharpe 比率（0.900）均高於 GAT-universe（0.0377、0.755）。此結果支持具有經濟意義之局部圖拓樸的有效性：產業圖提供相對穩定的同業關係連結，使模型能在同產業股票之間進行相對強弱比較，而不引入與個股截面差異無關的全市場共同波動。
+
+\subsection{雙圖架構（GAT-TwoGraph）之效益分析}
+\label{subsec:twograph_results}
+
+GAT-TwoGraph 同時融合產業圖與全市場圖的訊息傳遞，其結果呈現截面排序訊號品質與投資組合風險報酬之間的取捨。長期視窗下，GAT-TwoGraph 的 Daily IC 為 0.0512，低於 GAT-industry 的 0.0543，但 Sharpe 比率提升至 1.827，最大跌幅為 -19.23\%，是同視窗 GAT 系列中最低。
+
+此結果說明，雙圖架構在長期視窗下可改善投資組合的風險報酬特徵，但平均截面排序訊號品質未必同步提升。全市場圖提供的共同因子資訊或有助於在特定市場情境下降低投資組合的系統性風險暴露，但同時亦可能稀釋產業圖所提供的局部排序訊號。圖拓樸的選擇應視評估目標而定，以 ICIR 衡量排序訊號穩健性或以 Sharpe 比率衡量投資組合效益，兩者的最佳拓樸選擇未必相同。
+
+\FloatBarrier
+
+% =========================================================
+\section{因子中性化機制之增益分析}
+\label{sec:neutralization_results}
+% =========================================================
+
+本節分析 GAT-IndNeutral 與 GAT-full 兩種加入中性化與因子注意力機制的延伸模型，並探討注意力特徵在不同訓練視窗下的分布規律。
+
+\subsection{GAT-IndNeutral 與 GAT-full 之比較}
+\label{subsec:indneutral_vs_full}
+
+GAT 中性化類模型在中期與長期視窗的 ICIR 表現最為突出。中期視窗中，GAT-full 取得全模型最高 Daily IC（0.0596）與 ICIR（0.628）；長期視窗中，GAT-IndNeutral 取得最高 Daily IC（0.0590）與 ICIR（0.786），GAT-full 亦有 Daily IC 0.0583 與 Sharpe 比率 1.849。以 ICIR 作為衡量排序訊號跨期穩定性的指標，GAT 中性化系列在長期視窗的表現已明顯優於基本 GAT 變體，亦優於不使用圖結構的 DNN。
+
+表 \ref{tab:results_dmfm_tradeoff} 進一步呈現兩者的差異。GAT-IndNeutral 具有較高的 ICIR（0.786）與產業中性 ICIR（0.753），最大跌幅亦較小（-20.11\%）；GAT-full 則在測試集 IC（0.0602）、Sharpe 比率（1.849）、年化報酬（42.02\%）與勝率（68.75\%）上均更具優勢。兩者的差異可解讀為截面排序訊號穩健性與投資組合絕對報酬之間的取捨：GAT-IndNeutral 因加入產業中性化約束，排序訊號更接近純截面 alpha，具有較高的 ICIR 與較低的最大跌幅；GAT-full 則保留較多產業及市場曝險，在有利市場環境下可轉化為較高的絕對報酬。
+
+\input{Sections/tables/results_dmfm_tradeoff.tex}
+
+\subsection{因子注意力特徵之描述性分析}
+\label{subsec:attention_analysis}
+
+表 \ref{tab:results_dmfm_attention} 顯示各訓練視窗下 GAT-full 因子注意力機制的高頻特徵。短期視窗較常出現 \texttt{down\_vol\_20}、\texttt{roll\_max\_10}、\texttt{roll\_min\_60}、\texttt{roll\_max\_5} 與 \texttt{pct\_to\_low\_20}，集中於近期價格位置、下行波動與短期動能訊號；中期視窗以 \texttt{atr\_14}、\texttt{roll\_min\_5}、\texttt{roll\_max\_20}、\texttt{macd} 與 \texttt{std\_ret\_20} 為主；長期視窗中，\texttt{ps}（股價銷售比）與 \texttt{macd\_signal} 進入高頻特徵，並搭配 rolling min/max 與 \texttt{atr\_14}。
+
+\input{Sections/tables/results_dmfm_attention.tex}
+
+上述模式與金融直覺一致：短期視窗的訓練樣本有限，模型傾向依賴近期價格位置與波動率等即時性較高的技術訊號；長期視窗的訓練期橫跨多個市場情境，模型較能穩定吸收估值特徵（如 \texttt{ps}）與中長期動能指標。需注意的是，注意力權重僅作為描述性解釋，反映模型在輸入特徵上的加權偏好，不應直接視為特徵對報酬的因果效果。
+
+\FloatBarrier
+
+% =========================================================
+\section{訓練視窗長度之跨模型效應}
+\label{sec:window_results}
+% =========================================================
+
+前三節以模型結構與圖拓樸為主軸，分別分析非圖基準、圖拓樸選擇與中性化機制的截面排序效益。本節以訓練視窗長度為橫向維度，比較所有模型家族在短期、中期、長期三種設定下的表現，以揭示訓練資料規模對樣本外可用性的影響程度。
+
+表 \ref{tab:results_portfolio_metrics} 以模型家族為單位，彙整三個視窗的平均 Daily IC、ICIR 與 Sharpe 比率。短期視窗的訓練樣本最為有限，多數模型雖已具正向 Daily IC，但投資組合年化報酬普遍接近零或為負。DNN 在短期視窗的 Daily IC 為 0.0396，Sharpe 比率卻為 -0.098；GAT 中性化系列的平均 Daily IC 為 0.0278，平均 Sharpe 比率僅 -0.084。短期視窗下弱正向的排序訊號，尚不足以在扣除交易成本前穩定轉化為可投資報酬。
+
+\input{Sections/tables/results_portfolio_metrics.tex}
+
+中期視窗擴大訓練樣本後，各模型表現明顯改善。GAT 中性化系列的平均 Daily IC 提升至 0.0548，平均 Sharpe 比率提升至 0.873；DNN 亦達 Sharpe 比率 0.980。長期視窗的改善最為穩定：GAT 中性化系列平均 Daily IC 為 0.0587、平均 ICIR 為 0.760、平均 Sharpe 比率為 1.826；GAT 系列平均 Daily IC 為 0.0502、平均 Sharpe 比率為 1.704；DNN 為 Daily IC 0.0535、Sharpe 比率 1.564。長期視窗的訓練期橫跨多種市場情境，使模型所學習的截面排序關係在樣本外更具泛化能力。
+
+表 \ref{tab:results_pred_metrics} 彙整各視窗中在主要指標上表現最佳的模型。短期視窗中，DNN 在 Daily IC（0.0396）與 ICIR（0.408）上最高，但最佳 Sharpe 比率僅 GAT-industry 的 0.057，且所有模型總報酬均為負；中期視窗中，GAT-full 取得最高 Daily IC（0.0596）與 ICIR（0.628），DNN 取得最高 Sharpe 比率（0.980）與總報酬（39.13\%）；長期視窗中，GAT-IndNeutral 取得最高 Daily IC（0.0590）與 ICIR（0.786），GAT-full 取得最高 Sharpe 比率（1.849），XGBoost 取得最高總報酬（143.08\%，但伴隨顯著過擬合風險，詳見第 \ref{subsec:xgboost_results} 節）。
+
+\input{Sections/tables/results_pred_metrics.tex}
+
+此結果揭示一項方法論上的重要考量：若僅以短期視窗進行模型比較，易低估圖注意力模型與 GAT 中性化系列的潛在效益；若僅觀察長期視窗的投資組合報酬，則可能因 XGBoost 的過擬合情形而高估其排序穩健性。較完整的評估方式應同時報告三個訓練視窗，並以 IC/ICIR 與投資組合績效共同衡量。
+
+\FloatBarrier
+
+% =========================================================
+\section{綜合詮釋與研究限制}
+\label{sec:discussion}
+% =========================================================
+
+\subsection{評估指標選擇之方法論考量}
+\label{subsec:metric_discussion}
+
+本實驗顯示，均方根誤差（RMSE）不適合作為跨架構的唯一比較指標。以長期視窗為例，線性迴歸、LSTM 與 GAT-industry 的 RMSE 約為 0.0484 至 0.0485，而 DNN、GAT-IndNeutral 與 GAT-full 的 RMSE 分別為 0.1336、0.1160 與 0.1817；然而後三者在 Daily IC、ICIR 與 Sharpe 比率上均明顯優於前者。RMSE 偏高的原因在於因子注意力與中性化模型的輸出尺度與原始報酬空間不完全一致，且截面排序任務所需者為相對強弱排序而非精確數值預測。此結果印證以 IC/ICIR 為主要評估指標的方法論選擇：排序訊號的跨期穩健性比均方誤差更直接反映模型在橫斷面投資策略中的可用性。
+
+\subsection{圖模型增量貢獻之定位}
+\label{subsec:graph_contribution}
+
+綜合本章各節的分析，圖注意力機制的增量貢獻應定位於訊號穩定性、拓樸可解釋性與截面辨識力的提升，而非對非圖模型的全面性績效主導。DNN 在短期與中期視窗已展現具競爭力的截面排序能力，GAT 系列與 GAT 中性化系列的優勢主要體現於中、長期視窗的 ICIR 穩定性，以及使用具有經濟意義之產業圖拓樸時的截面差異保留。GAT-universe 的結果則說明，圖的引入若不搭配合理的拓樸設計，反而可能因過度平滑化而降低個股截面辨識力。
+
+\subsection{研究限制}
+\label{subsec:limitations}
+
+本實驗存在若干重要限制，應於解讀結果時一併考慮。
+
+其一，回測尚未納入交易成本、市場衝擊與換手率約束，現有績效數字應視為無摩擦假設下的上限估計，實際可落地的超額報酬將低於本文所報告的數值。
+
+其二，尚未進行分年度分析、跨市場情境分組檢驗、配對 $t$ 檢定或 Bootstrap 穩健性檢定，各模型在不同市場環境下的跨期一致性有待進一步統計驗證。
+
+其三，本文圖結構所使用之產業分類為穩定外生資訊，不涉及前視偏誤；但若未來研究採用動態圖（如滾動相關係數）構建邊，則需嚴格確保圖建構僅使用截至當前交易日的訓練期資訊，以避免前視偏誤影響評估結果。
 
 \FloatBarrier
