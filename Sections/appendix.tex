@@ -145,183 +145,191 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
 
 \begin{figure}[H]
   \centering
-  \captionsetup[subfigure]{font=scriptsize}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{font=small}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_linear/plots/cum_returns.png}
     \caption{Linear}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_xgboost/plots/cum_returns.png}
     \caption{XGBoost}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_lstm/plots/cum_returns.png}
     \caption{LSTM}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/mlp/plots/cum_returns.png}
     \caption{DNN}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_industry/plots/cum_returns.png}
     \caption{GAT-industry}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_universe/plots/cum_returns.png}
     \caption{GAT-universe}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_two_graph_no_neutral/plots/cum_returns.png}
     \caption{GAT-TwoGraph}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_ind_neutral/plots/cum_returns.png}
     \caption{GAT-IndNeutral}
   \end{subfigure}
+  \par\vspace{0.5em}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_full/plots/cum_returns.png}
     \caption{GAT-full}
   \end{subfigure}
-  \par\vspace{0.4em}
+  \hfill
+  \par\vspace{0.3em}
   \caption{Short window 各模型累積報酬曲線。}
   \label{fig:appendix_static_cum_returns_short}
 \end{figure}
 
+\clearpage
 \begin{figure}[H]
   \centering
-  \captionsetup[subfigure]{font=scriptsize}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{font=small}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_linear/plots/cum_returns.png}
     \caption{Linear}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/cum_returns.png}
     \caption{XGBoost}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_lstm/plots/cum_returns.png}
     \caption{LSTM}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/mlp/plots/cum_returns.png}
     \caption{DNN}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_industry/plots/cum_returns.png}
     \caption{GAT-industry}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_universe/plots/cum_returns.png}
     \caption{GAT-universe}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_two_graph_no_neutral/plots/cum_returns.png}
     \caption{GAT-TwoGraph}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_ind_neutral/plots/cum_returns.png}
     \caption{GAT-IndNeutral}
   \end{subfigure}
+  \par\vspace{0.5em}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_full/plots/cum_returns.png}
     \caption{GAT-full}
   \end{subfigure}
-  \par\vspace{0.4em}
+  \hfill
+  \par\vspace{0.3em}
   \caption{Medium window 各模型累積報酬曲線。}
   \label{fig:appendix_static_cum_returns_medium}
 \end{figure}
 
+\clearpage
 \begin{figure}[H]
   \centering
-  \captionsetup[subfigure]{font=scriptsize}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{font=small}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_linear/plots/cum_returns.png}
     \caption{Linear}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_xgboost/plots/cum_returns.png}
     \caption{XGBoost}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_lstm/plots/cum_returns.png}
     \caption{LSTM}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/mlp/plots/cum_returns.png}
     \caption{DNN}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_industry/plots/cum_returns.png}
     \caption{GAT-industry}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_universe/plots/cum_returns.png}
     \caption{GAT-universe}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_two_graph_no_neutral/plots/cum_returns.png}
     \caption{GAT-TwoGraph}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_ind_neutral/plots/cum_returns.png}
     \caption{GAT-IndNeutral}
   \end{subfigure}
+  \par\vspace{0.5em}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_full/plots/cum_returns.png}
     \caption{GAT-full}
   \end{subfigure}
-  \par\vspace{0.4em}
+  \hfill
+  \par\vspace{0.3em}
   \caption{Long window 各模型累積報酬曲線。}
   \label{fig:appendix_static_cum_returns_long}
 \end{figure}
@@ -331,184 +339,192 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
 
 \begin{figure}[H]
   \centering
-  \captionsetup[subfigure]{font=scriptsize}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{font=small}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_linear/plots/daily_ic.png}
     \caption{Linear}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_xgboost/plots/daily_ic.png}
     \caption{XGBoost}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_lstm/plots/daily_ic.png}
     \caption{LSTM}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/mlp/plots/daily_ic.png}
     \caption{DNN}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_industry/plots/daily_ic.png}
     \caption{GAT-industry}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_universe/plots/daily_ic.png}
     \caption{GAT-universe}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_two_graph_no_neutral/plots/daily_ic.png}
     \caption{GAT-TwoGraph}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_ind_neutral/plots/daily_ic.png}
     \caption{GAT-IndNeutral}
   \end{subfigure}
+  \par\vspace{0.5em}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_full/plots/daily_ic.png}
     \caption{GAT-full}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \caption{Short window 各模型Daily IC。}
+  \hfill
+  \par\vspace{0.3em}
+  \caption{Short window 各模型 Daily IC 時序。}
   \label{fig:appendix_static_daily_ic_short}
 \end{figure}
 
+\clearpage
 \begin{figure}[H]
   \centering
-  \captionsetup[subfigure]{font=scriptsize}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{font=small}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_linear/plots/daily_ic.png}
     \caption{Linear}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/daily_ic.png}
     \caption{XGBoost}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_lstm/plots/daily_ic.png}
     \caption{LSTM}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/mlp/plots/daily_ic.png}
     \caption{DNN}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_industry/plots/daily_ic.png}
     \caption{GAT-industry}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_universe/plots/daily_ic.png}
     \caption{GAT-universe}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_two_graph_no_neutral/plots/daily_ic.png}
     \caption{GAT-TwoGraph}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_ind_neutral/plots/daily_ic.png}
     \caption{GAT-IndNeutral}
   \end{subfigure}
+  \par\vspace{0.5em}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_full/plots/daily_ic.png}
     \caption{GAT-full}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \caption{Medium window 各模型Daily IC。}
+  \hfill
+  \par\vspace{0.3em}
+  \caption{Medium window 各模型 Daily IC 時序。}
   \label{fig:appendix_static_daily_ic_medium}
 \end{figure}
 
+\clearpage
 \begin{figure}[H]
   \centering
-  \captionsetup[subfigure]{font=scriptsize}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{font=small}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_linear/plots/daily_ic.png}
     \caption{Linear}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_xgboost/plots/daily_ic.png}
     \caption{XGBoost}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_lstm/plots/daily_ic.png}
     \caption{LSTM}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/mlp/plots/daily_ic.png}
     \caption{DNN}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_industry/plots/daily_ic.png}
     \caption{GAT-industry}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_universe/plots/daily_ic.png}
     \caption{GAT-universe}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_two_graph_no_neutral/plots/daily_ic.png}
     \caption{GAT-TwoGraph}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_ind_neutral/plots/daily_ic.png}
     \caption{GAT-IndNeutral}
   \end{subfigure}
+  \par\vspace{0.5em}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_full/plots/daily_ic.png}
     \caption{GAT-full}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \caption{Long window 各模型Daily IC。}
+  \hfill
+  \par\vspace{0.3em}
+  \caption{Long window 各模型 Daily IC 時序。}
   \label{fig:appendix_static_daily_ic_long}
 \end{figure}
 
@@ -517,183 +533,192 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
 
 \begin{figure}[H]
   \centering
-  \captionsetup[subfigure]{font=scriptsize}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{font=small}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_linear/plots/ic_distribution.png}
     \caption{Linear}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_xgboost/plots/ic_distribution.png}
     \caption{XGBoost}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/baseline_lstm/plots/ic_distribution.png}
     \caption{LSTM}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/mlp/plots/ic_distribution.png}
     \caption{DNN}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_industry/plots/ic_distribution.png}
     \caption{GAT-industry}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_universe/plots/ic_distribution.png}
     \caption{GAT-universe}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/gat_two_graph_no_neutral/plots/ic_distribution.png}
     \caption{GAT-TwoGraph}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_ind_neutral/plots/ic_distribution.png}
     \caption{GAT-IndNeutral}
   \end{subfigure}
+  \par\vspace{0.5em}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/short/dmfm_full/plots/ic_distribution.png}
     \caption{GAT-full}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \caption{Short window 各模型IC 分佈。}
+  \hfill
+  \par\vspace{0.3em}
+  \caption{Short window 各模型 IC 分佈。}
   \label{fig:appendix_static_ic_distribution_short}
 \end{figure}
 
+\clearpage
 \begin{figure}[H]
   \centering
-  \captionsetup[subfigure]{font=scriptsize}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{font=small}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_linear/plots/ic_distribution.png}
     \caption{Linear}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_xgboost/plots/ic_distribution.png}
     \caption{XGBoost}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/baseline_lstm/plots/ic_distribution.png}
     \caption{LSTM}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/mlp/plots/ic_distribution.png}
     \caption{DNN}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_industry/plots/ic_distribution.png}
     \caption{GAT-industry}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_universe/plots/ic_distribution.png}
     \caption{GAT-universe}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/gat_two_graph_no_neutral/plots/ic_distribution.png}
     \caption{GAT-TwoGraph}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_ind_neutral/plots/ic_distribution.png}
     \caption{GAT-IndNeutral}
   \end{subfigure}
+  \par\vspace{0.5em}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/medium/dmfm_full/plots/ic_distribution.png}
     \caption{GAT-full}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \caption{Medium window 各模型IC 分佈。}
+  \hfill
+  \par\vspace{0.3em}
+  \caption{Medium window 各模型 IC 分佈。}
   \label{fig:appendix_static_ic_distribution_medium}
 \end{figure}
 
+\clearpage
 \begin{figure}[H]
   \centering
-  \captionsetup[subfigure]{font=scriptsize}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \captionsetup[subfigure]{font=small}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_linear/plots/ic_distribution.png}
     \caption{Linear}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_xgboost/plots/ic_distribution.png}
     \caption{XGBoost}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/baseline_lstm/plots/ic_distribution.png}
     \caption{LSTM}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/mlp/plots/ic_distribution.png}
     \caption{DNN}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_industry/plots/ic_distribution.png}
     \caption{GAT-industry}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_universe/plots/ic_distribution.png}
     \caption{GAT-universe}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \begin{subfigure}[t]{0.31\textwidth}
+  \par\vspace{0.5em}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/gat_two_graph_no_neutral/plots/ic_distribution.png}
     \caption{GAT-TwoGraph}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_ind_neutral/plots/ic_distribution.png}
     \caption{GAT-IndNeutral}
   \end{subfigure}
+  \par\vspace{0.5em}
   \hfill
-  \begin{subfigure}[t]{0.31\textwidth}
+  \begin{subfigure}[t]{0.47\textwidth}
     \centering
     \includegraphics[width=\textwidth]{runs_gpu_static_to_20250601/static/long/dmfm_full/plots/ic_distribution.png}
     \caption{GAT-full}
   \end{subfigure}
-  \par\vspace{0.4em}
-  \caption{Long window 各模型IC 分佈。}
+  \hfill
+  \par\vspace{0.3em}
+  \caption{Long window 各模型 IC 分佈。}
   \label{fig:appendix_static_ic_distribution_long}
 \end{figure}
+
