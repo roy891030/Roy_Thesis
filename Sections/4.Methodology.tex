@@ -19,21 +19,15 @@
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{img/ch4_fig_overview_heatmap.png}
-  \caption{各訓練視窗下六類模型之核心指標概覽（共 18 條紀錄）。GAT family 為 GAT-universe、GAT-industry、GAT-TwoGraph 三個模型之組內平均；GAT-neutral 為 GAT-IndNeutral、GAT-full 兩個模型之組內平均；其餘類別（Linear、LSTM、XGBoost、DNN）均為單一模型結果。各欄以全域排名白→藍漸層著色，粗體為全表最高值。}
+  \caption{各訓練視窗下六類模型之核心指標概覽。}
   \label{fig:ch4_overview_heatmap}
 \end{figure}
 
-圖~\ref{fig:ch4_overview_heatmap} 以漸層色彩呈現完整 27 組實驗（依模型類別匯整為 18 條紀錄）的整體格局，讀者可快速定位各視窗與模型類別的相對強弱。三點關鍵觀察作為後續各節分析的座標：
+圖~\ref{fig:ch4_overview_heatmap} 彙整全體 27 組實驗之結果，依六類模型類別與三個訓練視窗呈現，共 18 條紀錄。其中 GAT family 為 GAT-universe、GAT-industry、GAT-TwoGraph 三個模型之組內平均；GAT-neutral 為 GAT-IndNeutral、GAT-full 兩個模型之組內平均；其餘四類（Linear、LSTM、XGBoost、DNN）均為單一模型結果。各欄以全域排名為基礎著色：白色代表 18 條紀錄中的最低排名，藍色代表最高排名；粗體標示各欄全表最高值。
 
-\begin{enumerate}
-  \item \textbf{訓練視窗為最大分水嶺。}短期視窗除 XGBoost 外，所有模型的 Sharpe 比率均為負值，年化報酬亦多數顯著偏負，顯示短訓練樣本對模型穩健性的制約遠大於架構設計本身的差異；中、長期視窗下排序訊號品質（Daily IC、ICIR）與投資組合績效則整體轉為正向。
+由圖可歸納三項結構性規律，供後續各節分析參照。第一，訓練視窗對模型表現具決定性影響。短期視窗下除 XGBoost 外所有模型的 Sharpe 比率均為負值，年化報酬亦多數顯著偏負，顯示短訓練樣本對跨期穩健性的制約明顯高於架構設計本身的差異；中、長期視窗下排序訊號品質（Daily IC、ICIR）與投資組合績效則整體改善。第二，長期視窗下中性化系列在多項指標上同時達到最高水準。GAT-neutral 在長期視窗的 Daily IC（0.0587）、ICIR（0.760）與 Sharpe 比率（1.826）均為全表最高，顯示分層中性化設計在充足訓練樣本下具有跨指標的一致優勢。第三，XGBoost 的長期視窗年化報酬（43.37\%）雖為全表最高，但訓練集與測試集資訊係數之差距高達 38 倍（詳見第~\ref{subsec:xgboost_results}~節），說明以單一報酬指標評估訊號品質存在明顯侷限。
 
-  \item \textbf{長期視窗中性化系列最具競爭力。}GAT-neutral 在長期視窗的 Daily IC（0.0587）、ICIR（0.760）與 Sharpe 比率（1.826）三項指標均為全表最高（粗體），色深在同視窗內亦屬最深，顯示分層中性化設計在長期視窗下具有穩健的跨指標優勢。
-
-  \item \textbf{XGBoost 年化報酬最高，但訊號穩健性待驗。}長期視窗下 XGBoost 的年化報酬（43.37\%）為全表最高，然其訓練集與測試集資訊係數之差距高達 38 倍（詳見第~\ref{subsec:xgboost_results}~節），提示以單一報酬指標評估模型品質的侷限。
-\end{enumerate}
-
-後續各節以此全局視角為基礎，依序深入分析各模型類別的結構差異與效益來源。
+後續各節以此全局分布為起點，依序就模型架構差異、圖拓樸設計與中性化機制展開細部分析。
 
 \FloatBarrier
 

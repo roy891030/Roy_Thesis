@@ -844,12 +844,6 @@ def fig_overview_heatmap():
         ax.plot([xv, xv], [0, TOTAL_Y],
                 color="white", lw=0.8, zorder=4)
 
-    # ── Footnote ─────────────────────────────────────────────────────────────
-    ax.text(0, -0.55,
-            "Colour gradient per column: white (lowest rank) → blue (highest rank) across all 18 rows.  Bold = best value per column.",
-            ha="left", va="top", fontsize=8, color=MIDGRAY,
-            transform=ax.transData, clip_on=False)
-
     fig.savefig(OUT_DIR + "/ch4_fig_overview_heatmap.png",
                 dpi=300, bbox_inches="tight")
     plt.close(fig)
