@@ -129,12 +129,12 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
 \clearpage
 \subsection{全模型關鍵指標彙整}
 
-圖 \ref{fig:appendix_static_gpu_key_metrics_by_window} 將表 \ref{tab:appendix_unified_key_metrics} 的數據依 Short、Medium 與 Long 三個訓練視窗分面呈現，並標示資料期間、訓練日數、測試日數與測試期間。
+圖 \ref{fig:appendix_static_gpu_key_metrics_by_window} 聚焦全文主要比較的 Daily IC、ICIR 與 Sharpe，並以欄位對照 Short、Medium 與 Long 三個訓練視窗。色彩越深代表指標越高，粗框標示各視窗的最佳模型；完整指標與數值列於表 \ref{tab:appendix_unified_key_metrics}。
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{img/appendix_static_gpu_key_metrics_by_window.png}
-  \caption{全模型關鍵指標之分視窗視覺化}
+  \includegraphics[width=\textwidth]{img/appendix_static_gpu_key_metrics_by_window.pdf}
+  \caption{全模型核心指標之跨視窗比較}
   \label{fig:appendix_static_gpu_key_metrics_by_window}
 \end{figure}
 
@@ -721,4 +721,3 @@ zscore\_close\_60 & 標準化 & 60 日 z-score：$\frac{P_t-\mu_{60}}{\sigma_{60
   \caption{Long window 各模型 IC 分佈。}
   \label{fig:appendix_static_ic_distribution_long}
 \end{figure}
-
