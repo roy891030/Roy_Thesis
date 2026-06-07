@@ -681,6 +681,181 @@ def fig_topology_heatmap():
     print("✓  ch4_fig_topology_heatmap.png")
 
 
+# ╔══════════════════════════════════════════════════════════════════════════╗
+# ║  Fig H – §4.1 Overview heatmap: 3 windows × 6 categories × 4 metrics  ║
+# ╚══════════════════════════════════════════════════════════════════════════╝
+def fig_overview_heatmap():
+    """
+    Condensed summary table for §4.1.
+    Rows: 18 (3 windows × 6 model categories), grouped by window.
+    Cols: Daily IC | ICIR | Sharpe | Ann. Ret.(%)
+    Gradient: white→thesisBlue by GLOBAL column rank (rank 0..17).
+    Best value per column globally shown in bold.
+    Left stripe: Amber=Short, Forest=Medium, Blue=Long.
+    """
+    from matplotlib.patches import Rectangle
+
+    BLUE_RGB = np.array([43/255, 108/255, 176/255])
+
+    windows    = ["Short", "Medium", "Long"]
+    win_colors = [AMBER, FOREST, BLUE]
+
+    cats = ["Linear", "LSTM", "XGBoost", "DNN", "GAT family", "GAT-neutral"]
+
+    # Data sourced from results_portfolio_metrics.tex
+    raw = {
+        ("Short",  "Linear"):      [0.0036, 0.037, -0.423, -16.92],
+        ("Short",  "LSTM"):        [0.0057, 0.048, -0.223,  -9.28],
+        ("Short",  "XGBoost"):     [0.0261, 0.209,  0.010,   0.44],
+        ("Short",  "DNN"):         [0.0396, 0.408, -0.098,  -4.06],
+        ("Short",  "GAT family"):  [0.0275, 0.247, -0.036,  -1.54],
+        ("Short",  "GAT-neutral"): [0.0278, 0.253, -0.084,  -3.68],
+        ("Medium", "Linear"):      [0.0253, 0.278,  0.561,  18.14],
+        ("Medium", "LSTM"):        [0.0359, 0.345,  0.776,  26.53],
+        ("Medium", "XGBoost"):     [0.0485, 0.430,  0.938,  32.10],
+        ("Medium", "DNN"):         [0.0453, 0.581,  0.980,  31.88],
+        ("Medium", "GAT family"):  [0.0454, 0.478,  0.842,  29.21],
+        ("Medium", "GAT-neutral"): [0.0548, 0.583,  0.873,  29.86],
+        ("Long",   "Linear"):      [0.0214, 0.235,  0.884,  22.32],
+        ("Long",   "LSTM"):        [0.0418, 0.479,  1.336,  33.45],
+        ("Long",   "XGBoost"):     [0.0408, 0.459,  1.714,  43.37],
+        ("Long",   "DNN"):         [0.0535, 0.726,  1.564,  35.35],
+        ("Long",   "GAT family"):  [0.0502, 0.569,  1.704,  37.87],
+        ("Long",   "GAT-neutral"): [0.0587, 0.760,  1.826,  40.36],
+    }
+
+    col_names  = ["Daily IC", "ICIR", "Sharpe", "Ann. Ret. (%)"]
+    col_fmts   = [".4f", ".3f", ".3f", ".1f"]
+    col_suffix = ["", "", "", "%"]
+    n_cols     = len(col_names)
+
+    # Flatten 18 rows in window-then-category order
+    flat_keys = [(w, c) for w in windows for c in cats]
+    flat_vals = [raw[k] for k in flat_keys]
+    n_data    = len(flat_vals)   # 18
+
+    # Global column rank normalisation (0=worst → 1=best)
+    norm_mat     = np.zeros((n_data, n_cols))
+    best_per_col = []
+    for col in range(n_cols):
+        col_arr = [flat_vals[r][col] for r in range(n_data)]
+        order   = np.argsort(col_arr)          # ascending rank
+        ranks   = np.empty(n_data)
+        for rank_pos, orig_idx in enumerate(order):
+            ranks[orig_idx] = rank_pos
+        norm_mat[:, col] = ranks / (n_data - 1)
+        best_per_col.append(int(np.argmax(col_arr)))
+
+    # ── layout constants ─────────────────────────────────────────────────────
+    STRIPE_W = 0.12   # left window-colour stripe
+    NAME_W   = 1.90   # model-category name column
+    COL_W    = 1.60   # each metric column  (4 × 1.60 = 6.40)
+    TOTAL_X  = STRIPE_W + NAME_W + n_cols * COL_W   # = 8.42
+
+    TOP_H  = 0.80    # column-name header row
+    GRP_H  = 0.55    # window-group header row
+    ROW_H  = 0.78    # each data row
+    # Total Y: 1 top-header + 3 × (1 group-header + 6 data rows)
+    TOTAL_Y = TOP_H + 3 * (GRP_H + 6 * ROW_H)   # = 0.80 + 3×5.23 = 16.49
+
+    fig, ax = plt.subplots(figsize=(9, 8))
+    ax.set_xlim(0, TOTAL_X)
+    ax.set_ylim(0, TOTAL_Y)
+    ax.axis("off")
+
+    # ── colour helpers ───────────────────────────────────────────────────────
+    def blue_grad(t):
+        return (1.0 + (BLUE_RGB[0]-1.0)*t,
+                1.0 + (BLUE_RGB[1]-1.0)*t,
+                1.0 + (BLUE_RGB[2]-1.0)*t, 1.0)
+
+    def text_color(rgba):
+        lum = 0.2126*rgba[0] + 0.7152*rgba[1] + 0.0722*rgba[2]
+        return "white" if lum < 0.50 else DARK
+
+    def add_rect(x, y, w, h, fc, ec="white", lw=0.6):
+        ax.add_patch(Rectangle((x, y), w, h,
+                                facecolor=fc, edgecolor=ec,
+                                linewidth=lw, zorder=2))
+
+    def cell_text(x, y, w, h, txt, fs=9, fc=DARK, fw="normal"):
+        ax.text(x + w/2, y + h/2, txt,
+                ha="center", va="center", fontsize=fs,
+                color=fc, fontweight=fw, zorder=3, clip_on=False)
+
+    # ── Top column-name header ───────────────────────────────────────────────
+    y_top = TOTAL_Y - TOP_H
+    add_rect(0, y_top, TOTAL_X, TOP_H, DARK, ec=DARK)
+    cell_text(0, y_top, STRIPE_W + NAME_W, TOP_H,
+              "Model Category", fs=10, fc="white", fw="bold")
+    for j, cname in enumerate(col_names):
+        cx = STRIPE_W + NAME_W + j * COL_W
+        cell_text(cx, y_top, COL_W, TOP_H, cname,
+                  fs=10, fc="white", fw="bold")
+
+    # ── Three window groups (top to bottom: Short → Medium → Long) ──────────
+    for wi, (wname, wcolor) in enumerate(zip(windows, win_colors)):
+        block_h = GRP_H + 6 * ROW_H
+        y_grp   = TOTAL_Y - TOP_H - wi * block_h - GRP_H
+
+        # Window group header
+        add_rect(0, y_grp, TOTAL_X, GRP_H, wcolor, ec=wcolor)
+        ax.text(TOTAL_X / 2, y_grp + GRP_H / 2,
+                f"{wname}  Window",
+                ha="center", va="center", fontsize=10.5,
+                color="white", fontweight="bold", zorder=3)
+
+        # Six model-category rows
+        for ci, cat in enumerate(cats):
+            row_global = wi * 6 + ci
+            y_row = y_grp - (ci + 1) * ROW_H
+
+            row_bg = "#F7F9FC" if ci % 2 == 0 else "white"
+            add_rect(0, y_row, TOTAL_X, ROW_H, row_bg, ec="none")
+            add_rect(0, y_row, STRIPE_W, ROW_H, wcolor, ec="none")
+            # left-align model name slightly
+            ax.text(STRIPE_W + 0.12, y_row + ROW_H/2, cat,
+                    ha="left", va="center", fontsize=9.5,
+                    color=DARK, fontweight="normal", zorder=3)
+
+            for col in range(n_cols):
+                t   = norm_mat[row_global, col]
+                bg  = blue_grad(t)
+                tc  = text_color(bg)
+                cx  = STRIPE_W + NAME_W + col * COL_W
+                add_rect(cx, y_row, COL_W, ROW_H, bg)
+                val_str = format(flat_vals[row_global][col], col_fmts[col]) \
+                          + col_suffix[col]
+                is_best = (row_global == best_per_col[col])
+                cell_text(cx, y_row, COL_W, ROW_H, val_str,
+                          fs=9, fc=tc,
+                          fw="bold" if is_best else "normal")
+
+    # ── Horizontal dividers between groups ───────────────────────────────────
+    for wi in range(3):
+        block_h = GRP_H + 6 * ROW_H
+        y_line  = TOTAL_Y - TOP_H - wi * block_h
+        ax.plot([0, TOTAL_X], [y_line, y_line],
+                color="white", lw=1.4, zorder=5)
+
+    # ── Vertical grid between metric columns ─────────────────────────────────
+    for j in range(n_cols + 1):
+        xv = STRIPE_W + NAME_W + j * COL_W
+        ax.plot([xv, xv], [0, TOTAL_Y],
+                color="white", lw=0.8, zorder=4)
+
+    # ── Footnote ─────────────────────────────────────────────────────────────
+    ax.text(0, -0.55,
+            "Colour gradient per column: white (lowest rank) → blue (highest rank) across all 18 rows.  Bold = best value per column.",
+            ha="left", va="top", fontsize=8, color=MIDGRAY,
+            transform=ax.transData, clip_on=False)
+
+    fig.savefig(OUT_DIR + "/ch4_fig_overview_heatmap.png",
+                dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    print("✓  ch4_fig_overview_heatmap.png")
+
+
 # ── run all ──────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     fig_baseline_comparison()
@@ -690,4 +865,5 @@ if __name__ == "__main__":
     fig_window_effect()
     fig_topology_heatmap()
     fig_portfolio_metrics_overview()
-    print("\nAll 7 Chapter-4 figures generated successfully.")
+    fig_overview_heatmap()
+    print("\nAll 8 Chapter-4 figures generated successfully.")
