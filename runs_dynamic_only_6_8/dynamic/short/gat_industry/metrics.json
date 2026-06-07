@@ -1,0 +1,82 @@
+{
+  "model_type": "factor_variant",
+  "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/short",
+  "weights": "artifacts_dynamic_only_6_8/dynamic/short/gat_industry_best.pt",
+  "model_config": {
+    "in_dim": 56,
+    "num_features": 56,
+    "hidden_dim": 64,
+    "heads": 2,
+    "dropout": 0.1,
+    "edge_dim": 2,
+    "variant": "gat_industry",
+    "use_factor_attention": true
+  },
+  "dynamic_graphs": {
+    "enabled": true,
+    "edge_dim": 2,
+    "edge_attr": [
+      "abs_corr",
+      "signed_corr"
+    ],
+    "lookback": 60,
+    "min_obs": 20,
+    "industry_selection": "top_pct",
+    "industry_top_k": null,
+    "industry_top_pct": 0.5,
+    "universe_top_k": 100,
+    "avg_industry_edges": 18937.23611111111,
+    "avg_universe_edges": 100953.57638888889,
+    "max_industry_edges": 19908,
+    "max_universe_edges": 107060
+  },
+  "checkpoint_format_version": 1,
+  "checkpoint_is_legacy": false,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "train_days": 414,
+    "val_days": 46,
+    "test_days": 116
+  },
+  "train": {
+    "MSE": 0.004349340684711933,
+    "RMSE": 0.06594953134565805,
+    "MAE": 0.05020905286073685,
+    "IC": 0.23690016539357023,
+    "DailyIC": 0.24248027485798157,
+    "ICIR": 3.5255228209726472,
+    "DirAcc": 0.5867424161390246,
+    "IC_ind": 0.2084612121392281,
+    "DailyIC_ind": 0.2127990622709538,
+    "ICIR_ind": 3.1066601452492946,
+    "n": 425169
+  },
+  "val": {
+    "MSE": 0.004380830563604832,
+    "RMSE": 0.0661878430197331,
+    "MAE": 0.05126560851931572,
+    "IC": 0.06266867882802762,
+    "DailyIC": 0.06195568826768051,
+    "ICIR": 0.9973714048215199,
+    "DirAcc": 0.5549720984490792,
+    "IC_ind": 0.05242018017996281,
+    "DailyIC_ind": 0.052287160519151825,
+    "ICIR_ind": 0.7897229128969698,
+    "n": 48088
+  },
+  "test": {
+    "MSE": 0.004424524027854204,
+    "RMSE": 0.06651709575631068,
+    "MAE": 0.051778800785541534,
+    "IC": 0.02290141850479738,
+    "DailyIC": 0.02297367378474309,
+    "ICIR": 0.21213814664444308,
+    "DirAcc": 0.5485274100126423,
+    "IC_ind": 0.02631494260077403,
+    "DailyIC_ind": 0.02600651612815975,
+    "ICIR_ind": 0.30526956329027527,
+    "n": 122576
+  },
+  "has_industry_labels": true
+}

@@ -1,0 +1,127 @@
+{
+  "model_type": "factor_variant",
+  "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/medium",
+  "weights": "artifacts_dynamic_only_6_8/dynamic/medium/gat_universe_best.pt",
+  "model_config": {
+    "in_dim": 56,
+    "num_features": 56,
+    "hidden_dim": 64,
+    "heads": 2,
+    "dropout": 0.1,
+    "edge_dim": 2,
+    "variant": "gat_universe",
+    "use_factor_attention": true
+  },
+  "dynamic_graphs": {
+    "enabled": true,
+    "edge_dim": 2,
+    "edge_attr": [
+      "abs_corr",
+      "signed_corr"
+    ],
+    "lookback": 60,
+    "min_obs": 20,
+    "industry_selection": "top_pct",
+    "industry_top_k": null,
+    "industry_top_pct": 0.5,
+    "universe_top_k": 100,
+    "avg_industry_edges": 18739.916934964585,
+    "avg_universe_edges": 99474.42369607212,
+    "max_industry_edges": 19908,
+    "max_universe_edges": 107060
+  },
+  "checkpoint_format_version": 1,
+  "checkpoint_is_legacy": false,
+  "plots_dir": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/plots",
+  "plots": {
+    "daily_ic": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/plots/daily_ic.png",
+    "pred_dispersion": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/plots/pred_dispersion.png",
+    "hitrate_by_month": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/plots/hitrate_by_month.png",
+    "ic_distribution": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/plots/ic_distribution.png",
+    "cum_returns": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/plots/cum_returns.png",
+    "attention_weights": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/plots/attention_weights.png"
+  },
+  "benchmark_path": "GAT0050.csv",
+  "top_pct": 0.1,
+  "rebalance_days": 5,
+  "horizon": 5,
+  "split": {
+    "train_ratio": 0.8,
+    "val_ratio": 0.1,
+    "val_days": 124,
+    "test_days": 311
+  },
+  "strategy": {
+    "n": 63,
+    "mean_return": 0.006273299632113545,
+    "std_return": 0.050728617702711296,
+    "annual_return": 0.31617430145852266,
+    "annual_volatility": 0.3601374595387195,
+    "sharpe": 0.8779267279318657,
+    "hit_rate": 0.6031746031746031,
+    "total_return": 0.3648763915024613,
+    "cagr": 0.2825510407011371,
+    "max_drawdown": -0.30104592081942183
+  },
+  "strategy_aligned": {
+    "n": 63,
+    "mean_return": 0.006273299632113545,
+    "std_return": 0.050728617702711296,
+    "annual_return": 0.31617430145852266,
+    "annual_volatility": 0.3601374595387195,
+    "sharpe": 0.8779267279318657,
+    "hit_rate": 0.6031746031746031,
+    "total_return": 0.3648763915024613,
+    "cagr": 0.2825510407011371,
+    "max_drawdown": -0.30104592081942183
+  },
+  "benchmark": {
+    "n": 63,
+    "mean_return": 0.005063255590419556,
+    "std_return": 0.03843390717692153,
+    "annual_return": 0.25518808175714564,
+    "annual_volatility": 0.27285367348189526,
+    "sharpe": 0.9352561704619243,
+    "hit_rate": 0.5555555555555556,
+    "total_return": 0.31203484656098057,
+    "cagr": 0.24267137872239952,
+    "max_drawdown": -0.2737194557753494
+  },
+  "alignment": {
+    "start": "2024-02-16",
+    "end": "2025-05-29",
+    "n_periods": 63
+  },
+  "top_attention_features": [
+    {
+      "rank": 1,
+      "feature": "roll_max_20",
+      "attention_weight": 0.03193914145231247
+    },
+    {
+      "rank": 2,
+      "feature": "pct_to_low_20",
+      "attention_weight": 0.030100801959633827
+    },
+    {
+      "rank": 3,
+      "feature": "macd",
+      "attention_weight": 0.029049934819340706
+    },
+    {
+      "rank": 4,
+      "feature": "roll_min_5",
+      "attention_weight": 0.02873149700462818
+    },
+    {
+      "rank": 5,
+      "feature": "ps",
+      "attention_weight": 0.028626075014472008
+    }
+  ],
+  "excess": {
+    "annual_return": 0.06098621970137702,
+    "total_return": 0.052841544941480745,
+    "sharpe": -0.05732944253005867
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "started_at": "2026-06-08T01:35:43",
+  "mode": "full",
+  "models": [
+    "mlp",
+    "gat_industry",
+    "gat_universe",
+    "gat_two_graph_no_neutral",
+    "dmfm_ind_neutral",
+    "dmfm_full"
+  ],
+  "baseline_models": [
+    "linear",
+    "xgboost",
+    "lstm"
+  ],
+  "windows": [
+    "short",
+    "medium",
+    "long"
+  ],
+  "graph_modes": [
+    "dynamic"
+  ],
+  "baseline_graph_mode": "dynamic",
+  "train_ratio": 0.8,
+  "val_ratio": 0.1,
+  "dynamic_graphs": true,
+  "graph_lookback": 60,
+  "graph_min_obs": 20,
+  "industry_top_pct": 0.5,
+  "industry_top_k": null,
+  "universe_top_k": 100,
+  "parallel_jobs": 2,
+  "preload_gpu": true,
+  "artifacts": {
+    "dynamic": {
+      "short": "artifacts_dynamic_only_6_8/dynamic/short",
+      "medium": "artifacts_dynamic_only_6_8/dynamic/medium",
+      "long": "artifacts_dynamic_only_6_8/dynamic/long"
+    }
+  },
+  "runs": [
+    {
+      "window": "short",
+      "model": "mlp",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/short",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/short/mlp",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/short/mlp/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/short/mlp/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/short/mlp/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "short",
+      "model": "gat_industry",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/short",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/short/gat_industry",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/short/gat_industry/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/short/gat_industry/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/short/gat_industry/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "short",
+      "model": "gat_universe",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/short",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/short/gat_universe",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/short/gat_universe/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/short/gat_universe/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/short/gat_universe/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "short",
+      "model": "gat_two_graph_no_neutral",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/short",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/short/gat_two_graph_no_neutral",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/short/gat_two_graph_no_neutral/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/short/gat_two_graph_no_neutral/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/short/gat_two_graph_no_neutral/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "short",
+      "model": "dmfm_ind_neutral",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/short",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/short/dmfm_ind_neutral",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/short/dmfm_ind_neutral/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/short/dmfm_ind_neutral/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/short/dmfm_ind_neutral/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "short",
+      "model": "dmfm_full",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/short",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/short/dmfm_full",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/short/dmfm_full/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/short/dmfm_full/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/short/dmfm_full/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "medium",
+      "model": "mlp",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/medium",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/medium/mlp",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/medium/mlp/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/medium/mlp/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/medium/mlp/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "medium",
+      "model": "gat_industry",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/medium",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/medium/gat_industry",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/medium/gat_industry/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/medium/gat_industry/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/medium/gat_industry/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "medium",
+      "model": "gat_universe",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/medium",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/medium/gat_universe",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/medium/gat_universe/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "medium",
+      "model": "gat_two_graph_no_neutral",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/medium",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/medium/gat_two_graph_no_neutral",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/medium/gat_two_graph_no_neutral/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/medium/gat_two_graph_no_neutral/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/medium/gat_two_graph_no_neutral/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "medium",
+      "model": "dmfm_ind_neutral",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/medium",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/medium/dmfm_ind_neutral",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/medium/dmfm_ind_neutral/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/medium/dmfm_ind_neutral/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/medium/dmfm_ind_neutral/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "medium",
+      "model": "dmfm_full",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/medium",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/medium/dmfm_full",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/medium/dmfm_full/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/medium/dmfm_full/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/medium/dmfm_full/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "long",
+      "model": "mlp",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/long",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/long/mlp",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/long/mlp/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/long/mlp/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/long/mlp/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "long",
+      "model": "gat_industry",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/long",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/long/gat_industry",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/long/gat_industry/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/long/gat_industry/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/long/gat_industry/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "long",
+      "model": "gat_universe",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/long",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/long/gat_universe",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/long/gat_universe/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/long/gat_universe/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/long/gat_universe/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "long",
+      "model": "gat_two_graph_no_neutral",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/long",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/long/gat_two_graph_no_neutral",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/long/gat_two_graph_no_neutral/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/long/gat_two_graph_no_neutral/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/long/gat_two_graph_no_neutral/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "long",
+      "model": "dmfm_ind_neutral",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/long",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/long/dmfm_ind_neutral",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/long/dmfm_ind_neutral/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/long/dmfm_ind_neutral/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/long/dmfm_ind_neutral/plots",
+      "graph_mode": "dynamic"
+    },
+    {
+      "window": "long",
+      "model": "dmfm_full",
+      "artifact_dir": "artifacts_dynamic_only_6_8/dynamic/long",
+      "output_dir": "runs_dynamic_only_6_8/dynamic/long/dmfm_full",
+      "metrics_json": "runs_dynamic_only_6_8/dynamic/long/dmfm_full/metrics.json",
+      "portfolio_json": "runs_dynamic_only_6_8/dynamic/long/dmfm_full/portfolio.json",
+      "plots_dir": "runs_dynamic_only_6_8/dynamic/long/dmfm_full/plots",
+      "graph_mode": "dynamic"
+    }
+  ],
+  "dry_run": false,
+  "finished_at": "2026-06-08T03:51:21"
+}
