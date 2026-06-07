@@ -185,32 +185,34 @@ def fig_xgboost_gap():
     ratio = [tr / te for tr, te in zip(train, test)]
 
     with plt.rc_context(RC):
-        fig, ax = plt.subplots(figsize=(7.5, 5.5))
+        fig, ax = plt.subplots(figsize=(7.5, 6.2))   # taller figure → more headroom
 
         b1 = ax.bar(x - bw/2, train, width=bw, color=BLUE,
                     label="Train IC", edgecolor="white", linewidth=0.5, zorder=3)
         b2 = ax.bar(x + bw/2, test,  width=bw, color=CRIMSON,
                     label="Test IC",  edgecolor="white", linewidth=0.5, zorder=3)
 
-        # ── Train IC: label inside bar (white text) ──
+        # ── Train IC: value inside bar (white bold) ──
         for bar, v in zip(b1, train):
             cx = bar.get_x() + bar.get_width() / 2
-            cy = v * 0.55           # vertically centred in upper-middle of bar
+            cy = v * 0.50           # mid-point of bar
             ax.text(cx, cy, f"{v:.4f}",
                     ha="center", va="center", fontsize=11,
                     color="white", fontweight="bold", clip_on=False)
 
-        # ── Test IC: label above bar (dark text, small) ──
+        # ── Test IC: value above bar (dark small text) ──
         for bar, v in zip(b2, test):
             ax.text(bar.get_x() + bar.get_width() / 2,
                     v + 0.012, f"{v:.4f}",
                     ha="center", va="bottom", fontsize=10,
                     color=DARK, clip_on=False)
 
-        # ── ratio annotation: well above train bar ──
+        # ── ratio annotation: centred between bars, far above ──
+        # Use group centre (xi) so text is fully inside the axes for every window
         for xi, (tr, r) in enumerate(zip(train, ratio)):
-            ax.text(xi - bw/2,               # centred on the train bar
-                    tr + 0.070, f"×{r:.1f}",
+            ax.text(xi,                 # group centre, not train-bar centre
+                    tr + 0.150,         # much higher than +0.07 to avoid any overlap
+                    f"×{r:.1f}",
                     ha="center", va="bottom", fontsize=14,
                     fontweight="bold", color=DARK, clip_on=False)
 
@@ -221,8 +223,10 @@ def fig_xgboost_gap():
                      color=DARK, fontsize=15, pad=8)
         ax_style(ax)
         ax.legend(frameon=False, fontsize=13, handlelength=1.4, loc="upper left")
-        # leave ample room above the tallest bar + ratio text
-        ax.set_ylim(0, max(train) * 1.35)
+        # explicit xlim with left margin so Short-window text is never clipped
+        ax.set_xlim(-0.55, 2.55)
+        # ample top room for the tallest annotation (train_long + 0.15 + text height)
+        ax.set_ylim(0, max(train) * 1.52)
 
         fig.savefig(os.path.join(OUT_DIR, "ch4_fig_xgboost_gap.png"))
         plt.close(fig)
@@ -520,6 +524,163 @@ def fig_portfolio_metrics_overview():
         print("✓  ch4_fig_portfolio_metrics_overview.png")
 
 
+# ╔══════════════════════════════════════════════════════════════════════════╗
+# ║  Fig G – Topology heatmap (replaces bar chart, matches Table 11)       ║
+# ╚══════════════════════════════════════════════════════════════════════════╝
+def fig_topology_heatmap():
+    """
+    Coloured-cell table showing Long-window topology comparison.
+    Each column is independently normalised white→thesisBlue (rank 0→1).
+    Max DD: higher value (less negative) = better = darker.
+    Left stripe: Amber=DNN, Blue=GAT, Purple=GAT-neutral.
+    """
+    from matplotlib.patches import Rectangle
+
+    BLUE_RGB = np.array([43/255, 108/255, 176/255])
+
+    row_names  = ["DNN", "GAT-universe", "GAT-industry",
+                  "GAT-TwoGraph", "GAT-IndNeutral", "GAT-full"]
+    row_stripes = [AMBER, BLUE, BLUE, BLUE, PURPLE, PURPLE]
+
+    col_names  = ["Daily IC", "ICIR", "Sharpe", "Ann. Ret.", "Total Ret.", "Max DD", "DirAcc"]
+    col_vals   = [
+        [0.0535, 0.0452, 0.0543, 0.0512, 0.0590, 0.0583],   # Daily IC
+        [0.726,  0.526,  0.677,  0.504,  0.786,  0.735],    # ICIR
+        [1.564,  1.506,  1.779,  1.827,  1.803,  1.849],    # Sharpe
+        [35.35,  36.01,  38.13,  39.45,  38.70,  42.02],    # Ann Ret %
+        [106.45, 108.10, 120.83, 127.33, 123.60, 139.08],   # Total Ret %
+        [-21.79, -23.12, -20.44, -19.23, -20.11, -21.86],   # Max DD % (higher=better)
+        [42.58,  42.93,  57.51,  57.50,  57.51,  57.52],    # DirAcc %
+    ]
+    col_fmts   = [".4f", ".3f", ".3f", ".1f", ".1f", ".2f", ".1f"]
+    # suffix per column
+    col_suffix = ["", "", "", "%", "%", "%", "%"]
+
+    n_rows = len(row_names)
+    n_cols = len(col_names)
+
+    # ── coordinate layout ──────────────────────────────────────────────────
+    STRIPE_W = 0.12    # left type stripe
+    NAME_W   = 2.20    # model-name column
+    COL_W    = 1.54    # each metric column   (7 × 1.54 = 10.78)
+    TOTAL_X  = STRIPE_W + NAME_W + n_cols * COL_W    # ≈ 13.10
+
+    HDR_H = 1.0    # header row
+    ROW_H = 1.0    # each data row
+    TOTAL_Y = HDR_H + n_rows * ROW_H   # 7.0
+
+    fig, ax = plt.subplots(figsize=(13, 4.8))
+    ax.set_xlim(0, TOTAL_X)
+    ax.set_ylim(0, TOTAL_Y)
+    ax.axis("off")
+
+    # ── helpers ────────────────────────────────────────────────────────────
+    def blue_grad(t):
+        r = 1.0 + (BLUE_RGB[0] - 1.0) * t
+        g = 1.0 + (BLUE_RGB[1] - 1.0) * t
+        b = 1.0 + (BLUE_RGB[2] - 1.0) * t
+        return (r, g, b, 1.0)
+
+    def text_color(rgba):
+        lum = 0.2126*rgba[0] + 0.7152*rgba[1] + 0.0722*rgba[2]
+        return "white" if lum < 0.50 else DARK
+
+    def col_norm(vals):
+        lo, hi = min(vals), max(vals)
+        if hi == lo: return [0.5]*len(vals)
+        return [(v - lo)/(hi - lo) for v in vals]
+
+    def add_rect(x, y, w, h, fc, ec="white", lw=0.8):
+        ax.add_patch(Rectangle((x, y), w, h,
+                               facecolor=fc, edgecolor=ec, linewidth=lw, zorder=2))
+
+    def cell_text(x, y, w, h, txt, fs=10, fc=DARK, fw="normal"):
+        ax.text(x + w/2, y + h/2, txt,
+                ha="center", va="center", fontsize=fs,
+                color=fc, fontweight=fw, zorder=3, clip_on=False)
+
+    # ── header row (y = n_rows to n_rows+HDR_H) ───────────────────────────
+    y_hdr = n_rows * ROW_H
+    # header background
+    add_rect(0, y_hdr, TOTAL_X, HDR_H, BLUE, ec=BLUE)
+    # "Model" header
+    cell_text(STRIPE_W, y_hdr, NAME_W, HDR_H, "Model",
+              fs=11, fc="white", fw="bold")
+    # metric column headers
+    for j, cname in enumerate(col_names):
+        cx = STRIPE_W + NAME_W + j * COL_W
+        cell_text(cx, y_hdr, COL_W, HDR_H, cname,
+                  fs=10.5, fc="white", fw="bold")
+
+    # ── data rows ──────────────────────────────────────────────────────────
+    for i, (rname, rstripe) in enumerate(zip(row_names, row_stripes)):
+        # rows drawn top-to-bottom → row 0 = topmost → y = (n_rows-1)*ROW_H
+        y_row = (n_rows - 1 - i) * ROW_H
+
+        # alternating row background
+        row_bg = "#F7F9FC" if i % 2 == 0 else "white"
+        add_rect(0, y_row, TOTAL_X, ROW_H, row_bg, ec="none")
+
+        # type stripe
+        add_rect(0, y_row, STRIPE_W, ROW_H, rstripe, ec="none")
+
+        # model name
+        cell_text(STRIPE_W, y_row, NAME_W, ROW_H, rname,
+                  fs=10.5, fc=DARK, fw="bold")
+
+    # ── metric cells ───────────────────────────────────────────────────────
+    for j, (cname, cvals, cfmt, csuf) in enumerate(
+            zip(col_names, col_vals, col_fmts, col_suffix)):
+
+        norms = col_norm(cvals)
+        best_idx = int(np.argmax(cvals))   # highest = best for all cols
+
+        for i, (v, t) in enumerate(zip(cvals, norms)):
+            y_row = (n_rows - 1 - i) * ROW_H
+            cx    = STRIPE_W + NAME_W + j * COL_W
+
+            bg = blue_grad(t)
+            add_rect(cx, y_row, COL_W, ROW_H, bg)
+
+            # value string
+            val_str = format(v, cfmt) + csuf
+            tc = text_color(bg)
+            fs_cell = 10 if i != best_idx else 10
+            fw_cell = "bold" if i == best_idx else "normal"
+            cell_text(cx, y_row, COL_W, ROW_H, val_str,
+                      fs=fs_cell, fc=tc, fw=fw_cell)
+
+    # ── white grid lines ────────────────────────────────────────────────────
+    # horizontal (between rows)
+    for r in range(n_rows + 1):
+        y_line = r * ROW_H
+        ax.plot([0, TOTAL_X], [y_line, y_line],
+                color="white", lw=0.9, zorder=4)
+    # vertical (between metric columns, and name/metric boundary)
+    for j in range(n_cols + 1):
+        x_line = STRIPE_W + NAME_W + j * COL_W
+        ax.plot([x_line, x_line], [0, TOTAL_Y],
+                color="white", lw=0.9, zorder=4)
+
+    # ── legend for stripe colours ───────────────────────────────────────────
+    from matplotlib.patches import Patch
+    legend_handles = [
+        Patch(facecolor=AMBER,  label="DNN (no graph)"),
+        Patch(facecolor=BLUE,   label="GAT topology family"),
+        Patch(facecolor=PURPLE, label="GAT-neutral family"),
+    ]
+    ax.legend(handles=legend_handles,
+              loc="upper center", bbox_to_anchor=(0.5, -0.04),
+              ncol=3, frameon=False, fontsize=11,
+              handlelength=1.2, handletextpad=0.4)
+
+    fig.tight_layout(pad=0.2)
+    fig.savefig(OUT_DIR + "/ch4_fig_topology_heatmap.png",
+                dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    print("✓  ch4_fig_topology_heatmap.png")
+
+
 # ── run all ──────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     fig_baseline_comparison()
@@ -527,5 +688,6 @@ if __name__ == "__main__":
     fig_topology_comparison()
     fig_neutralization()
     fig_window_effect()
+    fig_topology_heatmap()
     fig_portfolio_metrics_overview()
-    print("\nAll 6 Chapter-4 figures generated successfully.")
+    print("\nAll 7 Chapter-4 figures generated successfully.")

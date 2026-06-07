@@ -398,7 +398,7 @@ E_I, \quad E_U.
 \begin{equation}
 S_{i,t}=\left[x_{i,t-L+1},x_{i,t-L+2},\ldots,x_{i,t}\right]\in\mathbb{R}^{L\times 56},
 \end{equation}
-並以 \(y_{i,t}\) 作為目標值。模型僅沿著單一股票自身的時間軸更新隱藏狀態，最後一步隱藏狀態再經線性映射形成預測：
+並以 \(y_{i,t}\) 作為目標值。模型僅沿著單一股票自身的時間軸更新隱藏狀態，最後一步隱藏狀態再經線性擬合形成預測：
 \begin{equation}
 h_{i,t}=\mathrm{LSTM}(S_{i,t}), \qquad
 \widehat{y}_{i,t}=w_o^{\top}h_{i,t}+b_o .
