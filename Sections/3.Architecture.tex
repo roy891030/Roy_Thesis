@@ -670,7 +670,7 @@ C_U^t=C_I^t-H_U^t.
 \label{fig:factor_ablation_full}
 \end{figure}
 
-上述各消融模型之輸入表示再經 DNN 輸出層產生每檔股票的深度因子或預測分數。此設計使本文能辨識績效改善來自單純非線性特徵編碼、產業圖、全市場圖、雙圖聚合，或分層中性化。
+上述各消融模型之輸入表示再經 DNN 輸出層產生每檔股票的預測訊號或分數。此設計使本文能辨識績效改善來自單純非線性特徵編碼、產業圖、全市場圖、雙圖聚合，或分層中性化。
 
 \subsection{因子注意力與解釋性輸出}
 \label{subsec:factor_attention}
@@ -679,7 +679,7 @@ C_U^t=C_I^t-H_U^t.
 \begin{equation}
 A^t=\mathrm{softmax}\!\left(\mathrm{LeakyReLU}(W_a\widetilde{F}^{t}+b_a)\right),
 \end{equation}
-其中 softmax 於每一檔股票的特徵維度上計算，使同一股票內各特徵權重可相互比較。注意力加權後的特徵再經一個小型前饋網路估計輔助因子：
+其中 softmax 於每一檔股票的特徵維度上計算，使同一股票內各特徵權重可相互比較。注意力加權後的特徵再經一個小型前饋網路估計輔助訊號：
 \begin{equation}
 \widehat{f}^{\,t}=g_a\!\left(A^t\odot \widetilde{F}^{t}\right).
 \end{equation}
@@ -736,7 +736,7 @@ A^t=\mathrm{softmax}\!\left(\mathrm{LeakyReLU}(W_a\widetilde{F}^{t}+b_a)\right),
 \subsection{總損失函數}
 本文的預測任務旨在於每一交易日的股票截面中產生可用於選股排序的訊號。均方誤差重視報酬幅度的數值貼近程度，對截面排序品質的對應較為間接。實證金融與量化選股文獻常以資訊係數衡量模型分數與未來報酬之截面相關性，並將其視為選股訊號品質的重要指標 \cite{zhang2020information_coefficient,ding2022timevarying_ic,qian2004active_risk}。基於此，本文將損失函數設計為排序導向目標，並以相同損失函數比較 DNN、GAT 類模型與中性化模型。
 
-令第 \(t\) 日之主預測因子為 \(f^t\in\mathbb{R}^{N_t}\)，注意力輔助因子為 \(\widehat{f}^{\,t}\in\mathbb{R}^{N_t}\)，截面去均值標籤為 \(y^t\in\mathbb{R}^{N_t}\)。對每一個有效交易日，本文使用下列損失函數：
+令第 \(t\) 日之主預測訊號為 \(f^t\in\mathbb{R}^{N_t}\)，注意力輔助訊號為 \(\widehat{f}^{\,t}\in\mathbb{R}^{N_t}\)，截面去均值標籤為 \(y^t\in\mathbb{R}^{N_t}\)。對每一個有效交易日，本文使用下列損失函數：
 \begin{equation}
 \mathcal{L}_t
 =\lambda_{attn} d_t
@@ -744,9 +744,9 @@ A^t=\mathrm{softmax}\!\left(\mathrm{LeakyReLU}(W_a\widetilde{F}^{t}+b_a)\right),
 -\lambda_b b_t .
 \label{eq:loss}
 \end{equation}
-其中 \(d_t\) 為注意力一致性項，\(IC_t\) 為當日截面資訊係數，\(b_t\) 為由截面回歸估計的因子收益。訓練時對所有有效訓練日逐日計算式 \ref{eq:loss}，並以交易日平均作為該輪訓練的目標函數。此設計同時回應三個需求：第一，模型分數需與未來相對報酬具正相關；第二，注意力輔助因子不應與主預測因子完全脫節；第三，若主因子可在當日截面回歸中取得正向因子收益，損失函數應給予小幅獎勵。
+其中 \(d_t\) 為注意力一致性項，\(IC_t\) 為當日截面資訊係數，\(b_t\) 為由截面回歸估計的因子收益。訓練時對所有有效訓練日逐日計算式 \ref{eq:loss}，並以交易日平均作為該輪訓練的目標函數。此設計同時回應三個需求：第一，模型分數需與未來相對報酬具正相關；第二，注意力輔助訊號不應與主預測訊號完全脫節；第三，若主預測訊號可在當日截面回歸中取得正向因子收益，損失函數應給予小幅獎勵。
 
-\textbf{注意力一致性項：}因子注意力模組產生的 \(\widehat{f}^{\,t}\) 主要用於輔助解釋，而非取代主預測因子。為避免兩者僅因尺度差異造成懲罰，本文先對 \(f^t\) 與 \(\widehat{f}^{\,t}\) 進行截面標準化：
+\textbf{注意力一致性項：}因子注意力模組產生的 \(\widehat{f}^{\,t}\) 主要用於輔助解釋，而非取代主預測訊號。為避免兩者僅因尺度差異造成懲罰，本文先對 \(f^t\) 與 \(\widehat{f}^{\,t}\) 進行截面標準化：
 \begin{equation}
 z(f_i^t)=\frac{f_i^t-\bar{f}^{\,t}}{\sigma_f^t+\epsilon},
 \qquad
@@ -759,7 +759,7 @@ z(\widehat{f}_i^{\,t})=
 d_t=\frac{1}{N_t}\sum_{i=1}^{N_t}
 \left(z(f_i^t)-z(\widehat{f}_i^{\,t})\right)^2 .
 \end{equation}
-此項使注意力輔助路徑在排序形狀上貼近主預測因子，進而提高後續特徵偏好分析的模型內部一致性。由於注意力權重本身不必然等同於因果解釋，本文仍將其定位為診斷性與描述性輸出 \cite{jain2019attention_not_explanation,serrano2019attention_interpretable}。
+此項使注意力輔助路徑在排序形狀上貼近主預測訊號，進而提高後續特徵偏好分析的模型內部一致性。由於注意力權重本身不必然等同於因果解釋，本文仍將其定位為診斷性與描述性輸出 \cite{jain2019attention_not_explanation,serrano2019attention_interpretable}。
 
 \textbf{截面資訊係數項：}資訊係數以 Pearson 相關係數衡量模型分數與未來報酬在同一交易日截面上的共變動方向：
 \begin{equation}
