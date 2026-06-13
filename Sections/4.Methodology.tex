@@ -181,13 +181,13 @@ H_1^{\mathrm{DM}} &: \mathbb{E}[d_t] > 0,
 
 \input{Sections/tables/results_stat_tests.tex}
 
-表~\ref{tab:results_stat_tests} 呈現三類檢定的完整結果，可從三個層次解讀：
+表~\ref{tab:results_stat_tests} 呈現全部 GAT 模型與 DNN 的三類檢定完整結果，可從三個層次解讀：
 
-\textbf{（一）平均 IC 顯著異於零。} Newey-West HAC $t$ 檢定顯示，GAT-IndNeutral（$t = 11.76$，$p < 0.001$）與 DNN（$t = 10.83$，$p < 0.001$）的長期視窗平均 IC 在高度顯著水準下大於零，排除「訊號源自噪音」的可能性。
+\textbf{（一）平均 IC 顯著異於零。}Newey-West HAC $t$ 檢定顯示，全部五個 GAT 模型與 DNN 之長期視窗平均 IC 均在 $p < 0.001$ 水準下顯著大於零，$t$ 統計量介於 6.879（GAT-TwoGraph）至 11.759（GAT-IndNeutral）之間。此結果確認各模型排序訊號均非源於噪音，但不能區分模型間的相對優劣。
 
-\textbf{（二）ICIR 信賴區間下界大於零。} Block Bootstrap 95\% 信賴區間顯示，GAT-IndNeutral 之 ICIR CI 為 $[0.624,\ 0.957]$，DNN 為 $[0.563,\ 0.901]$，兩者下界均遠大於零，確認跨期排序一致性本身具統計意義，而非少數極端月份所致。
+\textbf{（二）ICIR 信賴區間下界均大於零。}Block Bootstrap 95\% 信賴區間顯示，全部模型之 ICIR 信賴區間下界均遠大於零，GAT-IndNeutral 的 CI 為 $[0.624,\ 0.957]$，GAT-full 為 $[0.574,\ 0.909]$，DNN 為 $[0.563,\ 0.901]$。ICIR 較低的模型（GAT-TwoGraph $[0.365,\ 0.663]$、GAT-universe $[0.395,\ 0.667]$）信賴區間仍完全大於零，確認所有模型之跨期排序一致性本身具統計意義。
 
-\textbf{（三）DM 配對比較呈現明確分層。} 以 DNN 為非圖基準，GAT-IndNeutral（DM $= 2.330$，$p = 0.010$）與 GAT-full（$p = 0.031$）對 DNN 的每日 IC 差異在 5\% 顯著水準下可統計辨識；而 GAT-industry、GAT-universe 與 GAT-TwoGraph 均未達顯著水準（$p > 0.05$）。此分層揭示：中性化機制——而非圖連結本身——是圖模型對 DNN 可統計驗證的增量來源。
+\textbf{（三）DM 配對比較呈現明確分層。}以 DNN 為非圖基準，GAT-IndNeutral（DM $= 2.330$，$p = 0.010$）與 GAT-full（$p = 0.031$）對 DNN 的每日 IC 差異在 5\% 顯著水準下可統計辨識；GAT-industry、GAT-universe 與 GAT-TwoGraph 均未達顯著水準（$p > 0.05$），GAT-universe 的 DM $= -1.983$ 更顯示其 IC 在點估計上低於 DNN。此分層揭示：(A)(B) 確認所有模型訊號均真實存在，(C) 則進一步說明\textbf{中性化機制——而非圖連結本身——才是圖模型相對 DNN 可統計驗證的增量來源}。
 
 \subsection{因子注意力特徵之描述性分析}
 \label{subsec:attention_analysis}

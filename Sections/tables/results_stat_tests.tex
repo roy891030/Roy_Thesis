@@ -1,7 +1,7 @@
-% Statistical hypothesis tests for GAT-IndNeutral section (long window)
+% Statistical hypothesis tests — full GAT model set, long window
 \begin{table}[H]
 \centering
-\caption{長期視窗統計穩健性檢定結果彙整}
+\caption{長期視窗統計穩健性檢定結果彙整（全 GAT 模型）}
 \label{tab:results_stat_tests}
 \begingroup
 \scriptsize
@@ -13,10 +13,18 @@
 檢定方法 & 模型 & 統計量 & $p$ 值（一尾） & 顯著水準 & 結論 \\
 \midrule
 \multicolumn{6}{l}{\textit{(A) Newey-West HAC $t$ 檢定 \quad $H_0: \mathbb{E}[\mathrm{IC}_t] = 0$，lag $= 5$}} \\[2pt]
-NW $t$-test & GAT-IndNeutral & $t = 11.76$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\
-NW $t$-test & DNN（比較基準） & $t = 10.83$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\[4pt]
+NW $t$-test & GAT-industry    & $t = 10.013$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\
+NW $t$-test & GAT-universe    & $t =  7.755$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\
+NW $t$-test & GAT-TwoGraph    & $t =  6.879$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\
+NW $t$-test & GAT-IndNeutral  & $t = 11.759$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\
+NW $t$-test & GAT-full        & $t = 10.965$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\
+NW $t$-test & DNN（比較基準） & $t = 10.827$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\[4pt]
 \multicolumn{6}{l}{\textit{(B) Block Bootstrap ICIR 95\% 信賴區間 \quad（block size $= 10$，$B = 2000$）}} \\[2pt]
-Bootstrap CI & GAT-IndNeutral & $\widehat{\mathrm{ICIR}} = 0.786$ & $[0.624,\ 0.957]$ & $**$ & CI 下界 $> 0$ \\
+Bootstrap CI & GAT-industry    & $\widehat{\mathrm{ICIR}} = 0.677$ & $[0.538,\ 0.832]$ & $**$ & CI 下界 $> 0$ \\
+Bootstrap CI & GAT-universe    & $\widehat{\mathrm{ICIR}} = 0.526$ & $[0.395,\ 0.667]$ & $**$ & CI 下界 $> 0$ \\
+Bootstrap CI & GAT-TwoGraph    & $\widehat{\mathrm{ICIR}} = 0.504$ & $[0.365,\ 0.663]$ & $**$ & CI 下界 $> 0$ \\
+Bootstrap CI & GAT-IndNeutral  & $\widehat{\mathrm{ICIR}} = 0.786$ & $[0.624,\ 0.957]$ & $**$ & CI 下界 $> 0$ \\
+Bootstrap CI & GAT-full        & $\widehat{\mathrm{ICIR}} = 0.735$ & $[0.574,\ 0.909]$ & $**$ & CI 下界 $> 0$ \\
 Bootstrap CI & DNN（比較基準） & $\widehat{\mathrm{ICIR}} = 0.726$ & $[0.563,\ 0.901]$ & $**$ & CI 下界 $> 0$ \\[4pt]
 \multicolumn{6}{l}{\textit{(C) Diebold-Mariano 配對比較 \quad $H_0: \mathbb{E}[d_t] = 0$，$d_t = \mathrm{IC}_{A,t} - \mathrm{IC}_{\mathrm{DNN},t}$}} \\[2pt]
 DM test & GAT-industry    & $DM =  0.244$ & $0.404$ & n.s. & 未能拒絕 $H_0$ \\
@@ -32,6 +40,8 @@ DM test & GAT-full        & $DM =  1.873$ & $0.031$ & $*$  & 拒絕 $H_0$ \\
 {\footnotesize
   DM 檢定標準誤以 Newey-West HAC 估計量計算（lag $= 5$）；顯著水準：$*$ $p < 0.05$，$**$ $p < 0.01$，$***$ $p < 0.001$。
   (B) 欄之 $p$ 值欄位填入 95\% Bootstrap 信賴區間。
+  \textbf{關鍵觀察：}(A)(B) 顯示全部 GAT 模型之平均 IC 與 ICIR 均顯著大於零；
+  (C) 則揭示僅 GAT-IndNeutral 與 GAT-full 對 DNN 具有統計可辨識的排序能力增益。
 }
 \endgroup
 \end{table}
