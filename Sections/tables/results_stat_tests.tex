@@ -1,0 +1,32 @@
+% Statistical hypothesis tests for GAT-IndNeutral section (long window)
+\begin{table}[H]
+\centering
+\caption{長期視窗統計穩健性檢定結果彙整}
+\label{tab:results_stat_tests}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{@{}llcccl@{}}
+\toprule
+檢定方法 & 模型 & 統計量 & $p$ 值（一尾） & 顯著水準 & 結論 \\
+\midrule
+\multicolumn{6}{l}{\textit{(A) Newey-West HAC $t$ 檢定 \quad $H_0: \mathbb{E}[\mathrm{IC}_t] = 0$，lag $= 5$}} \\[2pt]
+NW $t$-test & GAT-IndNeutral & $t = 11.76$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\
+NW $t$-test & DNN（比較基準） & $t = 10.83$ & $< 0.001$ & $***$ & 拒絕 $H_0$ \\[4pt]
+\multicolumn{6}{l}{\textit{(B) Block Bootstrap ICIR 95\% 信賴區間 \quad（block size $= 10$，$B = 2000$）}} \\[2pt]
+Bootstrap CI & GAT-IndNeutral & $\widehat{\mathrm{ICIR}} = 0.786$ & $[0.624,\ 0.957]$ & $**$ & CI 下界 $> 0$ \\
+Bootstrap CI & DNN（比較基準） & $\widehat{\mathrm{ICIR}} = 0.726$ & $[0.563,\ 0.901]$ & $**$ & CI 下界 $> 0$ \\[4pt]
+\multicolumn{6}{l}{\textit{(C) Diebold-Mariano 配對比較 \quad $H_0: \mathbb{E}[d_t] = 0$，$d_t = \mathrm{IC}_{A,t} - \mathrm{IC}_{\mathrm{DNN},t}$}} \\[2pt]
+DM test & GAT-industry    & $DM =  0.244$ & $0.404$ & n.s. & 未能拒絕 $H_0$ \\
+DM test & GAT-universe    & $DM = -1.983$ & $0.976$ & n.s. & 未能拒絕 $H_0$ \\
+DM test & GAT-TwoGraph    & $DM = -0.394$ & $0.653$ & n.s. & 未能拒絕 $H_0$ \\
+DM test & GAT-IndNeutral  & $DM =  2.330$ & $0.010$ & $**$ & 拒絕 $H_0$ \\
+DM test & GAT-full        & $DM =  1.873$ & $0.031$ & $*$  & 拒絕 $H_0$ \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\smallskip
+
+{\footnotesize
+  DM 檢定標準誤以 Newey-West HAC 估計量計算（lag $= 5$）；顯著水準：$*$ $p < 0.05$，$**$ $p < 0.01$，$***$ $p < 0.001$。
+  (B) 欄之 $p$ 值欄位填入 95\% Bootstrap 信賴區間。
+}
+\end{table}

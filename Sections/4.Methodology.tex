@@ -30,13 +30,13 @@
 由表~\ref{tab:results_overview_master} 與圖~\ref{fig:ch4_portfolio_metrics_overview} 可歸納四項全局規律，作為後續各節分析的敘事框架：
 
 \begin{enumerate}
+  \item \textbf{高報酬不等於高訊號品質：訓練/測試比值是必要診斷。}XGBoost 長期總報酬達 143\%，但訓練/測試 IC 比值僅 0.16，訓練 ICIR 高達 1.841 而測試僅 0.459，為全模型過擬合程度最嚴重者（詳見第~\ref{subsec:xgboost_results}~節）。表中「比值」欄位提供各模型泛化能力的快速診斷，並應與 ICIR 及 Sharpe 指標共同解讀。DNN 的 ICIR（0.726）在長期視窗為非圖模型上界，是評估圖結構增量貢獻的合理基準。
+
+  \item \textbf{圖拓樸設計是必要非充分條件。}GAT-universe（全市場圖）在長期視窗的 ICIR 僅 0.526，低於 GAT-industry（0.677）與 DNN（0.726），說明圖若不搭配具有經濟意義的拓樸，將因過度平滑化降低截面辨識力。統計檢定進一步確認：僅中性化延伸模型（GAT-IndNeutral、GAT-full）能在 Diebold-Mariano 配對檢定中顯著優於 DNN（詳見第~\ref{subsec:graph_contribution}~節）。
+
+  \item \textbf{GAT 中性化系列在長期視窗多指標同時領先。}長期視窗 GAT-IndNeutral 取得最高 ICIR（0.786），GAT-full 取得最高 Sharpe 比率（1.849）；兩者的優勢隨訓練資料充足而持續擴大。
+
   \item \textbf{訓練視窗長度是可投資性的前提閾值。}短期視窗（116 天）下九個模型的 Sharpe 比率介於 $-0.423$ 至 $+0.057$，年化報酬普遍為負；中、長期視窗 Sharpe 整體轉正，長期最佳達 1.849。訓練資料規模決定排序訊號能否轉化為可投資報酬，優先於架構設計本身。
-
-  \item \textbf{GAT 中性化系列在長期視窗多指標同時領先。}長期視窗 GAT-IndNeutral 取得最高 ICIR（0.786），GAT-full 取得最高 Sharpe 比率（1.849）；兩者的優勢隨訓練資料充足而持續擴大。DNN 的 ICIR（0.726）在長期視窗為非圖模型上界，是評估圖結構增量貢獻的合理基準。
-
-  \item \textbf{圖拓樸設計是必要非充分條件。}GAT-universe（全市場圖）在長期視窗的 ICIR 僅 0.526，低於 GAT-industry（0.677）與 DNN（0.726），說明圖若不搭配具有經濟意義的拓樸，可能因過度平滑化降低截面辨識力。統計檢定進一步確認：僅中性化延伸模型（GAT-IndNeutral、GAT-full）能在 Diebold-Mariano 配對檢定中顯著優於 DNN（詳見第~\ref{subsec:graph_contribution}~節）。
-
-  \item \textbf{高報酬不等於高訊號品質：訓練/測試比值是必要診斷。}XGBoost 長期總報酬達 143\%，但訓練/測試 IC 比值僅 0.16，訓練 ICIR 高達 1.841 而測試僅 0.459，為全模型過擬合程度最嚴重者（詳見第~\ref{subsec:xgboost_results}~節）。表中「比值」欄位提供各模型泛化能力的快速診斷，並應與 ICIR 及 Sharpe 指標共同解讀。
 \end{enumerate}
 
 \FloatBarrier
