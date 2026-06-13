@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>Dynamic vs Static Graph — Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8fafc; color: #1e293b; font-size: 14px; }
+  .header { background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%); color: white; padding: 32px 40px; }
+  .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .header .meta { font-size: 13px; opacity: 0.85; }
+  .main { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
+  .section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  h2 { font-size: 18px; font-weight: 600; color: #0f172a; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0; }
+  h3 { font-size: 15px; font-weight: 600; color: #334155; margin: 16px 0 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f1f5f9; padding: 8px 10px; text-align: center; font-weight: 600; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; }
+  tr:hover td { background: #f8fafc; }
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); text-align: center; }
+  .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 8px; }
+  .card-value { font-size: 26px; font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
+  .card-desc { font-size: 12px; color: #94a3b8; line-height: 1.4; }
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 16px; }
+  .chart-box { position: relative; height: 280px; }
+  .heatmap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .heatmap-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .heatmap-table th { background: #f1f5f9; padding: 6px 8px; font-weight: 600; font-size: 11px; }
+  .heatmap-table td { padding: 6px 10px; text-align: center; font-weight: 600; }
+  .legend { display: flex; gap: 16px; align-items: center; margin-bottom: 12px; font-size: 12px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  .tab-bar { display: flex; gap: 4px; margin-bottom: 20px; }
+  .tab { padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; background: #f1f5f9; color: #64748b; border: none; }
+  .tab.active { background: #1e40af; color: white; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .param-table { width: 100%; border-collapse: collapse; }
+  .param-table th { text-align: left; background: #f8fafc; padding: 8px 12px; font-size: 12px; color: #64748b; border-bottom: 1px solid #e2e8f0; }
+  .param-table td { padding: 8px 12px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-green { background: #dcfce7; color: #16a34a; }
+  .badge-gray { background: #f1f5f9; color: #475569; }
+  @media (max-width: 900px) { .cards { grid-template-columns: 1fr 1fr; } .chart-grid { grid-template-columns: 1fr; } .heatmap-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Dynamic vs Static Graph — Experiment Dashboard</h1>
+  <div class="meta">
+    Static run: 2026-05-24 → 2026-05-25 &nbsp;|&nbsp;
+    Dynamic run: 2026-06-08 01:35 → 03:51 &nbsp;|&nbsp;
+    Test period: ~2024-12-03 to 2025-05-29 (116 days) &nbsp;|&nbsp;
+    Models: 6 shared + 3 baseline (static only) &nbsp;|&nbsp;
+    Windows: Short / Medium / Long
+  </div>
+</div>
+<div class="main">
+
+  <!-- Summary Cards -->
+  <div class="cards">
+    
+<div class="card">
+  <div class="card-title">Win Rate (IC↑)</div>
+  <div class="card-value" style="color:#1e40af">13/18</div>
+  <div class="card-desc">72% of model-window pairs show higher IC in dynamic mode</div>
+</div>
+<div class="card">
+  <div class="card-title">Avg IC Δ</div>
+  <div class="card-value" style="color:#16a34a">+0.0039</div>
+  <div class="card-desc">Mean (dynamic − static) test IC across all model-window pairs</div>
+</div>
+<div class="card">
+  <div class="card-title">Avg ICIR Δ</div>
+  <div class="card-value" style="color:#1e40af">-0.0045</div>
+  <div class="card-desc">Mean (dynamic − static) test ICIR across all model-window pairs</div>
+</div>
+<div class="card">
+  <div class="card-title">Best Gain</div>
+  <div class="card-value" style="color:#1e40af">GAT-Universe<br>medium</div>
+  <div class="card-desc">IC Δ = +0.0185</div>
+</div>
+  </div>
+
+  <!-- Parameter Comparison -->
+  <div class="section">
+    <h2>Experiment Configuration Comparison</h2>
+    <div style="overflow-x:auto">
+    <table class="param-table">
+      <thead><tr>
+        <th>Parameter</th>
+        <th>Static (runs_gpu_static_to_20250601)</th>
+        <th>Dynamic (runs_dynamic_only_6_8)</th>
+        <th>Difference</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Graph mode</td><td><span class="badge badge-gray">static</span></td><td><span class="badge badge-blue">dynamic</span></td><td>Static = fixed graph; Dynamic = rebuilt each day via rolling correlation</td></tr>
+        <tr><td>Dynamic graphs</td><td>false</td><td>true</td><td>—</td></tr>
+        <tr><td>Graph lookback (dynamic only)</td><td>N/A</td><td>60 days</td><td>Window for rolling correlation computation</td></tr>
+        <tr style="background:#fef9c3"><td><b>Industry 建圖方式</b></td><td><b>同產業全連接（intra-industry full clique）</b></td><td><b>滾動相關 top 50%（top_pct=0.5）</b></td><td>Static 更稠密；Dynamic 依相關性篩選</td></tr>
+        <tr style="background:#fef9c3"><td><b>Universe 建圖方式</b></td><td><b>完全圖（N×N，全連接）</b></td><td><b>滾動相關 top-100 per node</b></td><td>Static N²全連；Dynamic 稀疏有權重</td></tr>
+        <tr><td>Industry 邊數</td><td>~27,923（固定，每日相同）</td><td>avg ~18,937 / day（每日變動）</td><td>Static 反而更多邊</td></tr>
+        <tr><td>Universe 邊數</td><td>594,441（固定，771×771完全圖）</td><td>avg ~100,954 / day（每日變動）</td><td>Static 約多 5.9× 邊</td></tr>
+        <tr><td>Edge attributes</td><td>無（edge_dim=null）</td><td>abs_corr, signed_corr（edge_dim=2）</td><td>Dynamic 每條邊帶相關係數特徵</td></tr>
+        <tr><td>Parallel jobs</td><td>1</td><td>2</td><td>—</td></tr>
+        <tr><td>Baseline models included</td><td>Yes (linear, XGBoost, LSTM)</td><td>No</td><td>Dynamic run skipped baselines</td></tr>
+        <tr><td>Split ratio (train/val/test)</td><td>0.8 / 0.1 / 0.1</td><td>0.8 / 0.1 / 0.1</td><td>Same</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- IC/ICIR Bar Charts -->
+  <div class="section">
+    <h2>Test IC &amp; ICIR Comparison — by Window</h2>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#3b82f6"></span>Static IC</span>
+      <span><span class="legend-dot" style="background:#1d4ed8"></span>Dynamic IC</span>
+      <span><span class="legend-dot" style="background:#f59e0b;margin-left:12px"></span>Static ICIR</span>
+      <span><span class="legend-dot" style="background:#d97706"></span>Dynamic ICIR</span>
+    </div>
+    <div class="tab-bar" id="ic-tabs">
+      <button class="tab active" onclick="switchTab('ic','short',this)">Short</button>
+      <button class="tab" onclick="switchTab('ic','medium',this)">Medium</button>
+      <button class="tab" onclick="switchTab('ic','long',this)">Long</button>
+    </div>
+    <div id="ic-short" class="tab-content active" style="position:relative;height:300px"><canvas id="ic-chart-short"></canvas></div>
+    <div id="ic-medium" class="tab-content" style="position:relative;height:300px"><canvas id="ic-chart-medium"></canvas></div>
+    <div id="ic-long" class="tab-content" style="position:relative;height:300px"><canvas id="ic-chart-long"></canvas></div>
+  </div>
+
+  <!-- Portfolio Bar Charts -->
+  <div class="section">
+    <h2>Portfolio Performance Comparison — by Window</h2>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#64748b"></span>Static</span>
+      <span><span class="legend-dot" style="background:#3b82f6"></span>Dynamic</span>
+    </div>
+    <div class="tab-bar" id="port-tabs">
+      <button class="tab active" onclick="switchTab('port','short',this)">Short</button>
+      <button class="tab" onclick="switchTab('port','medium',this)">Medium</button>
+      <button class="tab" onclick="switchTab('port','long',this)">Long</button>
+    </div>
+    <div id="port-short" class="tab-content active">
+      <div class="chart-grid">
+        <div class="chart-box"><canvas id="port-sharpe-short"></canvas></div>
+        <div class="chart-box"><canvas id="port-cagr-short"></canvas></div>
+        <div class="chart-box"><canvas id="port-maxdd-short"></canvas></div>
+      </div>
+    </div>
+    <div id="port-medium" class="tab-content">
+      <div class="chart-grid">
+        <div class="chart-box"><canvas id="port-sharpe-medium"></canvas></div>
+        <div class="chart-box"><canvas id="port-cagr-medium"></canvas></div>
+        <div class="chart-box"><canvas id="port-maxdd-medium"></canvas></div>
+      </div>
+    </div>
+    <div id="port-long" class="tab-content">
+      <div class="chart-grid">
+        <div class="chart-box"><canvas id="port-sharpe-long"></canvas></div>
+        <div class="chart-box"><canvas id="port-cagr-long"></canvas></div>
+        <div class="chart-box"><canvas id="port-maxdd-long"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delta Heatmaps -->
+  <div class="section">
+    <h2>Δ Heatmaps — Dynamic minus Static (test set)</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:16px">Green = Dynamic improves over Static &nbsp;|&nbsp; Red = Dynamic regresses &nbsp;|&nbsp; Gray ≈ neutral</p>
+    <div id="heatmap-container"></div>
+  </div>
+
+  <!-- Full Metrics Tables -->
+  <div class="section">
+    <h2>Full Test-Set Metrics Tables</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:20px">
+      Static | Dynamic | Δ (Dynamic−Static). Baselines are static-only (no dynamic equivalent).
+    </p>
+    
+<div class="section">
+  <h2>Short (5d) Window — Test Set</h2>
+  <div style="overflow-x:auto">
+  <table>
+    <thead>
+      <tr>
+        <th rowspan='2'>Model</th>
+        <th colspan='3' style='border-left:2px solid #e5e7eb'>IC</th><th colspan='3' style='border-left:2px solid #e5e7eb'>ICIR</th><th colspan='3' style='border-left:2px solid #e5e7eb'>DirAcc</th><th colspan='3' style='border-left:2px solid #e5e7eb'>Sharpe</th><th colspan='3' style='border-left:2px solid #e5e7eb'>CAGR</th><th colspan='3' style='border-left:2px solid #e5e7eb'>MaxDD</th><th colspan='3' style='border-left:2px solid #e5e7eb'>MSE</th>
+      </tr>
+      <tr><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style='font-weight:600'>MLP</td><td style='text-align:right'>0.0363</td><td style='text-align:right'>0.0341</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0022</td><td style='text-align:right'>0.4084</td><td style='text-align:right'>0.3088</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0995</td><td style='text-align:right'>45.23%</td><td style='text-align:right'>45.14%</td><td style='text-align:right;color:#6b7280'>-0.09%</td><td style='text-align:right'>-0.0982</td><td style='text-align:right'>0.0604</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.1586</td><td style='text-align:right'>-11.94%</td><td style='text-align:right'>-6.61%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+5.33%</td><td style='text-align:right'>-26.14%</td><td style='text-align:right'>-27.93%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-1.79%</td><td style='text-align:right'>0.0094</td><td style='text-align:right'>0.0106</td><td style='text-align:right;color:#dc2626;font-weight:600'>+0.0012</td></tr><tr><td style='font-weight:600'>GAT-Industry</td><td style='text-align:right'>0.0267</td><td style='text-align:right'>0.0229</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0038</td><td style='text-align:right'>0.2344</td><td style='text-align:right'>0.2121</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0223</td><td style='text-align:right'>45.13%</td><td style='text-align:right'>54.85%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+9.72%</td><td style='text-align:right'>0.0574</td><td style='text-align:right'>0.0189</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0385</td><td style='text-align:right'>-6.66%</td><td style='text-align:right'>-8.33%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-1.67%</td><td style='text-align:right'>-27.89%</td><td style='text-align:right'>-28.12%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.23%</td><td style='text-align:right'>0.0062</td><td style='text-align:right'>0.0044</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.0018</td></tr><tr><td style='font-weight:600'>GAT-Universe</td><td style='text-align:right'>0.0287</td><td style='text-align:right'>0.0304</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0017</td><td style='text-align:right'>0.2579</td><td style='text-align:right'>0.1987</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0591</td><td style='text-align:right'>54.85%</td><td style='text-align:right'>54.86%</td><td style='text-align:right;color:#6b7280'>+0.01%</td><td style='text-align:right'>-0.0926</td><td style='text-align:right'>-0.0258</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0668</td><td style='text-align:right'>-12.44%</td><td style='text-align:right'>-10.78%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+1.67%</td><td style='text-align:right'>-27.94%</td><td style='text-align:right'>-29.21%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-1.27%</td><td style='text-align:right'>0.0030</td><td style='text-align:right'>0.0033</td><td style='text-align:right;color:#6b7280'>+0.0004</td></tr><tr><td style='font-weight:600'>GAT-TwoGraph</td><td style='text-align:right'>0.0267</td><td style='text-align:right'>0.0347</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0080</td><td style='text-align:right'>0.2496</td><td style='text-align:right'>0.2817</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0320</td><td style='text-align:right'>45.22%</td><td style='text-align:right'>45.14%</td><td style='text-align:right;color:#6b7280'>-0.08%</td><td style='text-align:right'>-0.0728</td><td style='text-align:right'>-0.0085</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0643</td><td style='text-align:right'>-11.74%</td><td style='text-align:right'>-9.62%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+2.13%</td><td style='text-align:right'>-28.12%</td><td style='text-align:right'>-28.56%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.44%</td><td style='text-align:right'>0.0023</td><td style='text-align:right'>0.0062</td><td style='text-align:right;color:#dc2626;font-weight:600'>+0.0039</td></tr><tr><td style='font-weight:600'>DMFM-IndNeut</td><td style='text-align:right'>0.0324</td><td style='text-align:right'>0.0322</td><td style='text-align:right;color:#6b7280'>-0.0002</td><td style='text-align:right'>0.3200</td><td style='text-align:right'>0.2901</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0299</td><td style='text-align:right'>45.20%</td><td style='text-align:right'>54.83%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+9.63%</td><td style='text-align:right'>0.0029</td><td style='text-align:right'>0.0509</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0480</td><td style='text-align:right'>-7.92%</td><td style='text-align:right'>-6.88%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+1.03%</td><td style='text-align:right'>-25.97%</td><td style='text-align:right'>-26.89%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.92%</td><td style='text-align:right'>0.0121</td><td style='text-align:right'>0.0166</td><td style='text-align:right;color:#dc2626;font-weight:600'>+0.0044</td></tr><tr><td style='font-weight:600'>DMFM-Full</td><td style='text-align:right'>0.0211</td><td style='text-align:right'>0.0338</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0127</td><td style='text-align:right'>0.1862</td><td style='text-align:right'>0.1893</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0031</td><td style='text-align:right'>45.85%</td><td style='text-align:right'>45.36%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.49%</td><td style='text-align:right'>-0.1711</td><td style='text-align:right'>-0.1211</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0501</td><td style='text-align:right'>-15.79%</td><td style='text-align:right'>-14.90%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.89%</td><td style='text-align:right'>-29.06%</td><td style='text-align:right'>-29.56%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.50%</td><td style='text-align:right'>0.0068</td><td style='text-align:right'>0.0068</td><td style='text-align:right;color:#6b7280'>-0.0001</td></tr><tr style='background:#fafafa'><td style='font-weight:600;color:#6b7280'>Linear (static only)</td><td style='text-align:right;color:#9ca3af'>0.0050</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0368</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>51.13%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-0.4229</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-22.18%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-28.42%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0023</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td></tr><tr style='background:#fafafa'><td style='font-weight:600;color:#6b7280'>XGBoost (static only)</td><td style='text-align:right;color:#9ca3af'>0.0232</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.2090</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>52.18%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0101</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-8.86%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-29.06%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0023</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td></tr><tr style='background:#fafafa'><td style='font-weight:600;color:#6b7280'>LSTM (static only)</td><td style='text-align:right;color:#9ca3af'>0.0073</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0477</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>49.57%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-0.2226</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-16.50%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-27.62%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0023</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+
+<div class="section">
+  <h2>Medium (20d) Window — Test Set</h2>
+  <div style="overflow-x:auto">
+  <table>
+    <thead>
+      <tr>
+        <th rowspan='2'>Model</th>
+        <th colspan='3' style='border-left:2px solid #e5e7eb'>IC</th><th colspan='3' style='border-left:2px solid #e5e7eb'>ICIR</th><th colspan='3' style='border-left:2px solid #e5e7eb'>DirAcc</th><th colspan='3' style='border-left:2px solid #e5e7eb'>Sharpe</th><th colspan='3' style='border-left:2px solid #e5e7eb'>CAGR</th><th colspan='3' style='border-left:2px solid #e5e7eb'>MaxDD</th><th colspan='3' style='border-left:2px solid #e5e7eb'>MSE</th>
+      </tr>
+      <tr><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style='font-weight:600'>MLP</td><td style='text-align:right'>0.0472</td><td style='text-align:right'>0.0601</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0129</td><td style='text-align:right'>0.5811</td><td style='text-align:right'>0.6628</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0817</td><td style='text-align:right'>43.95%</td><td style='text-align:right'>56.88%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+12.93%</td><td style='text-align:right'>0.9800</td><td style='text-align:right'>0.9453</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0346</td><td style='text-align:right'>30.24%</td><td style='text-align:right'>30.21%</td><td style='text-align:right;color:#6b7280'>-0.03%</td><td style='text-align:right'>-28.50%</td><td style='text-align:right'>-29.46%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.96%</td><td style='text-align:right'>0.0026</td><td style='text-align:right'>0.0158</td><td style='text-align:right;color:#dc2626;font-weight:600'>+0.0132</td></tr><tr><td style='font-weight:600'>GAT-Industry</td><td style='text-align:right'>0.0485</td><td style='text-align:right'>0.0539</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0054</td><td style='text-align:right'>0.4851</td><td style='text-align:right'>0.6550</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.1699</td><td style='text-align:right'>56.91%</td><td style='text-align:right'>56.85%</td><td style='text-align:right;color:#6b7280'>-0.06%</td><td style='text-align:right'>0.8999</td><td style='text-align:right'>0.8570</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0429</td><td style='text-align:right'>28.48%</td><td style='text-align:right'>25.37%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-3.11%</td><td style='text-align:right'>-31.13%</td><td style='text-align:right'>-26.80%</td><td style='text-align:right;color:#dc2626;font-weight:600'>+4.33%</td><td style='text-align:right'>0.0026</td><td style='text-align:right'>0.0026</td><td style='text-align:right;color:#6b7280'>-0.0000</td></tr><tr><td style='font-weight:600'>GAT-Universe</td><td style='text-align:right'>0.0474</td><td style='text-align:right'>0.0659</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0185</td><td style='text-align:right'>0.3509</td><td style='text-align:right'>0.5141</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.1632</td><td style='text-align:right'>46.76%</td><td style='text-align:right'>43.17%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-3.60%</td><td style='text-align:right'>0.7550</td><td style='text-align:right'>0.8779</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.1230</td><td style='text-align:right'>22.50%</td><td style='text-align:right'>28.26%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+5.75%</td><td style='text-align:right'>-32.43%</td><td style='text-align:right'>-30.10%</td><td style='text-align:right;color:#dc2626;font-weight:600'>+2.32%</td><td style='text-align:right'>0.0026</td><td style='text-align:right'>0.0031</td><td style='text-align:right;color:#6b7280'>+0.0006</td></tr><tr><td style='font-weight:600'>GAT-TwoGraph</td><td style='text-align:right'>0.0577</td><td style='text-align:right'>0.0656</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0079</td><td style='text-align:right'>0.5973</td><td style='text-align:right'>0.5697</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0277</td><td style='text-align:right'>56.88%</td><td style='text-align:right'>57.01%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.13%</td><td style='text-align:right'>0.8724</td><td style='text-align:right'>0.9474</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0750</td><td style='text-align:right'>26.61%</td><td style='text-align:right'>31.70%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+5.08%</td><td style='text-align:right'>-28.32%</td><td style='text-align:right'>-31.20%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-2.88%</td><td style='text-align:right'>0.0031</td><td style='text-align:right'>0.0037</td><td style='text-align:right;color:#6b7280'>+0.0006</td></tr><tr><td style='font-weight:600'>DMFM-IndNeut</td><td style='text-align:right'>0.0511</td><td style='text-align:right'>0.0542</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0031</td><td style='text-align:right'>0.5391</td><td style='text-align:right'>0.5895</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0505</td><td style='text-align:right'>43.16%</td><td style='text-align:right'>43.14%</td><td style='text-align:right;color:#6b7280'>-0.02%</td><td style='text-align:right'>0.8389</td><td style='text-align:right'>0.9504</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.1115</td><td style='text-align:right'>25.66%</td><td style='text-align:right'>29.39%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+3.73%</td><td style='text-align:right'>-29.65%</td><td style='text-align:right'>-27.87%</td><td style='text-align:right;color:#dc2626;font-weight:600'>+1.78%</td><td style='text-align:right'>0.0091</td><td style='text-align:right'>0.0035</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.0056</td></tr><tr><td style='font-weight:600'>DMFM-Full</td><td style='text-align:right'>0.0631</td><td style='text-align:right'>0.0650</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0019</td><td style='text-align:right'>0.6276</td><td style='text-align:right'>0.4833</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.1443</td><td style='text-align:right'>43.31%</td><td style='text-align:right'>43.18%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.13%</td><td style='text-align:right'>0.9063</td><td style='text-align:right'>0.9375</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0312</td><td style='text-align:right'>28.10%</td><td style='text-align:right'>30.90%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+2.80%</td><td style='text-align:right'>-29.02%</td><td style='text-align:right'>-29.91%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.89%</td><td style='text-align:right'>0.0221</td><td style='text-align:right'>0.0245</td><td style='text-align:right;color:#dc2626;font-weight:600'>+0.0023</td></tr><tr style='background:#fafafa'><td style='font-weight:600;color:#6b7280'>Linear (static only)</td><td style='text-align:right;color:#9ca3af'>0.0291</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.2780</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>51.32%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.5608</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>13.66%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-30.75%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0026</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td></tr><tr style='background:#fafafa'><td style='font-weight:600;color:#6b7280'>XGBoost (static only)</td><td style='text-align:right;color:#9ca3af'>0.0569</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.4301</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>51.13%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.9382</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>29.72%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-29.76%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0026</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td></tr><tr style='background:#fafafa'><td style='font-weight:600;color:#6b7280'>LSTM (static only)</td><td style='text-align:right;color:#9ca3af'>0.0406</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.3448</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>50.83%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.7758</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>22.72%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-29.55%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0026</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+
+<div class="section">
+  <h2>Long (60d) Window — Test Set</h2>
+  <div style="overflow-x:auto">
+  <table>
+    <thead>
+      <tr>
+        <th rowspan='2'>Model</th>
+        <th colspan='3' style='border-left:2px solid #e5e7eb'>IC</th><th colspan='3' style='border-left:2px solid #e5e7eb'>ICIR</th><th colspan='3' style='border-left:2px solid #e5e7eb'>DirAcc</th><th colspan='3' style='border-left:2px solid #e5e7eb'>Sharpe</th><th colspan='3' style='border-left:2px solid #e5e7eb'>CAGR</th><th colspan='3' style='border-left:2px solid #e5e7eb'>MaxDD</th><th colspan='3' style='border-left:2px solid #e5e7eb'>MSE</th>
+      </tr>
+      <tr><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th><th style='color:#6b7280;font-size:11px'>Static</th><th style='color:#3b82f6;font-size:11px'>Dynamic</th><th style='color:#8b5cf6;font-size:11px'>Δ</th></tr>
+    </thead>
+    <tbody>
+      <tr><td style='font-weight:600'>MLP</td><td style='text-align:right'>0.0542</td><td style='text-align:right'>0.0557</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0015</td><td style='text-align:right'>0.7261</td><td style='text-align:right'>0.7487</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0226</td><td style='text-align:right'>42.58%</td><td style='text-align:right'>42.50%</td><td style='text-align:right;color:#6b7280'>-0.08%</td><td style='text-align:right'>1.5640</td><td style='text-align:right'>1.7335</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.1695</td><td style='text-align:right'>38.57%</td><td style='text-align:right'>41.14%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+2.57%</td><td style='text-align:right'>-21.79%</td><td style='text-align:right'>-20.43%</td><td style='text-align:right;color:#dc2626;font-weight:600'>+1.36%</td><td style='text-align:right'>0.0178</td><td style='text-align:right'>0.0025</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.0153</td></tr><tr><td style='font-weight:600'>GAT-Industry</td><td style='text-align:right'>0.0548</td><td style='text-align:right'>0.0551</td><td style='text-align:right;color:#6b7280'>+0.0004</td><td style='text-align:right'>0.6773</td><td style='text-align:right'>0.7357</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0584</td><td style='text-align:right'>57.51%</td><td style='text-align:right'>42.50%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-15.01%</td><td style='text-align:right'>1.7792</td><td style='text-align:right'>1.7495</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0297</td><td style='text-align:right'>42.83%</td><td style='text-align:right'>43.07%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.24%</td><td style='text-align:right'>-20.44%</td><td style='text-align:right'>-22.18%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-1.75%</td><td style='text-align:right'>0.0023</td><td style='text-align:right'>0.0159</td><td style='text-align:right;color:#dc2626;font-weight:600'>+0.0135</td></tr><tr><td style='font-weight:600'>GAT-Universe</td><td style='text-align:right'>0.0466</td><td style='text-align:right'>0.0544</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0077</td><td style='text-align:right'>0.5260</td><td style='text-align:right'>0.4324</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0936</td><td style='text-align:right'>42.93%</td><td style='text-align:right'>57.55%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+14.62%</td><td style='text-align:right'>1.5065</td><td style='text-align:right'>1.4053</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.1011</td><td style='text-align:right'>39.07%</td><td style='text-align:right'>34.27%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-4.79%</td><td style='text-align:right'>-23.12%</td><td style='text-align:right'>-20.35%</td><td style='text-align:right;color:#dc2626;font-weight:600'>+2.76%</td><td style='text-align:right'>0.0023</td><td style='text-align:right'>0.0023</td><td style='text-align:right;color:#6b7280'>-0.0000</td></tr><tr><td style='font-weight:600'>GAT-TwoGraph</td><td style='text-align:right'>0.0520</td><td style='text-align:right'>0.0594</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0074</td><td style='text-align:right'>0.5036</td><td style='text-align:right'>0.5880</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0844</td><td style='text-align:right'>57.50%</td><td style='text-align:right'>42.50%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-15.01%</td><td style='text-align:right'>1.8270</td><td style='text-align:right'>1.8668</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0398</td><td style='text-align:right'>44.71%</td><td style='text-align:right'>47.87%</td><td style='text-align:right;color:#16a34a;font-weight:600'>+3.16%</td><td style='text-align:right'>-19.23%</td><td style='text-align:right'>-19.24%</td><td style='text-align:right;color:#6b7280'>-0.01%</td><td style='text-align:right'>0.0024</td><td style='text-align:right'>0.0026</td><td style='text-align:right;color:#6b7280'>+0.0002</td></tr><tr><td style='font-weight:600'>DMFM-IndNeut</td><td style='text-align:right'>0.0591</td><td style='text-align:right'>0.0582</td><td style='text-align:right;color:#6b7280'>-0.0008</td><td style='text-align:right'>0.7859</td><td style='text-align:right'>0.7691</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0168</td><td style='text-align:right'>57.51%</td><td style='text-align:right'>43.37%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-14.15%</td><td style='text-align:right'>1.8034</td><td style='text-align:right'>1.6585</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.1449</td><td style='text-align:right'>43.64%</td><td style='text-align:right'>41.17%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-2.47%</td><td style='text-align:right'>-20.11%</td><td style='text-align:right'>-20.96%</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.85%</td><td style='text-align:right'>0.0134</td><td style='text-align:right'>0.0079</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.0055</td></tr><tr><td style='font-weight:600'>DMFM-Full</td><td style='text-align:right'>0.0602</td><td style='text-align:right'>0.0487</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.0115</td><td style='text-align:right'>0.7346</td><td style='text-align:right'>0.4811</td><td style='text-align:right;color:#dc2626;font-weight:600'>-0.2534</td><td style='text-align:right'>57.52%</td><td style='text-align:right'>57.50%</td><td style='text-align:right;color:#6b7280'>-0.02%</td><td style='text-align:right'>1.8489</td><td style='text-align:right'>1.8532</td><td style='text-align:right;color:#16a34a;font-weight:600'>+0.0043</td><td style='text-align:right'>48.03%</td><td style='text-align:right'>45.64%</td><td style='text-align:right;color:#dc2626;font-weight:600'>-2.39%</td><td style='text-align:right'>-21.86%</td><td style='text-align:right'>-17.37%</td><td style='text-align:right;color:#dc2626;font-weight:600'>+4.49%</td><td style='text-align:right'>0.0330</td><td style='text-align:right'>0.0027</td><td style='text-align:right;color:#16a34a;font-weight:600'>-0.0303</td></tr><tr style='background:#fafafa'><td style='font-weight:600;color:#6b7280'>Linear (static only)</td><td style='text-align:right;color:#9ca3af'>0.0260</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.2347</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>51.46%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.8837</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>20.93%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-27.44%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0024</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td></tr><tr style='background:#fafafa'><td style='font-weight:600;color:#6b7280'>XGBoost (static only)</td><td style='text-align:right;color:#9ca3af'>0.0205</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.4592</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>50.12%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>1.7143</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>49.14%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-22.05%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0041</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td></tr><tr style='background:#fafafa'><td style='font-weight:600;color:#6b7280'>LSTM (static only)</td><td style='text-align:right;color:#9ca3af'>0.0438</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.4792</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>50.48%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>1.3357</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>35.21%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>-25.42%</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td><td style='text-align:right;color:#9ca3af'>0.0023</td><td colspan='2' style='text-align:center;color:#d1d5db'>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<script>
+const IC_DATA = {"short": {"models": ["MLP", "GAT-Industry", "GAT-Universe", "GAT-TwoGraph", "DMFM-IndNeut", "DMFM-Full"], "static_ic": [0.0363, 0.0267, 0.0287, 0.0267, 0.0324, 0.0211], "dynamic_ic": [0.0341, 0.0229, 0.0304, 0.0347, 0.0322, 0.0338], "static_icir": [0.4084, 0.2344, 0.2579, 0.2496, 0.32, 0.1862], "dynamic_icir": [0.3088, 0.2121, 0.1987, 0.2817, 0.2901, 0.1893]}, "medium": {"models": ["MLP", "GAT-Industry", "GAT-Universe", "GAT-TwoGraph", "DMFM-IndNeut", "DMFM-Full"], "static_ic": [0.0472, 0.0485, 0.0474, 0.0577, 0.0511, 0.0631], "dynamic_ic": [0.0601, 0.0539, 0.0659, 0.0656, 0.0542, 0.065], "static_icir": [0.5811, 0.4851, 0.3509, 0.5973, 0.5391, 0.6276], "dynamic_icir": [0.6628, 0.655, 0.5141, 0.5697, 0.5895, 0.4833]}, "long": {"models": ["MLP", "GAT-Industry", "GAT-Universe", "GAT-TwoGraph", "DMFM-IndNeut", "DMFM-Full"], "static_ic": [0.0542, 0.0548, 0.0466, 0.052, 0.0591, 0.0602], "dynamic_ic": [0.0557, 0.0551, 0.0544, 0.0594, 0.0582, 0.0487], "static_icir": [0.7261, 0.6773, 0.526, 0.5036, 0.7859, 0.7346], "dynamic_icir": [0.7487, 0.7357, 0.4324, 0.588, 0.7691, 0.4811]}};
+const PORT_DATA = {"short": {"models": ["MLP", "GAT-Industry", "GAT-Universe", "GAT-TwoGraph", "DMFM-IndNeut", "DMFM-Full"], "static": {"sharpe": [-0.0982, 0.0574, -0.0926, -0.0728, 0.0029, -0.1711], "cagr": [-0.1194, -0.0666, -0.1244, -0.1174, -0.0792, -0.1579], "max_drawdown": [-0.2614, -0.2789, -0.2794, -0.2812, -0.2597, -0.2906]}, "dynamic": {"sharpe": [0.0604, 0.0189, -0.0258, -0.0085, 0.0509, -0.1211], "cagr": [-0.0661, -0.0833, -0.1078, -0.0962, -0.0688, -0.149], "max_drawdown": [-0.2793, -0.2812, -0.2921, -0.2856, -0.2689, -0.2956]}}, "medium": {"models": ["MLP", "GAT-Industry", "GAT-Universe", "GAT-TwoGraph", "DMFM-IndNeut", "DMFM-Full"], "static": {"sharpe": [0.98, 0.8999, 0.755, 0.8724, 0.8389, 0.9063], "cagr": [0.3024, 0.2848, 0.225, 0.2661, 0.2566, 0.281], "max_drawdown": [-0.285, -0.3113, -0.3243, -0.2832, -0.2965, -0.2902]}, "dynamic": {"sharpe": [0.9453, 0.857, 0.8779, 0.9474, 0.9504, 0.9375], "cagr": [0.3021, 0.2537, 0.2826, 0.317, 0.2939, 0.309], "max_drawdown": [-0.2946, -0.268, -0.301, -0.312, -0.2787, -0.2991]}}, "long": {"models": ["MLP", "GAT-Industry", "GAT-Universe", "GAT-TwoGraph", "DMFM-IndNeut", "DMFM-Full"], "static": {"sharpe": [1.564, 1.7792, 1.5065, 1.827, 1.8034, 1.8489], "cagr": [0.3857, 0.4283, 0.3907, 0.4471, 0.4364, 0.4803], "max_drawdown": [-0.2179, -0.2044, -0.2312, -0.1923, -0.2011, -0.2186]}, "dynamic": {"sharpe": [1.7335, 1.7495, 1.4053, 1.8668, 1.6585, 1.8532], "cagr": [0.4114, 0.4307, 0.3427, 0.4787, 0.4117, 0.4564], "max_drawdown": [-0.2043, -0.2218, -0.2035, -0.1924, -0.2096, -0.1737]}}};
+const HEATMAP_DATA = {"IC (\u0394)": {"grid": [[-0.00216, 0.01295, 0.0015], [-0.0038, 0.00541, 0.00039], [0.00166, 0.01846, 0.00774], [0.008, 0.00788, 0.00739], [-0.0002, 0.00309, -0.00082], [0.01272, 0.00188, -0.01146]], "higher_better": true}, "ICIR (\u0394)": {"grid": [[-0.09954, 0.08171, 0.02258], [-0.02231, 0.16988, 0.05837], [-0.05911, 0.16317, -0.09356], [0.03205, -0.02767, 0.08439], [-0.02992, 0.05047, -0.0168], [0.00312, -0.14434, -0.25344]], "higher_better": true}, "DirAcc (\u0394)": {"grid": [[-0.00088, 0.12933, -0.00081], [0.09723, -0.00058, -0.15011], [6e-05, -0.03595, 0.14624], [-0.00082, 0.00127, -0.15007], [0.09631, -0.00017, -0.14146], [-0.00489, -0.00129, -0.00022]], "higher_better": true}, "Sharpe (\u0394)": {"grid": [[0.15863, -0.03463, 0.16954], [-0.0385, -0.04289, -0.02971], [0.06682, 0.12295, -0.10115], [0.06428, 0.07502, 0.03983], [0.04802, 0.11151, -0.14492], [0.05008, 0.03125, 0.00426]], "higher_better": true}, "CAGR (\u0394)": {"grid": [[0.05332, -0.00031, 0.02565], [-0.01671, -0.03109, 0.00241], [0.01665, 0.05752, -0.04794], [0.02126, 0.05082, 0.03164], [0.01032, 0.03728, -0.02471], [0.00887, 0.02797, -0.0239]], "higher_better": true}, "MaxDD (\u0394)": {"grid": [[-0.01786, -0.00964, 0.01357], [-0.00234, 0.04326, -0.01746], [-0.01273, 0.02322, 0.02763], [-0.00441, -0.02879, -6e-05], [-0.00922, 0.01779, -0.0085], [-0.00505, -0.00892, 0.04487]], "higher_better": false}};
+const WINDOWS = ['short','medium','long'];
+const MODELS = ['MLP','GAT-Industry','GAT-Universe','GAT-TwoGraph','DMFM-IndNeut','DMFM-Full'];
+
+function switchTab(group, win, btn) {
+  document.querySelectorAll(`#${group}-tabs .tab`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['short','medium','long'].forEach(w => {
+    const el = document.getElementById(`${group}-${w}`);
+    if (el) el.classList.toggle('active', w === win);
+  });
+}
+
+// IC Charts
+function makeICChart(window) {
+  const d = IC_DATA[window];
+  const ctx = document.getElementById(`ic-chart-${window}`).getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.models,
+      datasets: [
+        { label: 'Static IC', data: d.static_ic, backgroundColor: 'rgba(59,130,246,0.5)', borderColor: '#3b82f6', borderWidth: 1 },
+        { label: 'Dynamic IC', data: d.dynamic_ic, backgroundColor: 'rgba(29,78,216,0.7)', borderColor: '#1d4ed8', borderWidth: 1 },
+        { label: 'Static ICIR', data: d.static_icir, backgroundColor: 'rgba(245,158,11,0.4)', borderColor: '#f59e0b', borderWidth: 1 },
+        { label: 'Dynamic ICIR', data: d.dynamic_icir, backgroundColor: 'rgba(217,119,6,0.6)', borderColor: '#d97706', borderWidth: 1 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: {
+        y: { grid: { color: '#f1f5f9' } },
+        x: { ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+}
+WINDOWS.forEach(makeICChart);
+
+// Portfolio Charts
+function makePortChart(window, metric, label, canvasId, higherBetter) {
+  const d = PORT_DATA[window];
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  const isPct = metric === 'cagr' || metric === 'max_drawdown';
+  const fmt = v => isPct ? (v*100).toFixed(1)+'%' : v.toFixed(3);
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: d.models,
+      datasets: [
+        { label: 'Static', data: d.static[metric], backgroundColor: 'rgba(100,116,139,0.5)', borderColor: '#64748b', borderWidth: 1 },
+        { label: 'Dynamic', data: d.dynamic[metric], backgroundColor: 'rgba(59,130,246,0.6)', borderColor: '#3b82f6', borderWidth: 1 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: label, font: { size: 13, weight: '600' } },
+        legend: { position: 'top', labels: { font: { size: 11 } } }
+      },
+      scales: {
+        y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => isPct ? (v*100).toFixed(0)+'%' : v.toFixed(2) } },
+        x: { ticks: { font: { size: 10 }, maxRotation: 30 } }
+      }
+    }
+  });
+}
+
+WINDOWS.forEach(w => {
+  makePortChart(w, 'sharpe', 'Sharpe Ratio', `port-sharpe-${w}`, true);
+  makePortChart(w, 'cagr', 'CAGR', `port-cagr-${w}`, true);
+  makePortChart(w, 'max_drawdown', 'Max Drawdown', `port-maxdd-${w}`, false);
+});
+
+// Heatmaps
+const METRIC_KEYS = Object.keys(HEATMAP_DATA);
+const WIN_LABELS = { short: 'Short', medium: 'Medium', long: 'Long' };
+
+function heatColor(v, higherBetter) {
+  if (v === null) return '#f1f5f9';
+  const intensity = Math.min(Math.abs(v) * 50, 1);
+  const positive = higherBetter ? v > 0 : v < 0;
+  if (positive) {
+    const g = Math.round(165 + intensity * 90);
+    return `rgba(22, ${g}, 74, ${0.15 + intensity * 0.5})`;
+  } else {
+    const r = Math.round(185 + intensity * 70);
+    return `rgba(${r}, 38, 38, ${0.12 + intensity * 0.45})`;
+  }
+}
+
+function buildHeatmaps() {
+  const container = document.getElementById('heatmap-container');
+  METRIC_KEYS.forEach(metric => {
+    const info = HEATMAP_DATA[metric];
+    const grid = info.grid;
+    const hb = info.higher_better;
+
+    let html = `<h3>${metric}</h3><div style="overflow-x:auto;margin-bottom:20px"><table class="heatmap-table"><thead><tr><th>Model</th>`;
+    ['Short','Medium','Long'].forEach(w => html += `<th>${w}</th>`);
+    html += '</tr></thead><tbody>';
+
+    MODELS.forEach((m, mi) => {
+      html += `<tr><td style="text-align:left;font-weight:600">${m}</td>`;
+      [0,1,2].forEach(wi => {
+        const v = grid[mi][wi];
+        const bg = heatColor(v, hb);
+        const txt = v === null ? '—' : (Math.abs(v) < 0.01 ? v.toFixed(4) : v > 0 ? `+${v.toFixed(4)}` : v.toFixed(4));
+        const col = v === null ? '#94a3b8' : (hb ? (v > 0.001 ? '#166534' : v < -0.001 ? '#991b1b' : '#475569') : (v < -0.001 ? '#166534' : v > 0.001 ? '#991b1b' : '#475569'));
+        html += `<td style="background:${bg};color:${col}">${txt}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    container.innerHTML += html;
+  });
+}
+buildHeatmaps();
+</script>
+</body>
+</html>

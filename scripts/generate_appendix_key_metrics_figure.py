@@ -20,8 +20,8 @@ WINDOWS = ("short", "medium", "long")
 WINDOW_LABELS = ("Short", "Medium", "Long")
 MODELS = (
     ("baseline_linear", "Linear"),
-    ("baseline_lstm", "LSTM"),
     ("baseline_xgboost", "XGBoost"),
+    ("baseline_lstm", "LSTM"),
     ("mlp", "DNN"),
     ("gat_industry", "GAT-industry"),
     ("gat_universe", "GAT-universe"),

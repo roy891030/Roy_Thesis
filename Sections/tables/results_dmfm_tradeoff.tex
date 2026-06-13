@@ -1,30 +1,32 @@
 \begin{table}[H]
 \centering
-\caption{GAT 拓樸系列與 GAT 中性化系列於中期及長期訓練視窗之核心指標對照}
+\caption{無中性化模型與對應中性化模型於中期及長期訓練視窗之核心指標對照}
 \label{tab:results_dmfm_tradeoff}
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.10}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{@{}llrrrrrr@{}}
+\begin{tabular}{@{}lllrrrrrr@{}}
 \toprule
-\makecell[l]{訓練\\視窗} & 模型 & \makecell[r]{訓練\\Daily IC} & \makecell[r]{測試\\Daily IC} & \makecell[r]{Daily IC\\測/訓比} & \makecell[r]{測試\\ICIR} & \makecell[r]{測試\\Sharpe} & \makecell[r]{測試\\總報酬} \\
+\makecell[l]{訓練\\視窗} & 模型 & 中性化設定 & \makecell[r]{訓練\\Daily IC} & \makecell[r]{測試\\Daily IC} & \makecell[r]{Daily IC\\測/訓比} & \makecell[r]{測試\\ICIR} & \makecell[r]{測試\\Sharpe} & \makecell[r]{測試\\總報酬} \\
 \midrule
-中期 & GAT-industry & 0.2176 & 0.0445 & 0.20 & 0.485 & 0.900 & 36.79\% \\
-中期 & GAT-TwoGraph & 0.1597 & 0.0541 & 0.34 & 0.597 & 0.872 & 34.31\% \\
-中期 & GAT-IndNeutral & 0.1846 & 0.0499 & 0.27 & 0.539 & 0.839 & 33.04\% \\
-中期 & GAT-full & 0.1844 & 0.0596 & 0.32 & 0.628 & 0.906 & 36.29\% \\
+中期 & GAT-industry & 無中性化 & 0.2176 & 0.0445 & 0.20 & 0.485 & 0.900 & 36.79\% \\
+中期 & GAT-IndNeutral & 產業中性化 & 0.1846 & 0.0499 & 0.27 & 0.539 & 0.839 & 33.04\% \\
+\addlinespace
+中期 & GAT-TwoGraph & 無中性化 & 0.1597 & 0.0541 & 0.34 & 0.597 & 0.872 & 34.31\% \\
+中期 & GAT-full & 產業與市場中性化 & 0.1844 & 0.0596 & 0.32 & 0.628 & 0.906 & 36.29\% \\
 \midrule
-長期 & GAT-industry & 0.1558 & 0.0543 & 0.35 & 0.677 & 1.779 & 120.83\% \\
-長期 & GAT-TwoGraph & 0.1830 & 0.0512 & 0.28 & 0.504 & 1.827 & 127.33\% \\
-長期 & GAT-IndNeutral & 0.1543 & 0.0590 & 0.38 & 0.786 & 1.803 & 123.60\% \\
-長期 & GAT-full & 0.1581 & 0.0583 & 0.37 & 0.735 & 1.849 & 139.08\% \\
+長期 & GAT-industry & 無中性化 & 0.1558 & 0.0543 & 0.35 & 0.677 & 1.779 & 120.83\% \\
+長期 & GAT-IndNeutral & 產業中性化 & 0.1543 & 0.0590 & 0.38 & 0.786 & 1.803 & 123.60\% \\
+\addlinespace
+長期 & GAT-TwoGraph & 無中性化 & 0.1830 & 0.0512 & 0.28 & 0.504 & 1.827 & 127.33\% \\
+長期 & GAT-full & 產業與市場中性化 & 0.1581 & 0.0583 & 0.37 & 0.735 & 1.849 & 139.08\% \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
 \smallskip
 
-{\footnotesize 本表為表~\ref{tab:results_overview_master} 之 GAT 拓樸系列與 GAT 中性化系列中期及長期視窗明細。}
+{\footnotesize 本表為表~\ref{tab:results_overview_master} 之無中性化模型與對應中性化模型明細。}
 \endgroup
 \end{table}

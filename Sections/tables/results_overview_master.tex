@@ -1,26 +1,16 @@
-% Auto-generated master summary table: train + test metrics for all 27 experiments
+\begin{table}[H]
+\centering
+\caption{三個訓練視窗之全實驗訓練集與測試集核心指標對照（27 組）}
+\label{tab:results_overview_master}
 \begingroup
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.10}
-\begin{longtable}{@{}llrrrrrr@{}}
-\caption{三個訓練視窗之全實驗訓練集與測試集核心指標對照（27 組）}
-\label{tab:results_overview_master}\\
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{@{}llrrrrrr@{}}
 \toprule
 \makecell[l]{訓練\\視窗} & 模型 & \makecell[r]{訓練\\Daily IC} & \makecell[r]{測試\\Daily IC} & \makecell[r]{Daily IC\\測/訓比} & \makecell[r]{測試\\ICIR} & \makecell[r]{測試\\Sharpe} & \makecell[r]{測試\\總報酬} \\
 \midrule
-\endfirsthead
-\caption[]{三個訓練視窗之全實驗訓練集與測試集核心指標對照（續）}\\
-\toprule
-\makecell[l]{訓練\\視窗} & 模型 & \makecell[r]{訓練\\Daily IC} & \makecell[r]{測試\\Daily IC} & \makecell[r]{Daily IC\\測/訓比} & \makecell[r]{測試\\ICIR} & \makecell[r]{測試\\Sharpe} & \makecell[r]{測試\\總報酬} \\
-\midrule
-\endhead
-\midrule
-\multicolumn{8}{r}{\footnotesize（續下頁）}\\
-\endfoot
-\bottomrule
-\multicolumn{8}{l}{\footnotesize 粗體：各訓練視窗該欄最高值（測試 Daily IC、測試 ICIR、測試 Sharpe、測試總報酬）。}\\
-\endlastfoot
 %--- Short window ---
 短期 & Linear          & 0.0598 & 0.0036 &         0.06 &         0.037 &        $-$0.423 &  $-$11.26\% \\
 短期 & XGBoost         & 0.4491 & 0.0261 &         0.06 &         0.209 &           0.010 &   $-$4.32\% \\
@@ -53,6 +43,12 @@
 長期 & GAT-TwoGraph     & 0.1830 & 0.0512 &         0.28 &         0.504 &          1.827  &  127.33\% \\
 長期 & GAT-IndNeutral   & 0.1543 & \textbf{0.0590} & 0.38 & \textbf{0.786} &       1.803  &  123.60\% \\
 長期 & GAT-full         & 0.1581 & 0.0583 &         0.37 &         0.735 & \textbf{1.849}  &  139.08\% \\
-\end{longtable}
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\smallskip
+
+{\footnotesize 粗體：各訓練視窗該欄最高值（測試 Daily IC、測試 ICIR、測試 Sharpe、測試總報酬）。}
 \renewcommand{\arraystretch}{1.0}
 \endgroup
+\end{table}

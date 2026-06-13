@@ -21,8 +21,8 @@
 <rect x="20" y="754" width="7" height="148" rx="3" fill="#8291a0" stroke="none" stroke-width="0"/>
 <text class="group" x="38" y="778" text-anchor="start">中性化模型</text>
 <text class="model" x="260" y="265.0" text-anchor="end">Linear</text>
-<text class="model" x="260" y="341.0" text-anchor="end">LSTM</text>
-<text class="model" x="260" y="417.0" text-anchor="end">XGBoost</text>
+<text class="model" x="260" y="341.0" text-anchor="end">XGBoost</text>
+<text class="model" x="260" y="417.0" text-anchor="end">LSTM</text>
 <text class="model" x="260" y="493.0" text-anchor="end">DNN</text>
 <text class="model" x="260" y="569.0" text-anchor="end">GAT-industry</text>
 <text class="model" x="260" y="645.0" text-anchor="end">GAT-universe</text>
@@ -43,18 +43,18 @@
 <text class="value" x="525.0" y="265.0" text-anchor="middle" fill="#2d3748">0.0253</text>
 <rect x="600" y="220" width="150" height="76" rx="4" fill="#a2bfdc" stroke="#d9e2ec" stroke-width="1.5"/>
 <text class="value" x="675.0" y="265.0" text-anchor="middle" fill="#2d3748">0.0214</text>
-<rect x="300" y="296" width="150" height="76" rx="4" fill="#d1e0ee" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="375.0" y="341.0" text-anchor="middle" fill="#2d3748">0.0057</text>
-<rect x="450" y="296" width="150" height="76" rx="4" fill="#77a1cc" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="525.0" y="341.0" text-anchor="middle" fill="#2d3748">0.0359</text>
-<rect x="600" y="296" width="150" height="76" rx="4" fill="#6594c6" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="675.0" y="341.0" text-anchor="middle" fill="#ffffff">0.0418</text>
-<rect x="300" y="372" width="150" height="76" rx="4" fill="#94b5d7" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="375.0" y="417.0" text-anchor="middle" fill="#2d3748">0.0261</text>
-<rect x="450" y="372" width="150" height="76" rx="4" fill="#5086be" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="525.0" y="417.0" text-anchor="middle" fill="#ffffff">0.0485</text>
-<rect x="600" y="372" width="150" height="76" rx="4" fill="#6896c7" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="675.0" y="417.0" text-anchor="middle" fill="#ffffff">0.0408</text>
+<rect x="300" y="296" width="150" height="76" rx="4" fill="#94b5d7" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="375.0" y="341.0" text-anchor="middle" fill="#2d3748">0.0261</text>
+<rect x="450" y="296" width="150" height="76" rx="4" fill="#5086be" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="525.0" y="341.0" text-anchor="middle" fill="#ffffff">0.0485</text>
+<rect x="600" y="296" width="150" height="76" rx="4" fill="#6896c7" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="675.0" y="341.0" text-anchor="middle" fill="#ffffff">0.0408</text>
+<rect x="300" y="372" width="150" height="76" rx="4" fill="#d1e0ee" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="375.0" y="417.0" text-anchor="middle" fill="#2d3748">0.0057</text>
+<rect x="450" y="372" width="150" height="76" rx="4" fill="#77a1cc" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="525.0" y="417.0" text-anchor="middle" fill="#2d3748">0.0359</text>
+<rect x="600" y="372" width="150" height="76" rx="4" fill="#6594c6" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="675.0" y="417.0" text-anchor="middle" fill="#ffffff">0.0418</text>
 <rect x="300" y="448" width="150" height="76" rx="4" fill="#6b99c8" stroke="#2d3748" stroke-width="4"/>
 <text class="best" x="375.0" y="493.0" text-anchor="middle" fill="#2d3748">0.0396</text>
 <rect x="450" y="448" width="150" height="76" rx="4" fill="#5a8dc2" stroke="#d9e2ec" stroke-width="1.5"/>
@@ -105,18 +105,18 @@
 <text class="value" x="1030.0" y="265.0" text-anchor="middle" fill="#2d3748">0.278</text>
 <rect x="1105" y="220" width="150" height="76" rx="4" fill="#adc6e0" stroke="#d9e2ec" stroke-width="1.5"/>
 <text class="value" x="1180.0" y="265.0" text-anchor="middle" fill="#2d3748">0.235</text>
-<rect x="805" y="296" width="150" height="76" rx="4" fill="#d8e4f0" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="880.0" y="341.0" text-anchor="middle" fill="#2d3748">0.048</text>
-<rect x="955" y="296" width="150" height="76" rx="4" fill="#94b5d7" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1030.0" y="341.0" text-anchor="middle" fill="#2d3748">0.345</text>
-<rect x="1105" y="296" width="150" height="76" rx="4" fill="#75a0cc" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1180.0" y="341.0" text-anchor="middle" fill="#2d3748">0.479</text>
-<rect x="805" y="372" width="150" height="76" rx="4" fill="#b3cbe3" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="880.0" y="417.0" text-anchor="middle" fill="#2d3748">0.209</text>
-<rect x="955" y="372" width="150" height="76" rx="4" fill="#80a7d0" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1030.0" y="417.0" text-anchor="middle" fill="#2d3748">0.430</text>
-<rect x="1105" y="372" width="150" height="76" rx="4" fill="#7aa3cd" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1180.0" y="417.0" text-anchor="middle" fill="#2d3748">0.459</text>
+<rect x="805" y="296" width="150" height="76" rx="4" fill="#b3cbe3" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="880.0" y="341.0" text-anchor="middle" fill="#2d3748">0.209</text>
+<rect x="955" y="296" width="150" height="76" rx="4" fill="#80a7d0" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1030.0" y="341.0" text-anchor="middle" fill="#2d3748">0.430</text>
+<rect x="1105" y="296" width="150" height="76" rx="4" fill="#7aa3cd" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1180.0" y="341.0" text-anchor="middle" fill="#2d3748">0.459</text>
+<rect x="805" y="372" width="150" height="76" rx="4" fill="#d8e4f0" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="880.0" y="417.0" text-anchor="middle" fill="#2d3748">0.048</text>
+<rect x="955" y="372" width="150" height="76" rx="4" fill="#94b5d7" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1030.0" y="417.0" text-anchor="middle" fill="#2d3748">0.345</text>
+<rect x="1105" y="372" width="150" height="76" rx="4" fill="#75a0cc" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1180.0" y="417.0" text-anchor="middle" fill="#2d3748">0.479</text>
 <rect x="805" y="448" width="150" height="76" rx="4" fill="#85abd2" stroke="#2d3748" stroke-width="4"/>
 <text class="best" x="880.0" y="493.0" text-anchor="middle" fill="#2d3748">0.408</text>
 <rect x="955" y="448" width="150" height="76" rx="4" fill="#5e8fc3" stroke="#d9e2ec" stroke-width="1.5"/>
@@ -167,18 +167,18 @@
 <text class="value" x="1535.0" y="265.0" text-anchor="middle" fill="#2d3748">0.561</text>
 <rect x="1610" y="220" width="150" height="76" rx="4" fill="#7ba4ce" stroke="#d9e2ec" stroke-width="1.5"/>
 <text class="value" x="1685.0" y="265.0" text-anchor="middle" fill="#2d3748">0.884</text>
-<rect x="1310" y="296" width="150" height="76" rx="4" fill="#d3e1ef" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1385.0" y="341.0" text-anchor="middle" fill="#2d3748">-0.223</text>
-<rect x="1460" y="296" width="150" height="76" rx="4" fill="#84aad1" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1535.0" y="341.0" text-anchor="middle" fill="#2d3748">0.776</text>
-<rect x="1610" y="296" width="150" height="76" rx="4" fill="#588bc1" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1685.0" y="341.0" text-anchor="middle" fill="#ffffff">1.336</text>
-<rect x="1310" y="372" width="150" height="76" rx="4" fill="#c0d4e8" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1385.0" y="417.0" text-anchor="middle" fill="#2d3748">0.010</text>
-<rect x="1460" y="372" width="150" height="76" rx="4" fill="#77a1cc" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1535.0" y="417.0" text-anchor="middle" fill="#2d3748">0.938</text>
-<rect x="1610" y="372" width="150" height="76" rx="4" fill="#3a76b5" stroke="#d9e2ec" stroke-width="1.5"/>
-<text class="value" x="1685.0" y="417.0" text-anchor="middle" fill="#ffffff">1.714</text>
+<rect x="1310" y="296" width="150" height="76" rx="4" fill="#c0d4e8" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1385.0" y="341.0" text-anchor="middle" fill="#2d3748">0.010</text>
+<rect x="1460" y="296" width="150" height="76" rx="4" fill="#77a1cc" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1535.0" y="341.0" text-anchor="middle" fill="#2d3748">0.938</text>
+<rect x="1610" y="296" width="150" height="76" rx="4" fill="#3a76b5" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1685.0" y="341.0" text-anchor="middle" fill="#ffffff">1.714</text>
+<rect x="1310" y="372" width="150" height="76" rx="4" fill="#d3e1ef" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1385.0" y="417.0" text-anchor="middle" fill="#2d3748">-0.223</text>
+<rect x="1460" y="372" width="150" height="76" rx="4" fill="#84aad1" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1535.0" y="417.0" text-anchor="middle" fill="#2d3748">0.776</text>
+<rect x="1610" y="372" width="150" height="76" rx="4" fill="#588bc1" stroke="#d9e2ec" stroke-width="1.5"/>
+<text class="value" x="1685.0" y="417.0" text-anchor="middle" fill="#ffffff">1.336</text>
 <rect x="1310" y="448" width="150" height="76" rx="4" fill="#c9daeb" stroke="#d9e2ec" stroke-width="1.5"/>
 <text class="value" x="1385.0" y="493.0" text-anchor="middle" fill="#2d3748">-0.098</text>
 <rect x="1460" y="448" width="150" height="76" rx="4" fill="#749fcb" stroke="#2d3748" stroke-width="4"/>
