@@ -827,3 +827,63 @@ ICIR = \frac{\frac{1}{T}\sum_{t=1}^{T} IC_t}{\mathrm{Std}(IC_t)}.
 \textbf{台灣 50 ETF 基準：}以 0050 之未來 \(k\) 日報酬作為市場基準，與策略累積報酬比較。
 
 評估流程分為兩層。第一層以截面去均值標籤計算預測層指標，涵蓋誤差指標、資訊係數與資訊係數比率。第二層以原始未來報酬進行投資組合回測與 0050 基準比較，並輸出 Daily IC 時序、IC 分佈與累積報酬等結果。
+
+% =========================================================
+\section{統計假說檢定}
+\label{sec:stat_tests}
+% =========================================================
+
+截面選股模型的逐日資訊係數時間序列具有兩項統計特性，需以適當方法處理：其一為\textbf{序列自相關}，相鄰交易日的持倉重疊使 IC 序列產生正向自相關（本文長期視窗實測 $AC_1 \approx 0.53$）；其二為\textbf{非常態分布}，IC 分布呈現輕度尖峰，不滿足常態假設。傳統 i.i.d. 假設下的 $t$ 檢定在序列相關存在時將低估標準誤、過度拒絕虛無假設，故需以異方差自相關一致（HAC）估計量或無母數重採樣方法替代。本節說明本文採用的三種統計假說檢定，相應結果於第~\ref{subsec:statistical_tests}~節彙整。
+
+\subsection{Newey-West HAC \boldmath{$t$} 檢定}
+\label{subsec:nw_ttest}
+
+令 $\{IC_t\}_{t=1}^{T}$ 為測試期間逐日資訊係數序列，本文首先以單樣本 $t$ 檢定驗證排序訊號是否顯著異於零：
+
+\begin{equation}
+H_0: \mathbb{E}[IC_t] = 0, \qquad H_1: \mathbb{E}[IC_t] > 0.
+\end{equation}
+
+當 IC 序列存在序列相關，普通最小平方法標準誤 $\hat{\sigma}_{OLS}/\sqrt{T}$ 偏低，導致 $t$ 統計量膨脹。本文以 Newey-West HAC 估計量 \cite{newey1987simple} 校正長期方差：
+
+\begin{equation}
+\hat{\sigma}^2_{\mathrm{NW}} = \hat{\gamma}_0 + 2\sum_{\ell=1}^{L} w_\ell \, \hat{\gamma}_\ell, \qquad w_\ell = 1 - \frac{\ell}{L+1},
+\end{equation}
+
+其中 $\hat{\gamma}_\ell = \frac{1}{T}\sum_{t=\ell+1}^{T}(IC_t - \bar{IC})(IC_{t-\ell} - \bar{IC})$ 為第 $\ell$ 階樣本自共變異數，$w_\ell$ 為 Bartlett 核權重，$L$ 為截斷落後期數。$HAC$ 調整後的 $t$ 統計量為
+
+\begin{equation}
+t_{\mathrm{NW}} = \frac{\bar{IC}}{\hat{\sigma}_{\mathrm{NW}} / \sqrt{T}},
+\end{equation}
+
+在零假設下漸近服從標準常態分布。本文設定 $L = 5$：依 Andrews~\cite{andrews1991autocovariance} 所提規則，對日頻資料 $T \approx 250$，最佳截斷落後估計為 $\lfloor 1.3 \cdot T^{1/5} \rfloor \approx 5$，在中度自相關下具備理論依據 \cite{newey1994automatic}。
+
+\subsection{Block Bootstrap ICIR 信賴區間}
+\label{subsec:block_bootstrap}
+
+ICIR $= \bar{IC}/\hat{\sigma}_{IC}$ 為比值形式統計量，精確分布難以解析求得。本文採循環區塊自助法（Circular Block Bootstrap, CBB）\cite{kunsch1989bootstrap} 構建 95\% 無母數信賴區間，以保留 IC 序列的時序相依結構。
+
+設塊長為 $b$、重採樣次數為 $B$。每次重採樣時，從長度 $T$ 的 IC 序列循環抽取 $\lceil T/b \rceil$ 個連續區塊並拼接為長度 $T$ 的虛擬序列 $\{IC_t^*\}$，計算重採樣 ICIR$^*$；重複 $B$ 次後取 2.5\% 與 97.5\% 分位數。設定 $b = 10$（約兩週交易日）、$B = 2000$、隨機種子 42。塊長選擇遵循 Politis \& Romano~\cite{politis1994stationary} 的原則：塊長過短破壞時序結構，過長降低重採樣多樣性；$b = 10$ 在本文樣本規模下取得合理平衡。
+
+\subsection{Diebold-Mariano 配對比較}
+\label{subsec:dm_test_method}
+
+為評估各 GAT 模型相對 DNN 之排序能力增益是否具統計顯著性，本文採 Diebold-Mariano 配對預測精確度檢定 \cite{diebold1995dm}。令 $IC_{A,t}$ 與 $IC_{B,t}$ 分別為模型 A（GAT 類）與模型 B（DNN）在交易日 $t$ 之資訊係數，定義逐日損失差：
+
+\begin{equation}
+d_t = IC_{A,t} - IC_{B,t}.
+\end{equation}
+
+$d_t > 0$ 代表模型 A 當日截面排序優於 DNN。DM 檢定虛無假設為
+
+\begin{equation}
+H_0: \mathbb{E}[d_t] = 0 \quad \text{（等預測排序精確度）},
+\end{equation}
+
+對立假設 $H_1: \mathbb{E}[d_t] > 0$（模型 A 優於 DNN）。差序列 $\{d_t\}$ 同樣具序列相關，DM 統計量以 Newey-West HAC 估計量（$L = 5$）計算標準誤：
+
+\begin{equation}
+DM = \frac{\bar{d}}{\hat{\sigma}_{\mathrm{NW}}(d) / \sqrt{T}}.
+\end{equation}
+
+在 $H_0$ 成立下 $DM$ 漸近服從標準常態分布 \cite{diebold1995dm}；本文採單尾（右尾）$p$ 值。以 DNN 為基準，對全部五個 GAT 模型分別執行 DM 檢定，結果彙整於第~\ref{subsec:statistical_tests}~節表~\ref{tab:results_stat_tests}。
