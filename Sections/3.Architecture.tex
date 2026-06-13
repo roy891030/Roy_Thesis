@@ -82,16 +82,25 @@
   \node[chbox, below=5mm of s34] (s35) {%
     {\small\bfseries §\,3.5\quad 評估指標與基準比較}\\[4pt]%
     \rule{\linewidth}{0.3pt}\\[4pt]%
-    $\bullet$\enspace 預測品質（§\,3.5.1）：MSE、RMSE、MAE；Daily IC、ICIR、產業中性 IC\\[3pt]%
-    $\bullet$\enspace 投資組合績效（§\,3.5.2）：年化報酬率、Sharpe ratio、勝率、最大跌幅\\[3pt]%
+    $\bullet$\enspace 預測品質（§\,3.5.1）：MSE、RMSE、MAE；Daily IC、ICIR\\[3pt]%
+    $\bullet$\enspace 投資組合績效（§\,3.5.2）：年化報酬率、Sharpe ratio、最大跌幅\\[3pt]%
     $\bullet$\enspace 基準比較（§\,3.5.3）：台灣 50 ETF（0050）為市場基準；多模型統一比較%
+  };
+
+  \node[chbox, below=5mm of s35] (sstat) {%
+    {\small\bfseries 統計假說檢定（對應 §\,4.4.2）}\\[4pt]%
+    \rule{\linewidth}{0.3pt}\\[4pt]%
+    $\bullet$\enspace Newey-West HAC $t$ 檢定（lag $= 5$）：$H_0{:}\ \mathbb{E}[\mathrm{IC}_t]=0$，驗證排序訊號顯著性\\[3pt]%
+    $\bullet$\enspace Block Bootstrap 95\% ICIR 信賴區間（block $= 10$，$B = 2000$）：確認 ICIR 穩健非零\\[3pt]%
+    $\bullet$\enspace Diebold-Mariano 配對比較（以 DNN 為基準）：檢定各 GAT 模型是否提供可統計驗證的排序能力增益%
   };
 
   \draw[flowarrow] (s33.south) -- (s34.north);
   \draw[flowarrow] (s34.south) -- (s35.north);
+  \draw[flowarrow] (s35.south) -- (sstat.north);
 
   \end{tikzpicture}
-  \caption{實驗設計流程（對應 §\,3.3--3.5）}
+  \caption{實驗設計流程（對應 §\,3.3--3.5 及統計假說檢定）}
   \label{fig:exp-flow-model}
 \end{figure}
 
@@ -809,29 +818,12 @@ ICIR = \frac{\frac{1}{T}\sum_{t=1}^{T} IC_t}{\mathrm{Std}(IC_t)}.
 \end{equation}
 其中 \(T\) 為測試期間具有有效資訊係數的交易日數，\(\mathrm{Std}(IC_t)\) 為逐日資訊係數的標準差。整體樣本資訊係數則將測試期間所有有效股票日觀測串接後計算 Pearson 相關係數；因此，整體資訊係數反映全測試集彙總關係，逐日資訊係數與資訊係數比率則反映每日截面排序能力及其穩定度。此設計與本文以截面選股訊號為核心的評估目標一致 \cite{zhang2020information_coefficient,ding2022timevarying_ic,qian2004active_risk}。
 
-\textbf{產業中性資訊係數：}對具備產業標籤的圖與因子模型，本文另行計算產業中性資訊係數，以檢查模型排序能力在排除產業平均成分後是否仍然存在。實作流程先在每一交易日、每一產業內分別對預測值與真實標籤扣除產業平均，再對殘差計算 Pearson 相關係數。令 \(g(i)\) 表示股票 \(i\) 的產業別，\(G_{g(i),t}\) 表示交易日 \(t\) 中與股票 \(i\) 屬於同一產業且具有有效標籤的股票集合，則
-\begin{align}
-\tilde{\hat{y}}_{i,t} &= \hat{y}_{i,t} - \frac{1}{|G_{g(i),t}|}\sum_{j \in G_{g(i),t}} \hat{y}_{j,t}, \\
-\tilde{y}_{i,t} &= y_{i,t} - \frac{1}{|G_{g(i),t}|}\sum_{j \in G_{g(i),t}} y_{j,t},
-\end{align}
-產業中性資訊係數定義為
-\begin{equation}
-IC^{\text{ind-neutral}}_t = \text{Corr}\left(\tilde{\hat{y}}_{\cdot,t}, \tilde{y}_{\cdot,t}\right).
-\end{equation}
-本文同樣彙整其逐日平均與資訊係數比率，作為補充檢視圖模型在排除產業共同成分後，是否仍能保留具經濟意義的個股相對強弱訊號。
-
 \subsection{投資組合績效指標}
 \textbf{年化報酬率：}以每次再平衡選取預測分數最高之 \texttt{top\_pct}=0.10 股票等權做多，計算截面平均報酬作為策略報酬，並依再平衡頻率年化。本文預設每 5 個交易日再平衡一次（\texttt{rebalance\_days}=5），故策略統計所依據者為 5 日持有期報酬序列。
 
 \textbf{Sharpe Ratio：}以平均報酬除以波動後再乘年化因子，衡量風險調整後報酬 \cite{sharpe1994ratio}。
 
-\textbf{勝率：}正報酬期間比例，用以衡量策略穩定性。若策略在第 \(t\) 次再平衡後之單期報酬為 \(r^{p}_t\)，則勝率定義為
-\begin{equation}
-Hit\ Ratio = \frac{1}{T}\sum_{t=1}^{T} \mathbf{1}(r^{p}_t > 0),
-\end{equation}
-其中 \(\mathbf{1}(r^{p}_t > 0)\) 為指示函數：當第 \(t\) 期投資組合報酬 \(r^{p}_t\) 大於 0 時，其值為 1；否則為 0。
-
 \subsection{基準比較與流程摘要}
 \textbf{台灣 50 ETF 基準：}以 0050 之未來 \(k\) 日報酬作為市場基準，與策略累積報酬比較。
 
-評估流程分為兩層。第一層以截面去均值標籤計算預測層指標，涵蓋誤差指標、資訊係數、資訊係數比率與產業中性資訊係數。第二層以原始未來報酬進行投資組合回測與 0050 基準比較，並輸出 Daily IC 時序、IC 分佈與累積報酬等結果。主文表格與附錄均以正式實驗輸出之 \texttt{metrics.json} 與 \texttt{portfolio.json} 為依據。
+評估流程分為兩層。第一層以截面去均值標籤計算預測層指標，涵蓋誤差指標、資訊係數與資訊係數比率。第二層以原始未來報酬進行投資組合回測與 0050 基準比較，並輸出 Daily IC 時序、IC 分佈與累積報酬等結果。

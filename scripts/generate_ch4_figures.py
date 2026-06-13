@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-Chapter-4 comparison figures – thesis colour palette only.
-Colours used:
-  Short window / XGBoost / Baseline : AMBER   (#C98C1E)
-  Medium window                     : FOREST  (#2D7A4F)   ← "綠色為中期"
-  Long window / GAT family          : BLUE    (#2B6CB0)
-  Train IC / primary signal         : BLUE    (#2B6CB0)
-  Test IC  / warning                : CRIMSON (#9B2235)
-  DNN                               : CRIMSON (#9B2235)
-  GAT-neutral                       : PURPLE  (#6B46C1)
-  Overview – Linear (weakest)       : MIDGRAY (#82919F)
-  Overview – LSTM                   : TEAL    (#4A9D8F)   ← never used as window colour
+Chapter-4 comparison figures.
+Colour palette: hex values match thesis_colors.tex TikZ definitions exactly.
+  Short window / XGBoost / Baseline : AMBER   = thesisAmber  (#C98C1E)
+  Medium window                     : FOREST  = thesisForest (#2D7A4F)
+  Long window / GAT family          : BLUE    = thesisBlue   (#2B6CB0)
+  Train IC / primary signal         : BLUE    = thesisBlue   (#2B6CB0)
+  Test IC  / warning / DNN          : CRIMSON = thesisCrimson (#9B2235)
+  GAT-neutral                       : PURPLE  = thesisPurple (#6B46C1)
+  Overview – Linear                 : MIDGRAY = thesisMidGray (#82919F)
+  Overview – LSTM                   : TEAL    = thesisTeal   (#4A9D8F)
+Typography: serif (Times New Roman + Chinese fallback), sized for \textwidth embed.
 """
 
 import json, os, numpy as np
@@ -21,16 +21,16 @@ import matplotlib.ticker as mticker
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
-# ── strict thesis palette ────────────────────────────────────────────────────
-BLUE    = "#2B6CB0"
-AMBER   = "#C98C1E"
-CRIMSON = "#9B2235"
-FOREST  = "#2D7A4F"   # medium-window colour ("綠色")
-DARK    = "#2D3748"
-LIGHT   = "#EDF2F7"
-PURPLE  = "#6B46C1"
-TEAL    = "#4A9D8F"   # overview-only, LSTM line
-MIDGRAY = "#82919F"   # overview-only, Linear line
+# ── thesis palette (mirrors thesis_colors.tex TikZ definitions exactly) ──────
+BLUE    = "#2B6CB0"   # thesisBlue   RGB(43,108,176)
+AMBER   = "#C98C1E"   # thesisAmber  RGB(201,140,30)
+CRIMSON = "#9B2235"   # thesisCrimson RGB(155,35,53)
+FOREST  = "#2D7A4F"   # thesisForest RGB(45,122,79)  – medium-window colour
+DARK    = "#2D3748"   # thesisDark   RGB(45,55,72)
+LIGHT   = "#EDF2F7"   # thesisLight  RGB(237,242,247)
+PURPLE  = "#6B46C1"   # thesisPurple RGB(107,70,193)
+TEAL    = "#4A9D8F"   # thesisTeal   RGB(74,157,143) – LSTM line
+MIDGRAY = "#82919F"   # thesisMidGray RGB(130,145,160) – Linear / grid
 
 OUT_DIR = "/Users/luoyi/Desktop/Roy_Thesis/img"
 RUNS    = "/Users/luoyi/Desktop/Roy_Thesis/runs_gpu_static_to_20250601/static"
@@ -50,15 +50,20 @@ WINDOWS   = ["short", "medium", "long"]
 WIN_LABEL = {"short": "短期", "medium": "中期", "long": "長期"}
 WINDOW_COLORS = {"short": AMBER, "medium": FOREST, "long": BLUE}
 
-# ── global rcParams ──────────────────────────────────────────────────────────
+# ── global rcParams aligned with thesis typography ───────────────────────────
+# Thesis body: 12 pt Times New Roman + CJK.  Figures embed at \textwidth ≈ 8.5 in;
+# scale factor ≈ 0.74 → 14 pt matplotlib ≈ 10.4 pt in PDF ≈ thesis body size.
+# Tick/legend at 12 pt ≈ 8.9 pt in PDF (standard for thesis figures).
 RC = {
-    "font.family"      : "Arial Unicode MS",
-    "font.size"        : 14,
-    "axes.titlesize"   : 15,
-    "axes.labelsize"   : 14,
-    "xtick.labelsize"  : 13,
-    "ytick.labelsize"  : 13,
-    "legend.fontsize"  : 13,
+    "font.family"      : "serif",
+    "font.serif"       : ["Times New Roman", "Songti TC", "STSong",
+                          "Arial Unicode MS", "DejaVu Serif"],
+    "font.size"        : 14,          # ≈10.4 pt in PDF at 8.5-inch embed
+    "axes.titlesize"   : 15,          # ≈11.1 pt
+    "axes.labelsize"   : 14,          # ≈10.4 pt
+    "xtick.labelsize"  : 12,          # ≈ 8.9 pt
+    "ytick.labelsize"  : 12,          # ≈ 8.9 pt
+    "legend.fontsize"  : 12,          # ≈ 8.9 pt
     "axes.spines.top"  : False,
     "axes.spines.right": False,
     "axes.linewidth"   : 0.8,
@@ -72,6 +77,16 @@ RC = {
     "savefig.bbox"     : "tight",
 }
 
+# For narrow single-panel figures (≈7.5 in, scale≈0.84): 12 pt ≈ 10.1 pt in PDF.
+RC_NARROW = {**RC,
+    "font.size"      : 12,
+    "axes.titlesize" : 13,
+    "axes.labelsize" : 12,
+    "xtick.labelsize": 11,
+    "ytick.labelsize": 11,
+    "legend.fontsize": 11,
+}
+
 def ax_style(ax):
     ax.yaxis.grid(True, linestyle="--", linewidth=0.7, color="#D8E2EE", alpha=0.9)
     ax.set_axisbelow(True)
@@ -80,17 +95,16 @@ def ax_style(ax):
     ax.tick_params(axis="both", length=3, color=MIDGRAY)
 
 def bar_label(ax, bar, v, fmt, offset, is_neg_ok=False):
-    """Place a value label above (positive) or below (negative) a bar.
-    clip_on=False prevents axis-boundary clipping."""
+    """Place a value label above (positive) or below (negative) a bar."""
     if v >= 0:
         ax.text(bar.get_x() + bar.get_width() / 2,
                 v + offset, format(v, fmt),
-                ha="center", va="bottom", fontsize=9.5,
+                ha="center", va="bottom", fontsize=11,
                 color=DARK, clip_on=False)
     else:
         ax.text(bar.get_x() + bar.get_width() / 2,
                 v - offset * 0.5, format(v, fmt),
-                ha="center", va="top", fontsize=9.5,
+                ha="center", va="top", fontsize=11,
                 color=DARK, clip_on=False)
 
 def set_ylim_with_room(ax, all_vals, top_frac=0.22, bot_frac=0.18):
@@ -162,8 +176,8 @@ def fig_baseline_comparison():
     x       = np.arange(len(models))
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 2, figsize=(13, 5.8))
-        fig.subplots_adjust(wspace=0.32, top=0.88)
+        fig, axes = plt.subplots(1, 2, figsize=(8.5, 5.0))
+        fig.subplots_adjust(wspace=0.30, top=0.88)
 
         for col, (metric, ylabel, title, fmt) in enumerate([
             ("daily_ic", "測試 Daily IC",   "不同訓練視窗之測試 Daily IC", ".3f"),
@@ -184,9 +198,9 @@ def fig_baseline_comparison():
                     bar_label(ax, bar, v, fmt, offset_amt)
 
             ax.set_xticks(x)
-            ax.set_xticklabels(models, fontsize=13)
-            ax.set_ylabel(ylabel, color=DARK, fontsize=14)
-            ax.set_title(title, color=DARK, fontsize=15, pad=8)
+            ax.set_xticklabels(models, fontsize=12)
+            ax.set_ylabel(ylabel, color=DARK)
+            ax.set_title(title, color=DARK, pad=8)
             ax_style(ax)
             set_ylim_with_room(ax, all_vals, top_frac=0.26, bot_frac=0.20)
 
@@ -196,7 +210,7 @@ def fig_baseline_comparison():
         handles = [Patch(facecolor=WINDOW_COLORS[w], label=WIN_LABEL[w]) for w in WINDOWS]
         fig.legend(handles=handles, loc="upper center", ncol=3,
                    bbox_to_anchor=(0.5, 1.00), frameon=False,
-                   fontsize=13, handlelength=1.4, handletextpad=0.5)
+                   handlelength=1.4, handletextpad=0.5)
 
         fig.savefig(os.path.join(OUT_DIR, "ch4_fig_baseline_comparison.png"))
         plt.close(fig)
@@ -213,8 +227,8 @@ def fig_xgboost_gap():
     test  = [D[w]["XGBoost"]["test_ic"]  for w in WINDOWS]
     ratio = [tr / te for tr, te in zip(train, test)]
 
-    with plt.rc_context(RC):
-        fig, ax = plt.subplots(figsize=(7.5, 6.2))   # taller figure → more headroom
+    with plt.rc_context(RC_NARROW):
+        fig, ax = plt.subplots(figsize=(7.5, 6.2))
 
         b1 = ax.bar(x - bw/2, train, width=bw, color=BLUE,
                     label="Train IC", edgecolor="white", linewidth=0.5, zorder=3)
@@ -224,34 +238,30 @@ def fig_xgboost_gap():
         # ── Train IC: value inside bar (white bold) ──
         for bar, v in zip(b1, train):
             cx = bar.get_x() + bar.get_width() / 2
-            cy = v * 0.50           # mid-point of bar
+            cy = v * 0.50
             ax.text(cx, cy, f"{v:.4f}",
                     ha="center", va="center", fontsize=11,
                     color="white", fontweight="bold", clip_on=False)
 
-        # ── Test IC: value above bar (dark small text) ──
+        # ── Test IC: value above bar ──
         for bar, v in zip(b2, test):
             ax.text(bar.get_x() + bar.get_width() / 2,
                     v + 0.012, f"{v:.4f}",
                     ha="center", va="bottom", fontsize=10,
                     color=DARK, clip_on=False)
 
-        # ── ratio annotation: centred between bars, far above ──
-        # Use group centre (xi) so text is fully inside the axes for every window
+        # ── ratio annotation centred between bars ──
         for xi, (tr, r) in enumerate(zip(train, ratio)):
-            ax.text(xi,                 # group centre, not train-bar centre
-                    tr + 0.150,         # much higher than +0.07 to avoid any overlap
-                    f"×{r:.1f}",
-                    ha="center", va="bottom", fontsize=14,
+            ax.text(xi, tr + 0.150, f"×{r:.1f}",
+                    ha="center", va="bottom", fontsize=13,
                     fontweight="bold", color=DARK, clip_on=False)
 
         ax.set_xticks(x)
-        ax.set_xticklabels([WIN_LABEL[w] for w in WINDOWS], fontsize=13)
-        ax.set_ylabel("Information Coefficient (IC)", color=DARK, fontsize=14)
-        ax.set_title("XGBoost: Train IC vs. Test IC by Window",
-                     color=DARK, fontsize=15, pad=8)
+        ax.set_xticklabels([WIN_LABEL[w] for w in WINDOWS])
+        ax.set_ylabel("Information Coefficient (IC)", color=DARK)
+        ax.set_title("XGBoost: Train IC vs. Test IC by Window", color=DARK, pad=8)
         ax_style(ax)
-        ax.legend(frameon=False, fontsize=13, handlelength=1.4, loc="upper left")
+        ax.legend(frameon=False, handlelength=1.4, loc="upper left")
         # explicit xlim with left margin so Short-window text is never clipped
         ax.set_xlim(-0.55, 2.55)
         # ample top room for the tallest annotation (train_long + 0.15 + text height)
@@ -277,7 +287,7 @@ def fig_topology_comparison():
     ]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 3, figsize=(14, 5.5))
+        fig, axes = plt.subplots(1, 3, figsize=(8.5, 4.8))
         fig.subplots_adjust(wspace=0.32, top=0.88)
 
         for col, (metric, ylabel, title, fmt) in enumerate(metrics):
@@ -296,9 +306,9 @@ def fig_topology_comparison():
                     bar_label(ax, bar, v, fmt, offset_amt)
 
             ax.set_xticks(x)
-            ax.set_xticklabels(models, fontsize=11.5, rotation=15, ha="right")
-            ax.set_ylabel(ylabel, color=DARK, fontsize=14)
-            ax.set_title(title, color=DARK, fontsize=15, pad=8)
+            ax.set_xticklabels(models, fontsize=10, rotation=15, ha="right")
+            ax.set_ylabel(ylabel, color=DARK)
+            ax.set_title(title, color=DARK, pad=8)
             ax_style(ax)
             set_ylim_with_room(ax, all_vals)
 
@@ -306,7 +316,7 @@ def fig_topology_comparison():
                    for w in ["medium", "long"]]
         fig.legend(handles=handles, loc="upper center", ncol=2,
                    bbox_to_anchor=(0.5, 1.00), frameon=False,
-                   fontsize=13, handlelength=1.4)
+                   handlelength=1.4)
 
         fig.savefig(os.path.join(OUT_DIR, "ch4_fig_topology_comparison.png"))
         plt.close(fig)
@@ -327,7 +337,7 @@ def fig_neutralization():
     ]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 3, figsize=(15, 5.5))
+        fig, axes = plt.subplots(1, 3, figsize=(8.5, 4.5))
         fig.subplots_adjust(wspace=0.34, top=0.88)
 
         for col, (metric, ylabel, title, fmt) in enumerate(metrics):
@@ -345,9 +355,9 @@ def fig_neutralization():
                     bar_label(ax, bar, v, fmt, 0.0005 if metric == "daily_ic" else 0.010)
 
             ax.set_xticks(x)
-            ax.set_xticklabels(models, fontsize=11.5, rotation=12, ha="right")
-            ax.set_ylabel(ylabel, color=DARK, fontsize=14)
-            ax.set_title(title, color=DARK, fontsize=15, pad=8)
+            ax.set_xticklabels(models, fontsize=10, rotation=12, ha="right")
+            ax.set_ylabel(ylabel, color=DARK)
+            ax.set_title(title, color=DARK, pad=8)
             ax_style(ax)
             set_ylim_with_room(ax, all_vals)
 
@@ -355,7 +365,7 @@ def fig_neutralization():
                    for w in ["medium", "long"]]
         fig.legend(handles=handles, loc="upper center", ncol=2,
                    bbox_to_anchor=(0.5, 1.00), frameon=False,
-                   fontsize=13, handlelength=1.4)
+                   handlelength=1.4)
 
         fig.savefig(os.path.join(OUT_DIR, "ch4_fig_neutralization.png"))
         plt.close(fig)
@@ -370,7 +380,7 @@ def fig_window_effect():
     xlabels   = [WIN_LABEL[w] for w in WINDOWS]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+        fig, axes = plt.subplots(1, 2, figsize=(8.5, 4.5))
         fig.subplots_adjust(wspace=0.30)
 
         for col, (metric, ylabel, title) in enumerate([
@@ -385,9 +395,9 @@ def fig_window_effect():
             if metric == "sharpe":
                 ax.axhline(0, color=MIDGRAY, linewidth=0.9, linestyle=":", zorder=1)
             ax.set_xticks(xs)
-            ax.set_xticklabels(xlabels, fontsize=13)
-            ax.set_ylabel(ylabel, color=DARK, fontsize=14)
-            ax.set_title(title, color=DARK, fontsize=15, pad=8)
+            ax.set_xticklabels(xlabels)
+            ax.set_ylabel(ylabel, color=DARK)
+            ax.set_title(title, color=DARK, pad=8)
             ax_style(ax)
 
         handles = [Line2D([0], [0], label=category, **CATEGORY_STYLES[category])
@@ -395,7 +405,7 @@ def fig_window_effect():
         fig.legend(handles=handles,
                    loc="upper center", ncol=6,
                    bbox_to_anchor=(0.5, 1.02), frameon=False,
-                   fontsize=11.5, handlelength=1.8, handletextpad=0.5)
+                   handlelength=1.8, handletextpad=0.5)
 
         fig.savefig(os.path.join(OUT_DIR, "ch4_fig_window_effect.png"))
         plt.close(fig)
@@ -416,8 +426,8 @@ def fig_portfolio_metrics_overview():
     ]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(2, 2, figsize=(14, 9))
-        fig.subplots_adjust(hspace=0.38, wspace=0.28)
+        fig, axes = plt.subplots(2, 2, figsize=(8.5, 7.5))
+        fig.subplots_adjust(hspace=0.38, wspace=0.30)
 
         for idx, (metric, ylabel, title) in enumerate(panels):
             ax = axes[idx // 2][idx % 2]
@@ -430,23 +440,22 @@ def fig_portfolio_metrics_overview():
                 ax.axhline(0, color=MIDGRAY, lw=0.9, ls=":", zorder=1)
 
             ax.set_xticks(xs)
-            ax.set_xticklabels(xlabels, fontsize=13)
-            ax.set_ylabel(ylabel, color=DARK, fontsize=13)
-            ax.set_title(title, color=DARK, fontsize=14, pad=7)
+            ax.set_xticklabels(xlabels)
+            ax.set_ylabel(ylabel, color=DARK)
+            ax.set_title(title, color=DARK, pad=7)
             ax_style(ax)
 
             if metric == "total_ret":
                 ax.yaxis.set_major_formatter(
                     mticker.FuncFormatter(lambda v, _: f"{v:.0f}%"))
 
-        # shared legend below the 2×2 grid
         handles = [Line2D([0], [0], label=category, **CATEGORY_STYLES[category])
                    for category in CATEGORY_MODELS]
 
         fig.legend(handles=handles,
-                   loc="lower center", ncol=6,
-                   bbox_to_anchor=(0.5, -0.04),
-                   frameon=False, fontsize=12.5,
+                   loc="lower center", ncol=3,
+                   bbox_to_anchor=(0.5, -0.06),
+                   frameon=False,
                    handlelength=1.8, handletextpad=0.5, columnspacing=1.2)
 
         fig.savefig(OUT_DIR + "/ch4_fig_portfolio_metrics_overview.png",
@@ -500,7 +509,7 @@ def fig_topology_heatmap():
     ROW_H = 1.0    # each data row
     TOTAL_Y = HDR_H + n_rows * ROW_H   # 7.0
 
-    fig, ax = plt.subplots(figsize=(13, 4.8))
+    fig, ax = plt.subplots(figsize=(8.5, 4.2))
     ax.set_xlim(0, TOTAL_X)
     ax.set_ylim(0, TOTAL_Y)
     ax.axis("off")
@@ -525,23 +534,20 @@ def fig_topology_heatmap():
         ax.add_patch(Rectangle((x, y), w, h,
                                facecolor=fc, edgecolor=ec, linewidth=lw, zorder=2))
 
-    def cell_text(x, y, w, h, txt, fs=10, fc=DARK, fw="normal"):
+    def cell_text(x, y, w, h, txt, fs=12, fc=DARK, fw="normal"):
         ax.text(x + w/2, y + h/2, txt,
                 ha="center", va="center", fontsize=fs,
                 color=fc, fontweight=fw, zorder=3, clip_on=False)
 
-    # ── header row (y = n_rows to n_rows+HDR_H) ───────────────────────────
+    # ── header row ─────────────────────────────────────────────────────────
     y_hdr = n_rows * ROW_H
-    # header background
     add_rect(0, y_hdr, TOTAL_X, HDR_H, BLUE, ec=BLUE)
-    # "Model" header
     cell_text(STRIPE_W, y_hdr, NAME_W, HDR_H, "Model",
-              fs=11, fc="white", fw="bold")
-    # metric column headers
+              fs=13, fc="white", fw="bold")
     for j, cname in enumerate(col_names):
         cx = STRIPE_W + NAME_W + j * COL_W
         cell_text(cx, y_hdr, COL_W, HDR_H, cname,
-                  fs=10.5, fc="white", fw="bold")
+                  fs=12, fc="white", fw="bold")
 
     # ── data rows ──────────────────────────────────────────────────────────
     for i, (rname, rstripe) in enumerate(zip(row_names, row_stripes)):
@@ -557,7 +563,7 @@ def fig_topology_heatmap():
 
         # model name
         cell_text(STRIPE_W, y_row, NAME_W, ROW_H, rname,
-                  fs=10.5, fc=DARK, fw="bold")
+                  fs=13, fc=DARK, fw="bold")
 
     # ── metric cells ───────────────────────────────────────────────────────
     for j, (cname, cvals, cfmt, csuf) in enumerate(
@@ -602,7 +608,7 @@ def fig_topology_heatmap():
     ]
     ax.legend(handles=legend_handles,
               loc="upper center", bbox_to_anchor=(0.5, -0.04),
-              ncol=3, frameon=False, fontsize=11,
+              ncol=3, frameon=False, fontsize=12,
               handlelength=1.2, handletextpad=0.4)
 
     fig.tight_layout(pad=0.2)
@@ -689,7 +695,7 @@ def fig_overview_heatmap():
     # Total Y: 1 top-header + 3 × (1 group-header + 6 data rows)
     TOTAL_Y = TOP_H + 3 * (GRP_H + 6 * ROW_H)   # = 0.80 + 3×5.23 = 16.49
 
-    fig, ax = plt.subplots(figsize=(9, 8))
+    fig, ax = plt.subplots(figsize=(8.5, 8.0))
     ax.set_xlim(0, TOTAL_X)
     ax.set_ylim(0, TOTAL_Y)
     ax.axis("off")
@@ -709,7 +715,7 @@ def fig_overview_heatmap():
                                 facecolor=fc, edgecolor=ec,
                                 linewidth=lw, zorder=2))
 
-    def cell_text(x, y, w, h, txt, fs=9, fc=DARK, fw="normal"):
+    def cell_text(x, y, w, h, txt, fs=11, fc=DARK, fw="normal"):
         ax.text(x + w/2, y + h/2, txt,
                 ha="center", va="center", fontsize=fs,
                 color=fc, fontweight=fw, zorder=3, clip_on=False)
@@ -718,11 +724,11 @@ def fig_overview_heatmap():
     y_top = TOTAL_Y - TOP_H
     add_rect(0, y_top, TOTAL_X, TOP_H, DARK, ec=DARK)
     cell_text(0, y_top, STRIPE_W + NAME_W, TOP_H,
-              "Model Category", fs=10, fc="white", fw="bold")
+              "Model Category", fs=13, fc="white", fw="bold")
     for j, cname in enumerate(col_names):
         cx = STRIPE_W + NAME_W + j * COL_W
         cell_text(cx, y_top, COL_W, TOP_H, cname,
-                  fs=10, fc="white", fw="bold")
+                  fs=12, fc="white", fw="bold")
 
     # ── Three window groups (top to bottom: Short → Medium → Long) ──────────
     for wi, (wname, wcolor) in enumerate(zip(windows, win_colors)):
@@ -733,7 +739,7 @@ def fig_overview_heatmap():
         add_rect(0, y_grp, TOTAL_X, GRP_H, wcolor, ec=wcolor)
         ax.text(TOTAL_X / 2, y_grp + GRP_H / 2,
                 f"{wname}  Window",
-                ha="center", va="center", fontsize=10.5,
+                ha="center", va="center", fontsize=13,
                 color="white", fontweight="bold", zorder=3)
 
         # Six model-category rows
@@ -744,9 +750,8 @@ def fig_overview_heatmap():
             row_bg = "#F7F9FC" if ci % 2 == 0 else "white"
             add_rect(0, y_row, TOTAL_X, ROW_H, row_bg, ec="none")
             add_rect(0, y_row, STRIPE_W, ROW_H, wcolor, ec="none")
-            # left-align model name slightly
             ax.text(STRIPE_W + 0.12, y_row + ROW_H/2, cat,
-                    ha="left", va="center", fontsize=9.5,
+                    ha="left", va="center", fontsize=11,
                     color=DARK, fontweight="normal", zorder=3)
 
             for col in range(n_cols):
@@ -759,7 +764,7 @@ def fig_overview_heatmap():
                           + col_suffix[col]
                 is_best = (row_global == best_per_col[col])
                 cell_text(cx, y_row, COL_W, ROW_H, val_str,
-                          fs=9, fc=tc,
+                          fs=11, fc=tc,
                           fw="bold" if is_best else "normal")
 
     # ── Horizontal dividers between groups ───────────────────────────────────
