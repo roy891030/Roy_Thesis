@@ -47,11 +47,12 @@ MODEL_MAP = {
     "dmfm_full"                : "GAT-full",
 }
 WINDOWS   = ["short", "medium", "long"]
-WIN_LABEL = {"short": "Short", "medium": "Medium", "long": "Long"}
+WIN_LABEL = {"short": "短期", "medium": "中期", "long": "長期"}
+WINDOW_COLORS = {"short": AMBER, "medium": FOREST, "long": BLUE}
 
 # ── global rcParams ──────────────────────────────────────────────────────────
 RC = {
-    "font.family"      : "sans-serif",
+    "font.family"      : "Arial Unicode MS",
     "font.size"        : 14,
     "axes.titlesize"   : 15,
     "axes.labelsize"   : 14,
@@ -122,13 +123,41 @@ def load_data():
 
 D = load_data()
 
+CATEGORY_MODELS = {
+    "Linear": ["Linear"],
+    "XGBoost": ["XGBoost"],
+    "LSTM": ["LSTM"],
+    "DNN": ["DNN"],
+    "GAT 拓樸系列": ["GAT-industry", "GAT-universe", "GAT-TwoGraph"],
+    "GAT 中性化系列": ["GAT-IndNeutral", "GAT-full"],
+}
+
+CATEGORY_STYLES = {
+    "Linear": dict(color=MIDGRAY, linestyle=(0, (3, 1, 1, 1)), linewidth=1.8,
+                   marker="o", markersize=6),
+    "XGBoost": dict(color=AMBER, linestyle="--", linewidth=1.8,
+                    marker="s", markersize=6),
+    "LSTM": dict(color=TEAL, linestyle="--", linewidth=1.8,
+                 marker="v", markersize=6),
+    "DNN": dict(color=CRIMSON, linestyle="-", linewidth=2.2,
+                marker="D", markersize=7),
+    "GAT 拓樸系列": dict(color=BLUE, linestyle="-", linewidth=2.2,
+                         marker="^", markersize=8),
+    "GAT 中性化系列": dict(color=PURPLE, linestyle="-", linewidth=2.8,
+                           marker="*", markersize=9),
+}
+
+def category_values(category, metric):
+    models = CATEGORY_MODELS[category]
+    scale = 100 if metric == "total_ret" else 1
+    return [np.mean([D[w][m][metric] for m in models]) * scale for w in WINDOWS]
+
 
 # ╔══════════════════════════════════════════════════════════════════════════╗
 # ║  Fig A – Baseline model comparison                                     ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
 def fig_baseline_comparison():
     models  = ["Linear", "XGBoost", "LSTM", "DNN"]
-    win_clr = {"short": AMBER, "medium": FOREST, "long": BLUE}
     bw, gap = 0.22, 0.06
     x       = np.arange(len(models))
 
@@ -137,8 +166,8 @@ def fig_baseline_comparison():
         fig.subplots_adjust(wspace=0.32, top=0.88)
 
         for col, (metric, ylabel, title, fmt) in enumerate([
-            ("daily_ic", "Test Daily IC",     "Test Daily IC by Training Window",     ".3f"),
-            ("sharpe",   "Test Sharpe Ratio", "Test Sharpe Ratio by Training Window", ".2f"),
+            ("daily_ic", "測試 Daily IC",   "不同訓練視窗之測試 Daily IC", ".3f"),
+            ("sharpe",   "測試 Sharpe 比率", "不同訓練視窗之測試 Sharpe 比率", ".2f"),
         ]):
             ax = axes[col]
             offsets  = np.array([-1, 0, 1]) * (bw + gap / 2)
@@ -148,7 +177,7 @@ def fig_baseline_comparison():
                 vals = [D[w][m][metric] for m in models]
                 all_vals.extend(vals)
                 bars = ax.bar(x + off, vals, width=bw,
-                              color=win_clr[w], label=WIN_LABEL[w],
+                              color=WINDOW_COLORS[w], label=WIN_LABEL[w],
                               edgecolor="white", linewidth=0.5, zorder=3)
                 offset_amt = 0.0003 if metric == "daily_ic" else 0.012
                 for bar, v in zip(bars, vals):
@@ -164,7 +193,7 @@ def fig_baseline_comparison():
             if metric == "sharpe":
                 ax.axhline(0, color=MIDGRAY, linewidth=0.8, linestyle="--", zorder=2)
 
-        handles = [Patch(facecolor=win_clr[w], label=WIN_LABEL[w]) for w in WINDOWS]
+        handles = [Patch(facecolor=WINDOW_COLORS[w], label=WIN_LABEL[w]) for w in WINDOWS]
         fig.legend(handles=handles, loc="upper center", ncol=3,
                    bbox_to_anchor=(0.5, 1.00), frameon=False,
                    fontsize=13, handlelength=1.4, handletextpad=0.5)
@@ -289,17 +318,17 @@ def fig_topology_comparison():
 # ╚══════════════════════════════════════════════════════════════════════════╝
 def fig_neutralization():
     models  = ["GAT-industry", "GAT-TwoGraph", "GAT-IndNeutral", "GAT-full"]
-    win_clr = {"medium": AMBER, "long": BLUE}
     bw, gap = 0.30, 0.08
     x       = np.arange(len(models))
     metrics = [
-        ("icir",   "ICIR",         "ICIR by Neutralization",         ".3f"),
-        ("sharpe", "Sharpe Ratio", "Sharpe Ratio by Neutralization", ".3f"),
+        ("daily_ic", "測試 Daily IC", "測試 Daily IC", ".3f"),
+        ("icir",     "測試 ICIR",     "測試 ICIR", ".3f"),
+        ("sharpe",   "測試 Sharpe 比率", "測試 Sharpe 比率", ".3f"),
     ]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 2, figsize=(12, 5.5))
-        fig.subplots_adjust(wspace=0.32, top=0.88)
+        fig, axes = plt.subplots(1, 3, figsize=(15, 5.5))
+        fig.subplots_adjust(wspace=0.34, top=0.88)
 
         for col, (metric, ylabel, title, fmt) in enumerate(metrics):
             ax       = axes[col]
@@ -310,10 +339,10 @@ def fig_neutralization():
                 vals = [D[w][m][metric] for m in models]
                 all_vals.extend(vals)
                 bars = ax.bar(x + off, vals, width=bw,
-                              color=win_clr[w], label=WIN_LABEL[w],
+                              color=WINDOW_COLORS[w], label=WIN_LABEL[w],
                               edgecolor="white", linewidth=0.5, zorder=3)
                 for bar, v in zip(bars, vals):
-                    bar_label(ax, bar, v, fmt, 0.010)
+                    bar_label(ax, bar, v, fmt, 0.0005 if metric == "daily_ic" else 0.010)
 
             ax.set_xticks(x)
             ax.set_xticklabels(models, fontsize=11.5, rotation=12, ha="right")
@@ -322,7 +351,7 @@ def fig_neutralization():
             ax_style(ax)
             set_ylim_with_room(ax, all_vals)
 
-        handles = [Patch(facecolor=win_clr[w], label=WIN_LABEL[w])
+        handles = [Patch(facecolor=WINDOW_COLORS[w], label=WIN_LABEL[w])
                    for w in ["medium", "long"]]
         fig.legend(handles=handles, loc="upper center", ncol=2,
                    bbox_to_anchor=(0.5, 1.00), frameon=False,
@@ -337,53 +366,21 @@ def fig_neutralization():
 # ║  Fig E – Window-length effect across model groups (line chart)         ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
 def fig_window_effect():
-    def avg(mlist, metric, w):
-        return np.mean([D[w][m][metric] for m in mlist])
-
-    baselines = ["Linear", "XGBoost", "LSTM"]
-    gat_grp   = ["GAT-industry", "GAT-universe", "GAT-TwoGraph"]
-    neut_grp  = ["GAT-IndNeutral", "GAT-full"]
     xs        = [0, 1, 2]
-    xlabels   = ["Short", "Medium", "Long"]
-
-    series = {
-        "Baseline avg\n(excl. DNN)" : {
-            "sharpe"  : [avg(baselines, "sharpe",   w) for w in WINDOWS],
-            "daily_ic": [avg(baselines, "daily_ic", w) for w in WINDOWS],
-            "style"   : dict(color=AMBER,  linestyle="--", linewidth=2.2,
-                             marker="o", markersize=7),
-        },
-        "DNN" : {
-            "sharpe"  : [D[w]["DNN"]["sharpe"]   for w in WINDOWS],
-            "daily_ic": [D[w]["DNN"]["daily_ic"] for w in WINDOWS],
-            "style"   : dict(color=CRIMSON, linestyle="-", linewidth=2.2,
-                             marker="s", markersize=7),
-        },
-        "GAT family avg" : {
-            "sharpe"  : [avg(gat_grp, "sharpe",   w) for w in WINDOWS],
-            "daily_ic": [avg(gat_grp, "daily_ic", w) for w in WINDOWS],
-            "style"   : dict(color=BLUE,  linestyle="-", linewidth=2.2,
-                             marker="^", markersize=7),
-        },
-        "GAT-neutral avg" : {
-            "sharpe"  : [avg(neut_grp, "sharpe",   w) for w in WINDOWS],
-            "daily_ic": [avg(neut_grp, "daily_ic", w) for w in WINDOWS],
-            "style"   : dict(color=PURPLE, linestyle="-", linewidth=2.2,
-                             marker="D", markersize=7),
-        },
-    }
+    xlabels   = [WIN_LABEL[w] for w in WINDOWS]
 
     with plt.rc_context(RC):
         fig, axes = plt.subplots(1, 2, figsize=(13, 5))
         fig.subplots_adjust(wspace=0.30)
 
         for col, (metric, ylabel, title) in enumerate([
-            ("sharpe",   "Sharpe Ratio", "Sharpe Ratio across Training Windows"),
-            ("daily_ic", "Daily IC",     "Daily IC across Training Windows"),
+            ("sharpe",   "測試 Sharpe 比率", "不同訓練視窗之測試 Sharpe 比率"),
+            ("daily_ic", "測試 Daily IC",     "不同訓練視窗之測試 Daily IC"),
         ]):
             ax = axes[col]
-            for label, info in series.items():
-                ax.plot(xs, info[metric], label=label, **info["style"],
+            for category in CATEGORY_MODELS:
+                ax.plot(xs, category_values(category, metric), label=category,
+                        **CATEGORY_STYLES[category],
                         zorder=4, clip_on=False)
             if metric == "sharpe":
                 ax.axhline(0, color=MIDGRAY, linewidth=0.9, linestyle=":", zorder=1)
@@ -393,18 +390,12 @@ def fig_window_effect():
             ax.set_title(title, color=DARK, fontsize=15, pad=8)
             ax_style(ax)
 
-        handles = [
-            Line2D([0],[0], color=AMBER,  linestyle="--", linewidth=2, marker="o", markersize=7),
-            Line2D([0],[0], color=CRIMSON, linestyle="-", linewidth=2, marker="s", markersize=7),
-            Line2D([0],[0], color=BLUE,   linestyle="-", linewidth=2, marker="^", markersize=7),
-            Line2D([0],[0], color=PURPLE, linestyle="-", linewidth=2, marker="D", markersize=7),
-        ]
-        labels = ["Baseline avg (excl. DNN)", "DNN",
-                  "GAT family avg", "GAT-neutral avg"]
-        fig.legend(handles=handles, labels=labels,
-                   loc="upper center", ncol=4,
+        handles = [Line2D([0], [0], label=category, **CATEGORY_STYLES[category])
+                   for category in CATEGORY_MODELS]
+        fig.legend(handles=handles,
+                   loc="upper center", ncol=6,
                    bbox_to_anchor=(0.5, 1.02), frameon=False,
-                   fontsize=12.5, handlelength=1.8, handletextpad=0.6)
+                   fontsize=11.5, handlelength=1.8, handletextpad=0.5)
 
         fig.savefig(os.path.join(OUT_DIR, "ch4_fig_window_effect.png"))
         plt.close(fig)
@@ -415,72 +406,13 @@ def fig_window_effect():
 # ║  Fig F – Table 14 visualisation: all model categories × all windows    ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
 def fig_portfolio_metrics_overview():
-    """
-    Line chart: x = Short/Medium/Long, one line per model category.
-    2×2 panels: Daily IC | ICIR | Sharpe | Total Return.
-
-    Colour rules (no overlap with window colours Amber/Forest/Blue):
-      Linear    → MIDGRAY  (#82919F)  thin dashed-dot
-      LSTM      → TEAL     (#4A9D8F)  dashed   ← NOT Forest (Forest=Medium window)
-      XGBoost   → AMBER    (#C98C1E)  dashed   (warm = overfit risk)
-      DNN       → CRIMSON  (#9B2235)  solid
-      GAT fam.  → BLUE     (#2B6CB0)  solid
-      GAT-neut. → PURPLE   (#6B46C1)  solid thick
-    """
-    cats = {
-        "Linear": dict(
-            daily_ic   = [0.0036, 0.0253, 0.0214],
-            icir       = [0.037,  0.278,  0.235],
-            sharpe     = [-0.423, 0.561,  0.884],
-            total_ret  = [-11.26, 17.35,  52.55],
-            style = dict(color=MIDGRAY, ls=(0,(3,1,1,1)), lw=1.8, marker="o", ms=6),
-        ),
-        "LSTM": dict(
-            daily_ic   = [0.0057, 0.0359, 0.0418],
-            icir       = [0.048,  0.345,  0.479],
-            sharpe     = [-0.223, 0.776,  1.336],
-            total_ret  = [-8.23,  29.16,  95.50],
-            style = dict(color=TEAL,    ls="--",          lw=1.8, marker="v", ms=6),
-        ),
-        "XGBoost": dict(
-            daily_ic   = [0.0261, 0.0485, 0.0408],
-            icir       = [0.209,  0.430,  0.459],
-            sharpe     = [0.010,  0.938,  1.714],
-            total_ret  = [-4.32,  38.44, 143.08],
-            style = dict(color=AMBER,   ls="--",          lw=1.8, marker="s", ms=6),
-        ),
-        "DNN": dict(
-            daily_ic   = [0.0396, 0.0453, 0.0535],
-            icir       = [0.408,  0.581,  0.726],
-            sharpe     = [-0.098, 0.980,  1.564],
-            total_ret  = [-5.88,  39.13, 106.45],
-            style = dict(color=CRIMSON, ls="-",           lw=2.2, marker="D", ms=7),
-        ),
-        "GAT family": dict(
-            daily_ic   = [0.0275, 0.0454, 0.0502],
-            icir       = [0.247,  0.478,  0.569],
-            sharpe     = [-0.036, 0.842,  1.704],
-            total_ret  = [-5.04,  33.32, 118.76],
-            style = dict(color=BLUE,    ls="-",           lw=2.2, marker="^", ms=8),
-        ),
-        "GAT-neutral": dict(
-            daily_ic   = [0.0278, 0.0548, 0.0587],
-            icir       = [0.253,  0.583,  0.760],
-            sharpe     = [-0.084, 0.873,  1.826],
-            total_ret  = [-5.85,  34.66, 131.34],
-            style = dict(color=PURPLE,  ls="-",           lw=2.8, marker="*", ms=9),
-        ),
-    }
-    cats = {name: cats[name] for name in
-            ["Linear", "XGBoost", "LSTM", "DNN", "GAT family", "GAT-neutral"]}
-
     xs      = [0, 1, 2]
-    xlabels = ["Short", "Medium", "Long"]
+    xlabels = [WIN_LABEL[w] for w in WINDOWS]
     panels  = [
-        ("daily_ic",   "Test Daily IC",        "Test Daily IC by Model Category"),
-        ("icir",       "Test ICIR",            "Test ICIR by Model Category"),
-        ("sharpe",     "Test Sharpe Ratio",    "Test Sharpe Ratio by Model Category"),
-        ("total_ret",  "Test Total Return (%)",  "Test Total Return by Model Category"),
+        ("daily_ic",  "測試 Daily IC",   "各模型類別之測試 Daily IC"),
+        ("icir",      "測試 ICIR",       "各模型類別之測試 ICIR"),
+        ("sharpe",    "測試 Sharpe 比率", "各模型類別之測試 Sharpe 比率"),
+        ("total_ret", "測試總報酬（%）", "各模型類別之測試總報酬"),
     ]
 
     with plt.rc_context(RC):
@@ -489,8 +421,9 @@ def fig_portfolio_metrics_overview():
 
         for idx, (metric, ylabel, title) in enumerate(panels):
             ax = axes[idx // 2][idx % 2]
-            for cat_name, info in cats.items():
-                ax.plot(xs, info[metric], label=cat_name, **info["style"],
+            for category in CATEGORY_MODELS:
+                ax.plot(xs, category_values(category, metric), label=category,
+                        **CATEGORY_STYLES[category],
                         zorder=4, clip_on=False)
 
             if metric in ("sharpe", "total_ret"):
@@ -507,12 +440,8 @@ def fig_portfolio_metrics_overview():
                     mticker.FuncFormatter(lambda v, _: f"{v:.0f}%"))
 
         # shared legend below the 2×2 grid
-        handles = []
-        for c, info in cats.items():
-            h = Line2D([0],[0], label=c, **info["style"])
-            if h.get_marker() == "*":
-                h.set_markersize(8)
-            handles.append(h)
+        handles = [Line2D([0], [0], label=category, **CATEGORY_STYLES[category])
+                   for category in CATEGORY_MODELS]
 
         fig.legend(handles=handles,
                    loc="lower center", ncol=6,
@@ -855,9 +784,7 @@ def fig_overview_heatmap():
 # ── run all ──────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     fig_baseline_comparison()
-    fig_topology_comparison()
     fig_neutralization()
     fig_window_effect()
     fig_portfolio_metrics_overview()
-    fig_overview_heatmap()
-    print("\nAll 6 Chapter-4 figures generated successfully.")
+    print("\nAll 4 Chapter-4 figures generated successfully.")

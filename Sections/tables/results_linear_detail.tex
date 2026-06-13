@@ -1,7 +1,7 @@
 \begin{table}[H]
 \centering
-\caption{XGBoost 於三個訓練視窗之核心指標對照}
-\label{tab:results_xgboost_gap}
+\caption{Linear 於三個訓練視窗之核心指標對照}
+\label{tab:results_linear_detail}
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -11,14 +11,14 @@
 \toprule
 \makecell[l]{訓練\\視窗} & 模型 & \makecell[r]{訓練\\Daily IC} & \makecell[r]{測試\\Daily IC} & \makecell[r]{Daily IC\\測/訓比} & \makecell[r]{測試\\ICIR} & \makecell[r]{測試\\Sharpe} & \makecell[r]{測試\\總報酬} \\
 \midrule
-短期 & XGBoost & 0.4491 & 0.0261 & 0.06 & 0.209 & 0.010 & $-$4.32\% \\
-中期 & XGBoost & 0.3340 & 0.0485 & 0.15 & 0.430 & 0.938 & 38.44\% \\
-長期 & XGBoost & 0.2570 & 0.0408 & 0.16 & 0.459 & 1.714 & 143.08\% \\
+短期 & Linear & 0.0598 & 0.0036 & 0.06 & 0.037 & $-$0.423 & $-$11.26\% \\
+中期 & Linear & 0.0467 & 0.0253 & 0.54 & 0.278 & 0.561 & 17.35\% \\
+長期 & Linear & 0.0332 & 0.0214 & 0.65 & 0.235 & 0.884 & 52.55\% \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
 \smallskip
 
-{\footnotesize 本表為表~\ref{tab:results_overview_master} 之 XGBoost 明細。}
+{\footnotesize 本表為表~\ref{tab:results_overview_master} 之 Linear 明細。}
 \endgroup
 \end{table}

@@ -1,7 +1,7 @@
 \begin{table}[H]
 \centering
-\caption{DNN、GAT-industry 與 GAT-universe 於長期訓練視窗之核心指標對照}
-\label{tab:results_long_topology_train_test}
+\caption{GAT-industry 與 GAT-TwoGraph 於中期及長期訓練視窗之核心指標對照}
+\label{tab:results_twograph_detail}
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -11,14 +11,16 @@
 \toprule
 \makecell[l]{訓練\\視窗} & 模型 & \makecell[r]{訓練\\Daily IC} & \makecell[r]{測試\\Daily IC} & \makecell[r]{Daily IC\\測/訓比} & \makecell[r]{測試\\ICIR} & \makecell[r]{測試\\Sharpe} & \makecell[r]{測試\\總報酬} \\
 \midrule
-長期 & DNN & 0.1392 & 0.0535 & 0.38 & 0.726 & 1.564 & 106.45\% \\
+中期 & GAT-industry & 0.2176 & 0.0445 & 0.20 & 0.485 & 0.900 & 36.79\% \\
+中期 & GAT-TwoGraph & 0.1597 & 0.0541 & 0.34 & 0.597 & 0.872 & 34.31\% \\
+\midrule
 長期 & GAT-industry & 0.1558 & 0.0543 & 0.35 & 0.677 & 1.779 & 120.83\% \\
-長期 & GAT-universe & 0.2112 & 0.0452 & 0.21 & 0.526 & 1.506 & 108.10\% \\
+長期 & GAT-TwoGraph & 0.1830 & 0.0512 & 0.28 & 0.504 & 1.827 & 127.33\% \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
 \smallskip
 
-{\footnotesize 本表為表~\ref{tab:results_overview_master} 之 DNN、GAT-industry 與 GAT-universe 長期視窗明細。}
+{\footnotesize 本表為表~\ref{tab:results_overview_master} 之 GAT-industry 與 GAT-TwoGraph 明細。}
 \endgroup
 \end{table}

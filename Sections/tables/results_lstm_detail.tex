@@ -1,7 +1,7 @@
 \begin{table}[H]
 \centering
-\caption{XGBoost 於三個訓練視窗之核心指標對照}
-\label{tab:results_xgboost_gap}
+\caption{LSTM 於三個訓練視窗之核心指標對照}
+\label{tab:results_lstm_detail}
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -11,14 +11,14 @@
 \toprule
 \makecell[l]{訓練\\視窗} & 模型 & \makecell[r]{訓練\\Daily IC} & \makecell[r]{測試\\Daily IC} & \makecell[r]{Daily IC\\測/訓比} & \makecell[r]{測試\\ICIR} & \makecell[r]{測試\\Sharpe} & \makecell[r]{測試\\總報酬} \\
 \midrule
-短期 & XGBoost & 0.4491 & 0.0261 & 0.06 & 0.209 & 0.010 & $-$4.32\% \\
-中期 & XGBoost & 0.3340 & 0.0485 & 0.15 & 0.430 & 0.938 & 38.44\% \\
-長期 & XGBoost & 0.2570 & 0.0408 & 0.16 & 0.459 & 1.714 & 143.08\% \\
+短期 & LSTM & 0.0984 & 0.0057 & 0.06 & 0.048 & $-$0.223 & $-$8.23\% \\
+中期 & LSTM & 0.0742 & 0.0359 & 0.48 & 0.345 & 0.776 & 29.16\% \\
+長期 & LSTM & 0.0924 & 0.0418 & 0.45 & 0.479 & 1.336 & 95.50\% \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
 \smallskip
 
-{\footnotesize 本表為表~\ref{tab:results_overview_master} 之 XGBoost 明細。}
+{\footnotesize 本表為表~\ref{tab:results_overview_master} 之 LSTM 明細。}
 \endgroup
 \end{table}
