@@ -54,10 +54,11 @@ WINDOW_COLORS = {"short": AMBER, "medium": FOREST, "long": BLUE}
 # Thesis body: 12 pt Times New Roman + CJK.  Figures embed at \textwidth ≈ 8.5 in;
 # scale factor ≈ 0.74 → 14 pt matplotlib ≈ 10.4 pt in PDF ≈ thesis body size.
 # Tick/legend at 12 pt ≈ 8.9 pt in PDF (standard for thesis figures).
+# font.family uses Arial Unicode MS: the only macOS font that covers both Latin
+# and CJK glyphs in a single face, matching the thesis mixed-language labels.
+# (Setting font.family='serif' with Times New Roman causes CJK glyphs to vanish.)
 RC = {
-    "font.family"      : "serif",
-    "font.serif"       : ["Times New Roman", "Songti TC", "STSong",
-                          "Arial Unicode MS", "DejaVu Serif"],
+    "font.family"      : "Arial Unicode MS",
     "font.size"        : 14,          # ≈10.4 pt in PDF at 8.5-inch embed
     "axes.titlesize"   : 15,          # ≈11.1 pt
     "axes.labelsize"   : 14,          # ≈10.4 pt
