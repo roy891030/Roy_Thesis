@@ -181,16 +181,22 @@ H_1^{\mathrm{DM}} &: \mathbb{E}[d_t] > 0,
 
 \input{Sections/tables/results_stat_tests.tex}
 
-表~\ref{tab:results_stat_tests} 顯示，GAT-IndNeutral 與 DNN 的平均 IC 及 ICIR 均顯著大於零；Diebold-Mariano 配對比較則顯示 GAT-IndNeutral 與 GAT-full 對 DNN 的差異達顯著水準。相對地，未加入中性化的 GAT-industry、GAT-universe 與 GAT-TwoGraph 對 DNN 均未達顯著水準。
+表~\ref{tab:results_stat_tests} 呈現三類檢定的完整結果，可從三個層次解讀：
+
+\textbf{（一）平均 IC 顯著異於零。} Newey-West HAC $t$ 檢定顯示，GAT-IndNeutral（$t = 11.76$，$p < 0.001$）與 DNN（$t = 10.83$，$p < 0.001$）的長期視窗平均 IC 在高度顯著水準下大於零，排除「訊號源自噪音」的可能性。
+
+\textbf{（二）ICIR 信賴區間下界大於零。} Block Bootstrap 95\% 信賴區間顯示，GAT-IndNeutral 之 ICIR CI 為 $[0.624,\ 0.957]$，DNN 為 $[0.563,\ 0.901]$，兩者下界均遠大於零，確認跨期排序一致性本身具統計意義，而非少數極端月份所致。
+
+\textbf{（三）DM 配對比較呈現明確分層。} 以 DNN 為非圖基準，GAT-IndNeutral（DM $= 2.330$，$p = 0.010$）與 GAT-full（$p = 0.031$）對 DNN 的每日 IC 差異在 5\% 顯著水準下可統計辨識；而 GAT-industry、GAT-universe 與 GAT-TwoGraph 均未達顯著水準（$p > 0.05$）。此分層揭示：中性化機制——而非圖連結本身——是圖模型對 DNN 可統計驗證的增量來源。
 
 \subsection{因子注意力特徵之描述性分析}
 \label{subsec:attention_analysis}
 
-表 \ref{tab:results_dmfm_attention} 顯示各訓練視窗下 GAT-full 因子注意力機制的高頻特徵。短期視窗較常出現 \texttt{down\_vol\_20}、\allowbreak \texttt{roll\_max\_10}、\allowbreak \texttt{roll\_min\_60}、\allowbreak \texttt{roll\_max\_5} 與 \texttt{pct\_to\_low\_20}，集中於近期價格位置、下行波動與短期動能訊號；中期視窗以 \texttt{atr\_14}、\allowbreak \texttt{roll\_min\_5}、\linebreak[4] \texttt{roll\_max\_20}、\allowbreak \texttt{macd} 與 \texttt{std\_ret\_20} 為主；長期視窗中，\texttt{ps}（股價銷售比）與 \texttt{macd\_signal} 進入高頻特徵，並搭配 rolling min/max 與 \texttt{atr\_14}。
+表 \ref{tab:results_dmfm_attention} 顯示各訓練視窗下 GAT-full 因子注意力機制的高頻特徵。短期視窗較常出現 \texttt{down\_vol\_20}、\allowbreak \texttt{roll\_max\_10}、\allowbreak \texttt{roll\_min\_60}、\allowbreak \texttt{roll\_max\_5} 與 \texttt{pct\_to\_low\_20}，集中於近期價格位置、下行波動與短期動能訊號；中期視窗以 \texttt{atr\_14}、\allowbreak \texttt{roll\_min\_5}、\linebreak[4] \texttt{roll\_max\_20}、\allowbreak \texttt{macd} 與 \texttt{std\_ret\_20} 為主；長期視窗中，\texttt{ps} 與 \texttt{macd\_signal} 進入高頻特徵，並搭配 rolling min/max 與 \texttt{atr\_14}。
 
 \input{Sections/tables/results_dmfm_attention.tex}
 
-表~\ref{tab:results_dmfm_attention} 顯示，不同訓練視窗的高頻注意力特徵並不相同。上述模式與金融直覺一致：短期視窗的訓練樣本有限，模型傾向依賴近期價格位置與波動率等即時性較高的技術訊號；長期視窗的訓練期橫跨多個市場情境，模型較能穩定吸收估值特徵（如 \texttt{ps}）與中長期動能指標。需注意的是，注意力權重僅作為描述性解釋，反映模型在輸入特徵上的加權偏好，不應直接視為特徵對報酬的因果效果。
+表~\ref{tab:results_dmfm_attention} 顯示，不同訓練視窗的高頻注意力特徵並不相同。上述模式與金融直覺一致：短期視窗的訓練樣本有限，模型傾向依賴近期價格位置與波動率等即時性較高的技術訊號；長期視窗的訓練期橫跨多個市場情境，模型較能穩定吸收估值特徵（如 \texttt{ps}、\texttt{macd\_signal}）與中長期動能指標。需注意的是，注意力權重僅作為描述性解釋，反映模型在輸入特徵上的加權偏好，不應直接視為特徵對報酬的因果效果。
 
 \FloatBarrier
 
@@ -218,7 +224,9 @@ H_1^{\mathrm{DM}} &: \mathbb{E}[d_t] > 0,
 
 表~\ref{tab:results_portfolio_metrics} 以模型類別為橫向切面，呈現各訓練視窗所對應測試集的平均指標。短期視窗的訓練樣本最為有限，多數模型雖已具正向 Daily IC，但測試總報酬均為負。DNN 在短期視窗的 Daily IC 為 0.0396，Sharpe 比率卻為 $-0.098$；GAT 中性化系列的平均 Daily IC 為 0.0278，平均 Sharpe 比率僅 $-0.084$。短期視窗下弱正向的排序訊號，尚不足以在扣除交易成本前穩定轉化為可投資報酬。
 
-中期視窗擴大訓練樣本後，各模型表現明顯改善。GAT 中性化系列的平均 Daily IC 提升至 0.0548，平均 Sharpe 比率提升至 0.873；DNN 亦達 Sharpe 比率 0.980。長期視窗的改善最為穩定：GAT 中性化系列平均 Daily IC 為 0.0587、平均 ICIR 為 0.760、平均 Sharpe 比率為 1.826；GAT 拓樸系列平均 Daily IC 為 0.0502、平均 Sharpe 比率為 1.704；DNN 為 Daily IC 0.0535、Sharpe 比率 1.564。長期視窗的訓練期橫跨多種市場情境，使模型所學習的截面排序關係在樣本外更具泛化能力。
+中期視窗擴大訓練樣本後，截面排序訊號品質與投資組合績效均改善，惟兩者的模型排名並非完全一致。就截面排序訊號而言，GAT 中性化系列平均 Daily IC 提升至 0.0548，GAT-full 取得中期最高 Daily IC（0.0596）；就投資組合績效而言，DNN 取得最高 Sharpe 比率（0.980）與最高總報酬（39.13\%）。此結果說明，較高的 IC 並不自動轉化為較高的投資組合 Sharpe，IC 反映截面排序能力，Sharpe 則涵蓋排序訊號轉化為持倉集中度與報酬的效率，兩者應分層解讀。
+
+長期視窗的改善最為穩定，且訊號品質與投資組合績效均呈現一致的改善趨勢。就截面排序訊號，GAT 中性化系列平均 Daily IC 為 0.0587、平均 ICIR 為 0.760，居各類別最高；DNN 平均 Daily IC 為 0.0535；GAT 拓樸系列為 0.0502。就投資組合績效，GAT 中性化系列平均 Sharpe 比率達 1.826，GAT 拓樸系列為 1.704，DNN 為 1.564。長期視窗的訓練期橫跨多種市場情境，使截面排序關係在樣本外更具泛化能力。
 
 短期視窗中，DNN 在 Daily IC（0.0396）與 ICIR（0.408）上最高，但最佳 Sharpe 比率僅 GAT-industry 的 0.057，且所有模型總報酬均為負；中期視窗中，GAT-full 取得最高 Daily IC（0.0596）與 ICIR（0.628），DNN 取得最高 Sharpe 比率（0.980）與總報酬（39.13\%）；長期視窗中，GAT-IndNeutral 取得最高 Daily IC（0.0590）與 ICIR（0.786），GAT-full 取得最高 Sharpe 比率（1.849），XGBoost 取得最高總報酬（143.08\%，但伴隨顯著過擬合風險，詳見第 \ref{subsec:xgboost_results} 節）。
 
@@ -239,22 +247,13 @@ H_1^{\mathrm{DM}} &: \mathbb{E}[d_t] > 0,
 \subsection{圖模型增量貢獻之定位}
 \label{subsec:graph_contribution}
 
-綜合本章各節的分析，圖注意力機制的增量貢獻應定位於訊號穩定性、拓樸可解釋性與截面辨識力的提升，而非對非圖模型的全面性績效主導。DNN 在短期與中期視窗已展現具競爭力的截面排序能力，GAT 拓樸系列與 GAT 中性化系列的優勢主要體現於中、長期視窗的 ICIR 穩定性，以及使用具有經濟意義之產業圖拓樸時的截面差異保留。GAT-universe 的結果則說明，圖的引入若不搭配合理的拓樸設計，反而因過度平滑化降低個股截面辨識力。
+綜合本章各節分析，圖注意力機制的增量貢獻可從三個層次定位，每個層次均有對應的實證與統計依據支撐：
 
-為量化上述增量貢獻的統計顯著性，本文針對長期視窗進行 Diebold-Mariano（DM）配對比較檢定，以直接回答「圖模型的截面排序能力是否統計上優於非圖基準」的核心問題。
+\textbf{第一，截面排序訊號品質。}GAT 中性化系列在長期視窗的測試 ICIR 最高（GAT-IndNeutral 0.786、GAT-full 0.735），優於純圖模型（0.504--0.677）與 DNN（0.726）。此優勢隨訓練資料充足而擴大，在短期視窗則收窄甚至消失，顯示圖模型的訊號品質增益取決於訓練資料規模。
 
-\textbf{Diebold-Mariano 檢定。}DM 檢定~\cite{diebold1995dm}以逐期差異序列為基礎。本文令 $d_t=\mathrm{IC}_{A,t}-\mathrm{IC}_{\mathrm{DNN},t}$，檢驗模型 $A$ 的每日 IC 是否顯著高於 DNN；其虛無假說與對立假說已列於第~\ref{subsec:statistical_tests}~節。由於 $d_t$ 序列同樣存在序列自相關，DM 統計量的標準誤以 Newey-West HAC 估計量計算，確保推論的有效性。
+\textbf{第二，統計可辨識性。}第~\ref{subsec:statistical_tests}~節的 Diebold-Mariano 配對比較顯示，長期視窗中僅 GAT-IndNeutral（$p = 0.010$）與 GAT-full（$p = 0.031$）對 DNN 達顯著水準；GAT-industry、GAT-universe 與 GAT-TwoGraph 雖在點估計上接近 DNN，統計上無法與之區分。此結果直接說明：\textbf{中性化機制，而非圖連結本身，是圖模型相對 DNN 可統計驗證的增量貢獻}——圖拓樸的訊號精煉效果，必須透過中性化約束去除產業與市場共同因子後才能顯現。
 
-結果以 DNN 為非圖基準，對長期視窗各 GAT 模型進行配對檢定，呈現明確的分層（各模型數值可對照表~\ref{tab:results_overview_master}）：
-\begin{itemize}
-  \item \textbf{GAT-IndNeutral 對 DNN}：平均每日 IC 差 $+0.0055$，DM 統計量 $= 2.330$（$p = 0.010$），在 5\% 顯著水準下拒絕 $H_0$。
-  \item \textbf{GAT-full 對 DNN}：DM 統計量顯著（$p = 0.031$），確認中性化延伸模型均具有統計可辨識的排序能力增益。
-  \item \textbf{純圖模型（GAT-industry、GAT-universe、GAT-TwoGraph）對 DNN}：DM 檢定均未達顯著水準（$p > 0.05$），儘管其 ICIR 在點估計上高於或接近 DNN。
-\end{itemize}
-
-這一分層結果具有重要的方法論意涵：圖拓樸結構的引入，若不搭配中性化機制，其所帶來的絕對 IC 提升在統計上無法與 DNN 區分。換言之，\textbf{中性化機制——而非圖連結本身——才是可統計驗證的增量來源}。此發現將「圖模型的貢獻」定位於訊號的精煉與去噪（中性化約束），而非單純的鄰域資訊聚合。
-
-\textbf{訓練集與測試集指標對照。}表~\ref{tab:results_overview_master}「Daily IC 測試/訓練比」欄位揭示各模型泛化能力的系統性差異。短期視窗中，Linear、XGBoost 與 LSTM 的 Daily IC 測試/訓練比均僅為 0.06，為極端過擬合。隨視窗延長，比值整體提升：長期視窗中 GAT-IndNeutral（0.38）與 DNN（0.38）並列最高，在達到更高測試 Daily IC 的同時維持相近的泛化效率；XGBoost 長期比值（0.16）仍顯著偏低，其高報酬數字應合併診斷解讀。
+\textbf{第三，泛化能力。}表~\ref{tab:results_overview_master}「Daily IC 測試/訓練比」欄位顯示，長期視窗中 GAT-IndNeutral（0.38）與 DNN（0.38）並列最高，在取得更高測試 Daily IC 的同時維持相近的泛化效率。XGBoost 長期比值（0.16）仍顯著偏低，其高報酬需合併過擬合診斷解讀。
 
 \subsection{研究限制}
 \label{subsec:limitations}
