@@ -137,8 +137,8 @@ def fig_baseline_comparison():
         fig.subplots_adjust(wspace=0.32, top=0.88)
 
         for col, (metric, ylabel, title, fmt) in enumerate([
-            ("daily_ic", "Daily IC",     "Daily IC by Training Window",     ".3f"),
-            ("sharpe",   "Sharpe Ratio", "Sharpe Ratio by Training Window", ".2f"),
+            ("daily_ic", "Test Daily IC",     "Test Daily IC by Training Window",     ".3f"),
+            ("sharpe",   "Test Sharpe Ratio", "Test Sharpe Ratio by Training Window", ".2f"),
         ]):
             ax = axes[col]
             offsets  = np.array([-1, 0, 1]) * (bw + gap / 2)
@@ -475,10 +475,10 @@ def fig_portfolio_metrics_overview():
     xs      = [0, 1, 2]
     xlabels = ["Short", "Medium", "Long"]
     panels  = [
-        ("daily_ic",   "Daily IC",        "Daily IC by Model Category"),
-        ("icir",       "ICIR",            "ICIR by Model Category"),
-        ("sharpe",     "Sharpe Ratio",    "Sharpe Ratio by Model Category"),
-        ("annual_ret", "Annual Return (%)", "Annual Return by Model Category"),
+        ("daily_ic",   "Test Daily IC",        "Test Daily IC by Model Category"),
+        ("icir",       "Test ICIR",            "Test ICIR by Model Category"),
+        ("sharpe",     "Test Sharpe Ratio",    "Test Sharpe Ratio by Model Category"),
+        ("annual_ret", "Test Annual Return (%)", "Test Annual Return by Model Category"),
     ]
 
     with plt.rc_context(RC):

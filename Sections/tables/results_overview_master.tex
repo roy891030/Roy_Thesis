@@ -19,10 +19,7 @@
 \multicolumn{8}{r}{\footnotesize（續下頁）}\\
 \endfoot
 \bottomrule
-\multicolumn{8}{p{14cm}}{\footnotesize
-  粗體：各視窗該欄最高值（測試 IC、測試 ICIR、Sharpe）。$^\dagger$ XGBoost 長期總報酬最高，
-  但訓練/測試比值僅 0.16，過擬合程度最嚴重，應合併第~\ref{subsec:xgboost_results}~節診斷解讀。
-}\\
+\multicolumn{8}{l}{\footnotesize 粗體：各視窗該欄最高值（測試 IC、測試 ICIR、Sharpe）。}\\
 \endlastfoot
 %--- Short window ---
 Short & Linear          & 0.0598 & 0.0036 &         0.06 &         0.037 &        $-$0.423 &  $-$11.26\% \\
@@ -48,7 +45,7 @@ Medium & GAT-full       & 0.1844 & \textbf{0.0596} & 0.32 & \textbf{0.628} &    
 \midrule
 %--- Long window ---
 Long & Linear           & 0.0332 & 0.0214 &         0.65 &         0.235 &          0.884  &   52.55\% \\
-Long & XGBoost          & 0.2570 & 0.0408 &         0.16 &         0.459 &          1.714  & $143.08\%^\dagger$ \\
+Long & XGBoost          & 0.2570 & 0.0408 &         0.16 &         0.459 &          1.714  &  143.08\% \\
 Long & LSTM             & 0.0924 & 0.0418 &         0.45 &         0.479 &          1.336  &   95.50\% \\
 Long & DNN              & 0.1392 & 0.0535 &         0.38 &         0.726 &          1.564  &  106.45\% \\
 Long & GAT-industry     & 0.1558 & 0.0543 &         0.35 &         0.677 &          1.779  &  120.83\% \\
