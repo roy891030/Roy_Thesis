@@ -312,15 +312,21 @@ if __name__ == "__main__":
     phase1_ratio_table()
     phase1_approx_tstat()
 
-    # Phase 2: 需要 daily_ic_series.csv
-    # 如果已存在，取消下面的注解
-    #
-    # phase2_formal_tests(
-    #     window  = "long",
-    #     model_a = "dmfm_ind_neutral",   # 被檢定模型
-    #     model_b = "mlp",                # 對照基準（DNN）
-    # )
-    # phase2_monthly_winrate(window="long")
+    # Phase 2: 需要 daily_ic_series.csv（先跑 scripts/regenerate_daily_ic_csv.sh）
+    has_any_csv = any(
+        (RUNS_BASE / w / m / "daily_ic_series.csv").exists()
+        for w in WINDOWS for m in MODEL_LABELS
+    )
+    if has_any_csv:
+        phase2_formal_tests(
+            window  = "long",
+            model_a = "dmfm_ind_neutral",
+            model_b = "mlp",
+        )
+        phase2_monthly_winrate(window="long")
+    else:
+        print("\n[Phase 2 尚未解鎖]")
+        print("  請先執行: bash scripts/regenerate_daily_ic_csv.sh")
 
     print("\n" + "=" * 70)
     print("Phase 2 說明:")
