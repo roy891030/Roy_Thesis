@@ -2,29 +2,34 @@
 \centering
 \caption{注意力前五特徵之分視窗出現頻率摘要（正式實驗）}
 \label{tab:results_dmfm_attention}
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.10}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{llrrrr}
+\begin{tabular}{@{}llrrrr@{}}
 \toprule
-視窗 & 特徵 & 出現次數 & 平均排名 & 平均注意力權重 & 最大注意力權重 \\
+\makecell[l]{訓練\\視窗} & 特徵 & 出現次數 & 平均排名 & 平均注意力權重 & 最大注意力權重 \\
 \midrule
-Short & \texttt{down\_vol\_20} & 4 & 1.75 & 0.0266 & 0.0295 \\
-Short & \texttt{roll\_max\_10} & 2 & 1.00 & 0.0418 & 0.0519 \\
-Short & \texttt{roll\_min\_60} & 2 & 3.00 & 0.0263 & 0.0282 \\
-Short & \texttt{roll\_max\_5} & 2 & 3.00 & 0.0261 & 0.0300 \\
-Short & \texttt{pct\_to\_low\_20} & 2 & 3.50 & 0.0262 & 0.0290 \\
+短期 & \texttt{down\_vol\_20} & 4 & 1.75 & 0.0266 & 0.0295 \\
+短期 & \texttt{roll\_max\_10} & 2 & 1.00 & 0.0418 & 0.0519 \\
+短期 & \texttt{roll\_min\_60} & 2 & 3.00 & 0.0263 & 0.0282 \\
+短期 & \texttt{roll\_max\_5} & 2 & 3.00 & 0.0261 & 0.0300 \\
+短期 & \texttt{pct\_to\_low\_20} & 2 & 3.50 & 0.0262 & 0.0290 \\
 \midrule
-Medium & \texttt{atr\_14} & 3 & 1.67 & 0.0398 & 0.0523 \\
-Medium & \texttt{roll\_min\_5} & 3 & 2.67 & 0.0260 & 0.0283 \\
-Medium & \texttt{roll\_max\_20} & 3 & 3.67 & 0.0249 & 0.0278 \\
-Medium & \texttt{macd} & 2 & 2.00 & 0.0350 & 0.0430 \\
-Medium & \texttt{std\_ret\_20} & 2 & 2.50 & 0.0284 & 0.0318 \\
+中期 & \texttt{atr\_14} & 3 & 1.67 & 0.0398 & 0.0523 \\
+中期 & \texttt{roll\_min\_5} & 3 & 2.67 & 0.0260 & 0.0283 \\
+中期 & \texttt{roll\_max\_20} & 3 & 3.67 & 0.0249 & 0.0278 \\
+中期 & \texttt{macd} & 2 & 2.00 & 0.0350 & 0.0430 \\
+中期 & \texttt{std\_ret\_20} & 2 & 2.50 & 0.0284 & 0.0318 \\
 \midrule
-Long & \texttt{ps} & 3 & 2.00 & 0.0344 & 0.0419 \\
-Long & \texttt{macd\_signal} & 3 & 2.67 & 0.0348 & 0.0474 \\
-Long & \texttt{roll\_max\_10} & 3 & 2.67 & 0.0288 & 0.0302 \\
-Long & \texttt{roll\_min\_10} & 3 & 3.00 & 0.0294 & 0.0316 \\
-Long & \texttt{atr\_14} & 2 & 1.50 & 0.0338 & 0.0373 \\
+長期 & \texttt{ps} & 3 & 2.00 & 0.0344 & 0.0419 \\
+長期 & \texttt{macd\_signal} & 3 & 2.67 & 0.0348 & 0.0474 \\
+長期 & \texttt{roll\_max\_10} & 3 & 2.67 & 0.0288 & 0.0302 \\
+長期 & \texttt{roll\_min\_10} & 3 & 3.00 & 0.0294 & 0.0316 \\
+長期 & \texttt{atr\_14} & 2 & 1.50 & 0.0338 & 0.0373 \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
+\endgroup
 \end{table}

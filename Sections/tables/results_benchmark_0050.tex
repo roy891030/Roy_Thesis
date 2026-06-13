@@ -1,17 +1,21 @@
 \begin{table}[H]
 \centering
-\caption{三個測試視窗之 0050 基準績效}
+\caption{三個樣本視窗所對應測試期之 0050 基準績效}
 \label{tab:results_benchmark_0050}
-\small
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.10}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{llrrrrr}
+\begin{tabular}{@{}llrrrrr@{}}
 \toprule
-視窗 & 測試期間 & 再平衡期數 & 年化報酬 & 總報酬 & Sharpe & 最大跌幅 \\
+樣本視窗 & 測試期間 & 再平衡期數 & 測試年化報酬 & 測試總報酬 & 測試 Sharpe & 測試最大跌幅 \\
 \midrule
-Short & 2024-12-03--2025-05-29 & 24 & -5.12\% & -5.07\% & -0.150 & -27.37\% \\
-Medium & 2024-02-16--2025-05-29 & 63 & 25.52\% & 31.20\% & 0.935 & -27.37\% \\
-Long & 2023-02-09--2025-05-29 & 112 & 24.12\% & 58.99\% & 0.953 & -23.99\% \\
+短期 & 2024-12-03--2025-05-29 & 24 & $-$5.12\% & $-$5.07\% & $-$0.150 & $-$27.37\% \\
+中期 & 2024-02-16--2025-05-29 & 63 & 25.52\% & 31.20\% & 0.935 & $-$27.37\% \\
+長期 & 2023-02-09--2025-05-29 & 112 & 24.12\% & 58.99\% & 0.953 & $-$23.99\% \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
+\endgroup
 \end{table}

@@ -417,7 +417,7 @@ def fig_window_effect():
 def fig_portfolio_metrics_overview():
     """
     Line chart: x = Short/Medium/Long, one line per model category.
-    2×2 panels: Daily IC | ICIR | Sharpe | Annual Return.
+    2×2 panels: Daily IC | ICIR | Sharpe | Total Return.
 
     Colour rules (no overlap with window colours Amber/Forest/Blue):
       Linear    → MIDGRAY  (#82919F)  thin dashed-dot
@@ -432,45 +432,47 @@ def fig_portfolio_metrics_overview():
             daily_ic   = [0.0036, 0.0253, 0.0214],
             icir       = [0.037,  0.278,  0.235],
             sharpe     = [-0.423, 0.561,  0.884],
-            annual_ret = [-16.92, 18.14,  22.32],
+            total_ret  = [-11.26, 17.35,  52.55],
             style = dict(color=MIDGRAY, ls=(0,(3,1,1,1)), lw=1.8, marker="o", ms=6),
         ),
         "LSTM": dict(
             daily_ic   = [0.0057, 0.0359, 0.0418],
             icir       = [0.048,  0.345,  0.479],
             sharpe     = [-0.223, 0.776,  1.336],
-            annual_ret = [-9.28,  26.53,  33.45],
+            total_ret  = [-8.23,  29.16,  95.50],
             style = dict(color=TEAL,    ls="--",          lw=1.8, marker="v", ms=6),
         ),
         "XGBoost": dict(
             daily_ic   = [0.0261, 0.0485, 0.0408],
             icir       = [0.209,  0.430,  0.459],
             sharpe     = [0.010,  0.938,  1.714],
-            annual_ret = [0.44,   32.10,  43.37],
+            total_ret  = [-4.32,  38.44, 143.08],
             style = dict(color=AMBER,   ls="--",          lw=1.8, marker="s", ms=6),
         ),
         "DNN": dict(
             daily_ic   = [0.0396, 0.0453, 0.0535],
             icir       = [0.408,  0.581,  0.726],
             sharpe     = [-0.098, 0.980,  1.564],
-            annual_ret = [-4.06,  31.88,  35.35],
+            total_ret  = [-5.88,  39.13, 106.45],
             style = dict(color=CRIMSON, ls="-",           lw=2.2, marker="D", ms=7),
         ),
         "GAT family": dict(
             daily_ic   = [0.0275, 0.0454, 0.0502],
             icir       = [0.247,  0.478,  0.569],
             sharpe     = [-0.036, 0.842,  1.704],
-            annual_ret = [-1.54,  29.21,  37.87],
+            total_ret  = [-5.04,  33.32, 118.76],
             style = dict(color=BLUE,    ls="-",           lw=2.2, marker="^", ms=8),
         ),
         "GAT-neutral": dict(
             daily_ic   = [0.0278, 0.0548, 0.0587],
             icir       = [0.253,  0.583,  0.760],
             sharpe     = [-0.084, 0.873,  1.826],
-            annual_ret = [-3.68,  29.86,  40.36],
+            total_ret  = [-5.85,  34.66, 131.34],
             style = dict(color=PURPLE,  ls="-",           lw=2.8, marker="*", ms=9),
         ),
     }
+    cats = {name: cats[name] for name in
+            ["Linear", "XGBoost", "LSTM", "DNN", "GAT family", "GAT-neutral"]}
 
     xs      = [0, 1, 2]
     xlabels = ["Short", "Medium", "Long"]
@@ -478,7 +480,7 @@ def fig_portfolio_metrics_overview():
         ("daily_ic",   "Test Daily IC",        "Test Daily IC by Model Category"),
         ("icir",       "Test ICIR",            "Test ICIR by Model Category"),
         ("sharpe",     "Test Sharpe Ratio",    "Test Sharpe Ratio by Model Category"),
-        ("annual_ret", "Test Annual Return (%)", "Test Annual Return by Model Category"),
+        ("total_ret",  "Test Total Return (%)",  "Test Total Return by Model Category"),
     ]
 
     with plt.rc_context(RC):
@@ -491,7 +493,7 @@ def fig_portfolio_metrics_overview():
                 ax.plot(xs, info[metric], label=cat_name, **info["style"],
                         zorder=4, clip_on=False)
 
-            if metric in ("sharpe", "annual_ret"):
+            if metric in ("sharpe", "total_ret"):
                 ax.axhline(0, color=MIDGRAY, lw=0.9, ls=":", zorder=1)
 
             ax.set_xticks(xs)
@@ -500,7 +502,7 @@ def fig_portfolio_metrics_overview():
             ax.set_title(title, color=DARK, fontsize=14, pad=7)
             ax_style(ax)
 
-            if metric == "annual_ret":
+            if metric == "total_ret":
                 ax.yaxis.set_major_formatter(
                     mticker.FuncFormatter(lambda v, _: f"{v:.0f}%"))
 
@@ -700,7 +702,7 @@ def fig_overview_heatmap():
     windows    = ["Short", "Medium", "Long"]
     win_colors = [AMBER, FOREST, BLUE]
 
-    cats = ["Linear", "LSTM", "XGBoost", "DNN", "GAT family", "GAT-neutral"]
+    cats = ["Linear", "XGBoost", "LSTM", "DNN", "GAT family", "GAT-neutral"]
 
     # Data sourced from results_portfolio_metrics.tex
     raw = {
@@ -853,11 +855,9 @@ def fig_overview_heatmap():
 # ── run all ──────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     fig_baseline_comparison()
-    fig_xgboost_gap()
     fig_topology_comparison()
     fig_neutralization()
     fig_window_effect()
-    fig_topology_heatmap()
     fig_portfolio_metrics_overview()
     fig_overview_heatmap()
-    print("\nAll 8 Chapter-4 figures generated successfully.")
+    print("\nAll 6 Chapter-4 figures generated successfully.")

@@ -3,6 +3,10 @@
 \centering
 \caption{長期視窗統計穩健性檢定結果彙整}
 \label{tab:results_stat_tests}
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.10}
 \begin{adjustbox}{max width=\textwidth}
 \begin{tabular}{@{}llcccl@{}}
 \toprule
@@ -29,4 +33,5 @@ DM test & GAT-full        & $DM =  1.873$ & $0.031$ & $*$  & 拒絕 $H_0$ \\
   DM 檢定標準誤以 Newey-West HAC 估計量計算（lag $= 5$）；顯著水準：$*$ $p < 0.05$，$**$ $p < 0.01$，$***$ $p < 0.001$。
   (B) 欄之 $p$ 值欄位填入 95\% Bootstrap 信賴區間。
 }
+\endgroup
 \end{table}

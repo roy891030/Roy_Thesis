@@ -1,17 +1,21 @@
 \begin{table}[H]
 \centering
-\caption{正式實驗中各訓練視窗之勝出模型摘要}
+\caption{正式實驗中各訓練視窗所對應測試集之勝出模型摘要}
 \label{tab:results_pred_metrics}
+\begingroup
 \scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.10}
 \begin{adjustbox}{max width=\textwidth}
 \begin{tabularx}{\textwidth}{@{}lYYYY@{}}
 \toprule
-視窗 & Daily IC 最佳 & ICIR 最佳 & Sharpe 最佳 & 總報酬最佳 \\
+\makecell[l]{訓練\\視窗} & \makecell[l]{測試 Daily IC\\最佳} & \makecell[l]{測試 ICIR\\最佳} & \makecell[l]{測試 Sharpe\\最佳} & \makecell[l]{測試總報酬\\最佳} \\
 \midrule
-Short & DNN\newline (0.0396) & DNN\newline (0.408) & GAT-industry\newline (0.057) & GAT-industry\newline (-3.23\%) \\
-Medium & GAT-full\newline (0.0596) & GAT-full\newline (0.628) & DNN\newline (0.980) & DNN\newline (39.13\%) \\
-Long & GAT-IndNeutral\newline (0.0590) & GAT-IndNeutral\newline (0.786) & GAT-full\newline (1.849) & XGBoost\newline (143.08\%) \\
+短期 & DNN\newline (0.0396) & DNN\newline (0.408) & GAT-industry\newline (0.057) & GAT-industry\newline ($-$3.23\%) \\
+中期 & GAT-full\newline (0.0596) & GAT-full\newline (0.628) & DNN\newline (0.980) & DNN\newline (39.13\%) \\
+長期 & GAT-IndNeutral\newline (0.0590) & GAT-IndNeutral\newline (0.786) & GAT-full\newline (1.849) & XGBoost\newline (143.08\%) \\
 \bottomrule
 \end{tabularx}
 \end{adjustbox}
+\endgroup
 \end{table}

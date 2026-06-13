@@ -1,17 +1,21 @@
 \begin{table}[H]
 \centering
-\caption{XGBoost baseline 之 train-test IC gap}
+\caption{XGBoost 於三個訓練視窗之整體 IC 訓練集與測試集差距}
 \label{tab:results_xgboost_gap}
-\small
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.10}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lrrrrrr}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-視窗 & Train IC & Test IC & Train/Test 比 & Test ICIR & Sharpe & 總報酬 \\
+\makecell[l]{訓練\\視窗} & \makecell[r]{訓練\\整體 IC} & \makecell[r]{測試\\整體 IC} & \makecell[r]{訓練/測試\\倍數} & \makecell[r]{測試\\ICIR} & \makecell[r]{測試\\Sharpe} & \makecell[r]{測試\\總報酬} \\
 \midrule
-Short & 0.4546 & 0.0232 & 19.6$\times$ & 0.209 & 0.010 & -4.32\% \\
-Medium & 0.3724 & 0.0569 & 6.5$\times$ & 0.430 & 0.938 & 38.44\% \\
-Long & 0.7824 & 0.0205 & 38.1$\times$ & 0.459 & 1.714 & 143.08\% \\
+短期 & 0.4546 & 0.0232 & 19.6$\times$ & 0.209 & 0.010 & $-$4.32\% \\
+中期 & 0.3724 & 0.0569 & 6.5$\times$ & 0.430 & 0.938 & 38.44\% \\
+長期 & 0.7824 & 0.0205 & 38.1$\times$ & 0.459 & 1.714 & 143.08\% \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
+\endgroup
 \end{table}

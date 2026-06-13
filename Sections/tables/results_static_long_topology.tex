@@ -1,20 +1,23 @@
 \begin{table}[H]
 \centering
-\caption{長期訓練視窗九類模型訓練集與測試集核心指標對照}
+\caption{長期訓練視窗之九類模型訓練集與測試集核心指標對照}
 \label{tab:results_static_long_topology}
+\begingroup
 \scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.10}
 \begin{adjustbox}{max width=\textwidth}
 \begin{tabular}{@{}l p{3.2cm} r r r r r r r r@{}}
 \toprule
 模型 & 設計 &
-\makecell[r]{訓練\\IC} & \makecell[r]{訓練\\ICIR} &
-\makecell[r]{測試\\IC} & \makecell[r]{測試\\ICIR} &
-Sharpe & 年化報酬 & 總報酬 & 最大跌幅 \\
+\makecell[r]{訓練\\Daily IC} & \makecell[r]{訓練\\ICIR} &
+\makecell[r]{測試\\Daily IC} & \makecell[r]{測試\\ICIR} &
+\makecell[r]{測試\\Sharpe} & \makecell[r]{測試\\年化報酬} & \makecell[r]{測試\\總報酬} & \makecell[r]{測試\\最大跌幅} \\
 \midrule
 Linear         & 線性擬合
   & 0.0332 & 0.302 & 0.0214 & 0.235 & 0.884 & 22.32\% &  52.55\% & $-$27.44\% \\
 XGBoost        & 梯度提升
-  & 0.2570 & 1.841 & 0.0408 & 0.459 & 1.714 & \textbf{43.37\%} & \textbf{143.08\%} & $-$22.05\% \\
+  & \textbf{0.2570} & \textbf{1.841} & 0.0408 & 0.459 & 1.714 & \textbf{43.37\%} & \textbf{143.08\%} & $-$22.05\% \\
 LSTM           & 時序記憶
   & 0.0924 & 0.806 & 0.0418 & 0.479 & 1.336 & 33.45\% &  95.50\% & $-$25.42\% \\
 DNN            & 無圖全連接
@@ -29,7 +32,7 @@ GAT-TwoGraph   & 產業圖＋全市場圖
 \midrule
 GAT-IndNeutral & 產業圖＋產業中性化
   & 0.1543 & 1.701 & \textbf{0.0590} & \textbf{0.786} & 1.803 & 38.70\% & 123.60\% & $-$20.11\% \\
-GAT-full       & 產業圖＋全市場圖＋中性化
+GAT-full       & 雙圖＋中性化
   & 0.1581 & 1.676 & 0.0583 & 0.735 & \textbf{1.849} & 42.02\% & 139.08\% & $-$21.86\% \\
 \bottomrule
 \end{tabular}
@@ -37,8 +40,9 @@ GAT-full       & 產業圖＋全市場圖＋中性化
 \smallskip
 
 {\footnotesize
-  粗體：各欄最高值（測試 IC、測試 ICIR、Sharpe：GAT-IndNeutral 或 GAT-full 領先；
-  年化報酬、總報酬：XGBoost 最高，但其訓練/測試 ICIR 比值僅 0.25，
+  粗體：各欄最高值（測試 Daily IC、測試 ICIR、測試 Sharpe：GAT-IndNeutral 或 GAT-full 領先；
+  測試年化報酬、測試總報酬：XGBoost 最高，但其訓練/測試 ICIR 比值僅 0.25，
   應合併第~\ref{subsec:xgboost_results}~節過擬合診斷解讀；最大跌幅：GAT-TwoGraph 最小）。
 }
+\endgroup
 \end{table}
