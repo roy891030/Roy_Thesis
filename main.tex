@@ -109,6 +109,16 @@
 
 \begin{document}
 
+% IEEEtran BST control: suppress "——" for repeated first authors
+\makeatletter
+\newcommand{\bstctlcite}[2][]{\@bsphack
+  \if@filesw
+    \immediate\write\@auxout{\string\citation{#2}}%
+  \fi
+  \@esphack}
+\makeatother
+\bstctlcite{IEEEexample:BSTcontrol}
+
 % ====================================================
 % 封面的設定, 像是日期之類的 settings for cover
 % 封面：上下各3公分，左3公分，右2公分

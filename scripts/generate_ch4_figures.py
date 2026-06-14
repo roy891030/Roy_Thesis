@@ -345,11 +345,14 @@ def fig_neutralization():
     ]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 3, figsize=(8.5, 5.2))
-        fig.subplots_adjust(wspace=0.42, top=0.84)
+        fig, axes = plt.subplots(3, 1, figsize=(8.5, 10.5))
+        fig.subplots_adjust(hspace=0.55, top=0.95, bottom=0.06, left=0.12, right=0.96)
 
-        for col, (metric, ylabel, title, fmt) in enumerate(metrics):
-            ax       = axes[col]
+        handles = [Patch(facecolor=WINDOW_COLORS[w], label=WIN_LABEL[w])
+                   for w in ["medium", "long"]]
+
+        for row, (metric, ylabel, title, fmt) in enumerate(metrics):
+            ax       = axes[row]
             offsets  = [-bw/2 - gap/2, bw/2 + gap/2]
             all_vals = []
 
@@ -363,17 +366,15 @@ def fig_neutralization():
                     bar_label(ax, bar, v, fmt, 0.0005 if metric == "daily_ic" else 0.010)
 
             ax.set_xticks(x)
-            ax.set_xticklabels(models, fontsize=10, rotation=12, ha="right")
+            ax.set_xticklabels(models, fontsize=12)
             ax.set_ylabel(ylabel, color=DARK)
             ax.set_title(title, color=DARK, pad=8)
             ax_style(ax)
             set_ylim_with_room(ax, all_vals)
 
-        handles = [Patch(facecolor=WINDOW_COLORS[w], label=WIN_LABEL[w])
-                   for w in ["medium", "long"]]
-        fig.legend(handles=handles, loc="upper center", ncol=2,
-                   bbox_to_anchor=(0.5, 1.00), frameon=False,
-                   handlelength=1.4)
+            if row == 0:
+                ax.legend(handles=handles, loc="upper right", frameon=False,
+                          handlelength=1.4, fontsize=12)
 
         fig.savefig(os.path.join(OUT_DIR, "ch4_fig_neutralization.png"))
         plt.close(fig)
@@ -388,8 +389,8 @@ def fig_window_effect():
     xlabels   = [WIN_LABEL[w] for w in WINDOWS]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 2, figsize=(8.5, 5.2))
-        fig.subplots_adjust(wspace=0.38, top=0.84)
+        fig, axes = plt.subplots(1, 2, figsize=(8.5, 5.8))
+        fig.subplots_adjust(wspace=0.38, top=0.93, bottom=0.28)
 
         for col, (metric, ylabel, title) in enumerate([
             ("sharpe",   "測試 Sharpe 比率", "不同訓練視窗之測試 Sharpe 比率"),
@@ -411,8 +412,8 @@ def fig_window_effect():
         handles = [Line2D([0], [0], label=category, **CATEGORY_STYLES[category])
                    for category in CATEGORY_MODELS]
         fig.legend(handles=handles,
-                   loc="upper center", ncol=3,
-                   bbox_to_anchor=(0.5, 0.99), frameon=False,
+                   loc="lower center", ncol=3,
+                   bbox_to_anchor=(0.5, 0.03), frameon=False,
                    handlelength=1.8, handletextpad=0.5)
 
         fig.savefig(os.path.join(OUT_DIR, "ch4_fig_window_effect.png"))
