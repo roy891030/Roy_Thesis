@@ -18,8 +18,17 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import matplotlib.font_manager as _fm
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
+
+# ── register Noto Serif CJK TC from local path ───────────────────────────────
+_FONT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                         "10_NotoSerifCJKtc", "OTF", "TraditionalChinese")
+for _wt in ("Regular", "Bold", "Medium", "Light"):
+    _fp = os.path.join(_FONT_DIR, f"NotoSerifCJKtc-{_wt}.otf")
+    if os.path.exists(_fp):
+        _fm.fontManager.addfont(_fp)
 
 # ── thesis palette (mirrors thesis_colors.tex TikZ definitions exactly) ──────
 BLUE    = "#2B6CB0"   # thesisBlue   RGB(43,108,176)
@@ -54,11 +63,11 @@ WINDOW_COLORS = {"short": AMBER, "medium": FOREST, "long": BLUE}
 # Thesis body: 12 pt Times New Roman + CJK.  Figures embed at \textwidth ≈ 8.5 in;
 # scale factor ≈ 0.74 → 14 pt matplotlib ≈ 10.4 pt in PDF ≈ thesis body size.
 # Tick/legend at 12 pt ≈ 8.9 pt in PDF (standard for thesis figures).
-# font.family uses Arial Unicode MS: the only macOS font that covers both Latin
-# and CJK glyphs in a single face, matching the thesis mixed-language labels.
-# (Setting font.family='serif' with Times New Roman causes CJK glyphs to vanish.)
+# font.family: Noto Serif CJK TC — single face covering Latin + Traditional
+# Chinese glyphs in a serif style matching the thesis body (Times New Roman /
+# Kaiti TC). Registered from local 10_NotoSerifCJKtc/ at script startup.
 RC = {
-    "font.family"      : "Arial Unicode MS",
+    "font.family"      : "Noto Serif CJK TC",
     "font.size"        : 14,          # ≈10.4 pt in PDF at 8.5-inch embed
     "axes.titlesize"   : 15,          # ≈11.1 pt
     "axes.labelsize"   : 14,          # ≈10.4 pt
