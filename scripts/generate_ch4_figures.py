@@ -22,13 +22,10 @@ import matplotlib.font_manager as _fm
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
-# ── register Noto Serif CJK TC from local path ───────────────────────────────
-_FONT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                         "10_NotoSerifCJKtc", "OTF", "TraditionalChinese")
-for _wt in ("Regular", "Bold", "Medium", "Light"):
-    _fp = os.path.join(_FONT_DIR, f"NotoSerifCJKtc-{_wt}.otf")
-    if os.path.exists(_fp):
-        _fm.fontManager.addfont(_fp)
+# ── register 標楷體 (DFBiaoKaiShu-B5) — same font as TikZ figures ────────────
+_KAITI_PATH = os.path.expanduser("~/Library/Fonts/標楷體.ttc")
+if os.path.exists(_KAITI_PATH):
+    _fm.fontManager.addfont(_KAITI_PATH)
 
 # ── thesis palette (mirrors thesis_colors.tex TikZ definitions exactly) ──────
 BLUE    = "#2B6CB0"   # thesisBlue   RGB(43,108,176)
@@ -67,7 +64,8 @@ WINDOW_COLORS = {"short": AMBER, "medium": FOREST, "long": BLUE}
 # Chinese glyphs in a serif style matching the thesis body (Times New Roman /
 # Kaiti TC). Registered from local 10_NotoSerifCJKtc/ at script startup.
 RC = {
-    "font.family"      : "Noto Serif CJK TC",
+    "font.family"      : "DFBiaoKaiShu-B5",
+    "axes.unicode_minus": False,       # use ASCII minus; DFBiaoKaiShu-B5 lacks U+2212
     "font.size"        : 14,          # ≈10.4 pt in PDF at 8.5-inch embed
     "axes.titlesize"   : 15,          # ≈11.1 pt
     "axes.labelsize"   : 14,          # ≈10.4 pt
@@ -88,7 +86,7 @@ RC = {
 }
 
 # For narrow single-panel figures (≈7.5 in, scale≈0.84): 12 pt ≈ 10.1 pt in PDF.
-RC_NARROW = {**RC,
+RC_NARROW = {**RC,                     # inherits axes.unicode_minus: False
     "font.size"      : 12,
     "axes.titlesize" : 13,
     "axes.labelsize" : 12,

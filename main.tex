@@ -14,7 +14,7 @@
 
 % 文檔類別設定
 \documentclass[12pt,a4paper,oneside]{book}
-\usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=2cm]{geometry}
+\usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=2cm,footskip=1.0cm]{geometry}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{amsmath}
@@ -110,11 +110,15 @@
 \begin{document}
 
 % ====================================================
-% 封面的設定, 像是日期之類的 settings for cover 
-\newgeometry{top=3cm,bottom=3cm,left=3cm,right=3cm}
+% 封面的設定, 像是日期之類的 settings for cover
+% 封面：上下各3公分，左3公分，右2公分
+\newgeometry{top=3cm,bottom=3cm,left=3cm,right=2cm}
 
 % 1. 第一頁的封面, 系所資訊使用變數代入
 \input{covers/front_var.tex}        % 論文的封面
+
+% 書名頁：上下各2公分，左3公分，右2公分
+\newgeometry{top=2cm,bottom=2cm,left=3cm,right=2cm}
 
 % 2. 第二頁的書名頁, 系所&日期使用變數代入
 % 目前的浮水印剛好可以把校名&相關資訊包在裡面
@@ -148,12 +152,13 @@
 
 % 5. 學位論文審定同意書(審定書): (要裝訂在紙本論文)
 
-% 6. 致謝 Acknowledgement {Sections/0.1.Acknowledgement}
-\input{Sections/0.1.Acknowledgement}\newpage
-
-% 頁碼設定
+% 頁碼設定（誌謝起為小寫羅馬數字，封面書名頁不計）
 \frontmatter
 \pagenumbering{roman} % 小寫羅馬數字頁碼
+\pagestyle{fancy}
+
+% 6. 致謝 Acknowledgement {Sections/0.1.Acknowledgement}
+\input{Sections/0.1.Acknowledgement}\newpage
 
 % 中英文目錄設定放在covers/toc_var.tex 裡面, 主頁看起來比較清爽, 包含下面項目 (這邊的語法應該不太需要調整)
 \input{covers/toc_var.tex}

@@ -10,11 +10,14 @@
   {\setmainfont{Times New Roman}}
   {\setmainfont{TeX Gyre Termes}}
 
-\IfFontExistsTF{Kaiti TC}
-  {\setCJKmainfont[AutoFakeBold={4},AutoFakeSlant=0.2]{Kaiti TC}}
-  {\IfFontExistsTF{Songti TC}
-    {\setCJKmainfont[AutoFakeBold={4},AutoFakeSlant=0.2]{Songti TC}}
-    {\setCJKmainfont[AutoFakeBold={4},AutoFakeSlant=0.2]{PingFang TC}}}
+% 格式範本指定楷書（標楷體）; 優先使用 DFBiaoKaiShu-B5，fallback 至系統楷體
+\IfFontExistsTF{DFBiaoKaiShu-B5}
+  {\setCJKmainfont[AutoFakeBold={4}]{DFBiaoKaiShu-B5}}
+  {\IfFontExistsTF{Kaiti TC}
+    {\setCJKmainfont[AutoFakeBold={4}]{Kaiti TC}}
+    {\IfFontExistsTF{Songti TC}
+      {\setCJKmainfont[AutoFakeBold={4}]{Songti TC}}
+      {\setCJKmainfont[AutoFakeBold={4}]{PingFang TC}}}}
 
 \IfFontExistsTF{PingFang TC}
   {\setCJKsansfont{PingFang TC}}
