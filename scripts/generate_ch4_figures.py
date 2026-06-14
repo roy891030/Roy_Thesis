@@ -186,8 +186,8 @@ def fig_baseline_comparison():
     x       = np.arange(len(models))
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 2, figsize=(8.5, 5.0))
-        fig.subplots_adjust(wspace=0.30, top=0.88)
+        fig, axes = plt.subplots(1, 2, figsize=(8.5, 5.5))
+        fig.subplots_adjust(wspace=0.38, top=0.84)
 
         for col, (metric, ylabel, title, fmt) in enumerate([
             ("daily_ic", "測試 Daily IC",   "不同訓練視窗之測試 Daily IC", ".3f"),
@@ -297,8 +297,8 @@ def fig_topology_comparison():
     ]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 3, figsize=(8.5, 4.8))
-        fig.subplots_adjust(wspace=0.32, top=0.88)
+        fig, axes = plt.subplots(1, 3, figsize=(8.5, 5.2))
+        fig.subplots_adjust(wspace=0.42, top=0.84)
 
         for col, (metric, ylabel, title, fmt) in enumerate(metrics):
             ax    = axes[col]
@@ -347,8 +347,8 @@ def fig_neutralization():
     ]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 3, figsize=(8.5, 4.5))
-        fig.subplots_adjust(wspace=0.34, top=0.88)
+        fig, axes = plt.subplots(1, 3, figsize=(8.5, 5.2))
+        fig.subplots_adjust(wspace=0.42, top=0.84)
 
         for col, (metric, ylabel, title, fmt) in enumerate(metrics):
             ax       = axes[col]
@@ -390,8 +390,8 @@ def fig_window_effect():
     xlabels   = [WIN_LABEL[w] for w in WINDOWS]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(1, 2, figsize=(8.5, 4.5))
-        fig.subplots_adjust(wspace=0.30)
+        fig, axes = plt.subplots(1, 2, figsize=(8.5, 5.2))
+        fig.subplots_adjust(wspace=0.38, top=0.84)
 
         for col, (metric, ylabel, title) in enumerate([
             ("sharpe",   "測試 Sharpe 比率", "不同訓練視窗之測試 Sharpe 比率"),
@@ -413,8 +413,8 @@ def fig_window_effect():
         handles = [Line2D([0], [0], label=category, **CATEGORY_STYLES[category])
                    for category in CATEGORY_MODELS]
         fig.legend(handles=handles,
-                   loc="upper center", ncol=6,
-                   bbox_to_anchor=(0.5, 1.02), frameon=False,
+                   loc="upper center", ncol=3,
+                   bbox_to_anchor=(0.5, 0.99), frameon=False,
                    handlelength=1.8, handletextpad=0.5)
 
         fig.savefig(os.path.join(OUT_DIR, "ch4_fig_window_effect.png"))
@@ -436,8 +436,8 @@ def fig_portfolio_metrics_overview():
     ]
 
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(2, 2, figsize=(8.5, 7.5))
-        fig.subplots_adjust(hspace=0.38, wspace=0.30)
+        fig, axes = plt.subplots(2, 2, figsize=(8.5, 8.5))
+        fig.subplots_adjust(hspace=0.46, wspace=0.38)
 
         for idx, (metric, ylabel, title) in enumerate(panels):
             ax = axes[idx // 2][idx % 2]

@@ -48,12 +48,14 @@
     },
     flowarrow/.style={-{Stealth[length=2.8mm]}, thick}
 ]
+    % ── 第一章 緒論 ──────────────────────────────────────────────────────────
     \node[chapterbox] (ch1) {\textbf{第一章 緒論}\\
     研究背景與動機\\
-    研究問題\\
-    研究方法與研究貢獻\\
+    研究問題與目標\\
+    研究方法與貢獻\\
     論文架構};
 
+    % ── 第二章 文獻回顧 ──────────────────────────────────────────────────────
     \node[component, below=10mm of ch1, xshift=-3.7cm] (b1) {線性迴歸在報酬預測中的\\典型定位與限制};
     \node[component, right=10mm of b1] (b2) {樹狀結構模型在非線性預測與\\特徵工程中的典型定位與限制};
     \node[component, below=7mm of b1] (b3) {技術指標如何轉化為深度學習\\可用之特徵表示};
@@ -64,32 +66,50 @@
     \node[groupbox, fit=(b1)(b7)] (groupb) {};
     \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupb.north west) {第二章 文獻回顧};
 
-    \node[component, below=10mm of groupb, xshift=-3.7cm] (c1) {資料來源與預處理};
-    \node[component, right=10mm of c1] (c2) {特徵工程與圖結構};
-    \node[component, below=7mm of c2] (c3) {模型設計};
-    \node[component, below=7mm of c1] (c4) {損失函數};
-    \node[component, below=7mm of c4] (c5) {評估指標};
-    \node[component, below=7mm of c3] (c6) {基準比較與流程摘要};
+    % ── 第三章 實驗設計 ──────────────────────────────────────────────────────
+    \node[component, below=10mm of groupb, xshift=-3.7cm] (c1) {§\,3.1\enspace 資料來源與預處理};
+    \node[component, right=10mm of c1] (c2) {§\,3.2\enspace 特徵工程與圖結構};
+    \node[component, below=7mm of c2] (c3) {§\,3.3\enspace 模型設計};
+    \node[component, below=7mm of c1] (c4) {§\,3.4\enspace 損失函數設計};
+    \node[componentwide, below=7mm of c4, xshift=3.7cm] (c5) {§\,3.5\enspace 評估指標與基準比較};
+    \node[componentwide, below=7mm of c5] (c6) {§\,3.6\enspace 統計假說檢定（Newey-West HAC $t$ 檢定、Block Bootstrap ICIR CI、Diebold-Mariano 配對比較）};
     \node[groupbox, fit=(c1)(c6)] (groupc) {};
     \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupc.north west) {第三章 實驗設計};
 
-    \node[component, below=10mm of groupc, xshift=-3.7cm] (d1) {模型對比};
-    \node[component, right=10mm of d1] (d2) {投資組合績效驗證};
-    \node[componentwide, below=7mm of d1, xshift=3.7cm] (d3) {特徵重要性分析};
-    \node[groupbox, fit=(d1)(d3)] (groupd) {};
+    % ── 第四章 實驗結果 ──────────────────────────────────────────────────────
+    \node[componentwide, below=10mm of groupc] (d0) {§\,4.1\enspace 實驗概述與市場背景};
+    \node[component, below=7mm of d0, xshift=-3.7cm] (d1) {§\,4.2\enspace 非圖基準模型之實證分析\\（Linear、XGBoost、LSTM、DNN）};
+    \node[component, right=10mm of d1] (d2) {§\,4.3\enspace 圖拓樸結構之排序效益比較\\（GAT-industry、universe、TwoGraph）};
+    \node[component, below=7mm of d1] (d3) {§\,4.4\enspace 中性化機制分析\\（GAT-IndNeutral、GAT-full）};
+    \node[component, below=7mm of d2] (d4) {§\,4.5\enspace 訓練視窗長度之跨模型效應\\（短期 / 中期 / 長期視窗）};
+    \node[componentwide, below=7mm of d3, xshift=3.7cm] (d5) {§\,4.6\enspace 綜合詮釋與研究限制};
+    \node[groupbox, fit=(d0)(d5)] (groupd) {};
     \node[grouptitle, anchor=west] at ([xshift=6pt,yshift=3pt]groupd.north west) {第四章 實驗結果};
 
-    \node[chapterbox, below=10mm of groupd] (ch5) {\textbf{第五章 結論與未來研究}};
+    % ── 第五章 結論與未來工作 ────────────────────────────────────────────────
+    \node[chapterbox, below=10mm of groupd] (ch5) {\textbf{第五章 結論與未來工作}\\
+    主要發現（訓練視窗、圖拓樸、中性化機制、IC 與 Sharpe 詮釋）\\
+    未來研究方向（交易成本、動態圖結構、市場狀態分組）};
 
-    \coordinate (b2c) at ($(groupb.south |- groupc.north)$);
-    \draw[flowarrow] (ch1.south) -- (groupb.north);
-    \draw[flowarrow] (groupb.south) -- (b2c);
+    % ── 主流程箭頭 ───────────────────────────────────────────────────────────
+    \draw[flowarrow] (ch1.south)    -- (groupb.north);
+    \draw[flowarrow] (groupb.south) -- (groupc.north);
     \draw[flowarrow] (groupc.south) -- (groupd.north);
     \draw[flowarrow] (groupd.south) -- (ch5.north);
+
+    % ── 第三章 內部箭頭 ──────────────────────────────────────────────────────
     \draw[flowarrow] (c1.east) -- (c2.west);
     \draw[flowarrow] (c2.south) -- (c3.north);
     \draw[flowarrow] (c3.west) -- (c4.east);
-    \draw[flowarrow] (c4.south) -- (c5.north);
-    \draw[flowarrow] (c5.east) -- (c6.west);
+    \draw[flowarrow] (c4.south) -- (c5.north -| c4.south);
+    \draw[flowarrow] (c5.south) -- (c6.north);
+
+    % ── 第四章 內部箭頭 ──────────────────────────────────────────────────────
+    \draw[flowarrow] (d0.south) -- (d0.south |- d1.north) -| (d1.north);
+    \draw[flowarrow] (d0.south) -- (d0.south |- d2.north) -| (d2.north);
+    \draw[flowarrow] (d1.south) -- (d3.north);
+    \draw[flowarrow] (d2.south) -- (d4.north);
+    \draw[flowarrow] (d3.south) -- (d3.south |- d5.north) -| (d5.north -| d3.south);
+
 \end{tikzpicture}
 \end{document}
